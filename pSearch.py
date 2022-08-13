@@ -107,7 +107,6 @@ def rmMethod(website):
     else:
         for value in direct_websites[2:4]:
             generalUrls.append(value)
-    print(generalUrls)
 
     for url in generalUrls:
         searchUrl = url + nameInputFixed
@@ -136,7 +135,7 @@ def rmMethod(website):
             print(link)
 
 def checkChosenNum():
-    if chosenNum == '0' or '':
+    if chosenNum == '0' or chosenNum == '':
         fileCR()
         print("\n")
         monkrus()
