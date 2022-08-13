@@ -1,6 +1,13 @@
 # pSearch
  Searching tool written in Python for Piracy related websites. Asks you where to search, or if you want you can search in all of the websites available. Gives you maximum results available on the first page only, and at the end "Best Results" showcasing the first result ever shown on the website.
+
+## Requirements
+This software uses BeautifulSoup. Use this command within the extracted folder to install everything from the requirements.txt file:
  
+    pip install -r requirements.txt
+
+Make sure you have pip installed.
+
  ## Notice
  This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original page of the website. YOU CANNOT DOWNLOAD ANYTHING WITH THIS TOOL.
  
