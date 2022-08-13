@@ -1,0 +1,25 @@
+# Project metadata
+include LICENSE
+include CHANGELOG
+
+# Redundant metadata just in case someone is depending on the
+# old versions
+include COPYING.txt
+include NEWS.txt
+
+# scripts
+include test-all-versions
+include scripts/*.py
+include scripts/*.txt
+
+# Documentation source in various languages.
+include doc*/Makefile
+include doc*/source/conf.py
+include doc*/source/*.rst
+include doc*/source/*.jpg
+
+# Japanese and Korean translations are in HTML format, not RST.
+include doc.jp/index.html
+include doc.ko/*.jpg
+include doc.ko/index.css
+include doc.ko/index.html
