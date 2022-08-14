@@ -35,6 +35,7 @@ chosenNum = input("Where do you want to search? Enter number (Default (0) = all)
 
 bestResults = list()
 
+allLinks = list()
 rmmLinks = list()
 generalLinks = list()
 
@@ -105,6 +106,10 @@ def generalMethod(website):
                 oldPos = fullPos
             bestResults.append(noduplLinks[lastPos-1])
 
+            print("Results:")
+            for link in noduplLinks:
+                print(link)
+
 # FTUApps (4) and VSTorrent (5)
 def rmMethod(website):
     generalUrls = list()
@@ -116,11 +121,11 @@ def rmMethod(website):
         for value in direct_websites[3:5]:
             generalUrls.append(value)
 
+    oldPos = 0
     for url in generalUrls:
         searchUrl = url + nameInputFixed
         print("\nSearching", nameInput, "at", searchUrl)
 
-        rmmcount = 0
         req = urllib.request.Request(url=searchUrl, headers=header) 
         html = urllib.request.urlopen(req).read()
         soup = BeautifulSoup(html, 'html.parser')
@@ -131,12 +136,25 @@ def rmMethod(website):
                 if tagContent == "Read More »" or tagContent == "Read More":
                     getLink = tag.get('href', None)
                     rmmLinks.append(getLink)
-                    rmmcount = rmmcount + 1
-                    if rmmcount == 1:
-                        bestResults.append(getLink)
+        
+        noduplLinks = list(dict.fromkeys(rmmLinks))
 
-    if rmmcount == 0:
-        print("No results")
+        if len(noduplLinks) == 0:
+            print("No results")
+        else:        
+            fullPos = len(noduplLinks)
+            realfullPos = fullPos - 1
+            if oldPos == 0:
+                lastPos = fullPos - fullPos + 1
+                oldPos = fullPos
+            else:
+                lastPos = oldPos + 1
+                oldPos = fullPos
+            bestResults.append(noduplLinks[lastPos-1])
+
+            print("Results:")
+            for link in noduplLinks:
+                print(link)
 
 def checkChosenNum():
     if chosenNum == '0' or chosenNum == '':
@@ -156,14 +174,11 @@ def checkChosenNum():
     elif chosenNum == "-2":
         generalMethod("3")
 
-    noduplLinks = list(dict.fromkeys(generalLinks))
-
-    print("\nAll Results:")
-    for link in noduplLinks:
-        print(link)
-
-    print("\nBest Results:")
-    for link in bestResults:
-        print(link)
+    if len(bestResults) > 0:
+        print("\nBest Results:")
+        for link in bestResults:
+            print(link)
+    else:
+        print("No Best Results")
 
 checkChosenNum()
