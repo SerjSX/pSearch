@@ -40,7 +40,6 @@ allLinks = list()
 rmmLinks = list()
 generalLinks = list()
 
-# FileCR (1) Monkrus (2), Pirated Games (3), FitGirl Repacks (4), FTUApps (5), VSTorrent (6), 1337x (7)
 def generalMethod(website):
     generalUrls = list()
     tagSoups = list()
