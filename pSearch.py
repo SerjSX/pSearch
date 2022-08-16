@@ -13,25 +13,23 @@ header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
       'Connection': 'keep-alive'}
 
 website_library = {
-    "1": "FileCR", "2": "monkrus", "3": "Pirated-Games", "4" : "FitGirl Repacks",
-    "5": "FTUApps", "6": "VSTorrent", "7": "1337x", "8": "GOG Games",
-    "9": "STEAMRIP"
+    "1": "FileCR", "2": "monkrus", "3" : "FitGirl Repacks",
+    "4": "FTUApps", "5": "VSTorrent", "6": "1337x", "7": "GOG Games",
+    "8": "STEAMRIP"
 }
 
 direct_websites = [
     "https://filecr.com/?s=", "https://w14.monkrus.ws/search?q=",
-    "https://pirated-games.com/?s=", "https://fitgirl-repacks.site/?s=",
-    "https://ftuapps.dev/?s=", "https://vstorrent.org/?s=",
-    "https://1337x.to/search/", "https://gog-games.com/search/",
-    "https://steamrip.com/?s="
+    "https://fitgirl-repacks.site/?s=", "https://ftuapps.dev/?s=",
+    "https://vstorrent.org/?s=", "https://1337x.to/search/", 
+    "https://gog-games.com/search/", "https://steamrip.com/?s="
 ]
 
 static_websites = [
     "https://filecr.com/", "https://w14.monkrus.ws/",
-    "https://pirated-games.com/", "https://fitgirl-repacks.site/",
-    "https://ftuapps.dev/", "https://vstorrent.org/",
-    "https://1337x.to/", "https://gog-games.com/",
-    "https://steamrip.com/"    
+    "https://fitgirl-repacks.site/", "https://ftuapps.dev/",
+    "https://vstorrent.org/", "https://1337x.to/", 
+    "https://gog-games.com/", "https://steamrip.com/"    
 ]
 
 bestResults = list()
@@ -40,7 +38,7 @@ allLinks = list()
 rmmLinks = list()
 generalLinks = list()
 
-def generalMethod(website):
+def generalMethod(website,nameInput):
     generalUrls = list()
     tagSoups = list()
 
@@ -65,22 +63,19 @@ def generalMethod(website):
         if website == "1":
             tags = soup('div', {'class': 'product-info'})
             tagSoups.append(tags)
-        elif website == "2" or website == "5" or website == "6":
+        elif website == "2" or website == "4" or website == "5":
             tags = soup('h2', {'class': 'entry-title'})
             tagSoups.append(tags)
         elif website == "3":
-            tags = soup('h3', {'class': 'h4'})
-            tagSoups.append(tags)
-        elif website == "4":
             tags = soup('h1', {'class': 'entry-title'})
             tagSoups.append(tags)
-        elif website == "7":
+        elif website == "6":
             tags = soup('a')
             tagSoups.append(tags)
-        elif website == "8":
+        elif website == "7":
             tags = soup('a', {'class': 'block'})
             tagSoups.append(tags)
-        elif website == "9":
+        elif website == "8":
             tags = soup('div', {'class': 'thumb-content'})
             tagSoups.append(tags)
         else:
@@ -94,7 +89,7 @@ def generalMethod(website):
                     mainLinkA = links.get("href")
                     if mainLinkA != None:
                         if not mainLinkA.startswith("https://w14.monkrus.ws/search/label/") or not mainLinkA.startswith("https://w14.monkrus.ws/search?") or mainLinkA != "https://w14.monkrus.ws/":
-                            if website == "9":
+                            if website == "8":
                                 generalLinks.append("https://steamrip/" + mainLinkA)
                             else: 
                                 generalLinks.append(mainLinkA)
@@ -113,35 +108,32 @@ def generalMethod(website):
 
 
 
-def checkChosenNum(chosenNum):
+def checkChosenNum(chosenNum,nameInput):
     if chosenNum == '0' or chosenNum == '':
-        generalMethod("1") # FileCR
-        generalMethod("2") # monkrus
-        generalMethod("3") # Pirated-Games
-        generalMethod("4") # Fitgirl Repacks
-        generalMethod("5") # FTUApps
-        generalMethod("6") # VSTorrent
-        generalMethod("7") # 1337x
-        generalMethod("8") # GOG Games
-        generalMethod("9") # STEAMRIP
-
+        generalMethod("1",nameInput) # FileCR
+        generalMethod("2",nameInput) # monkrus
+        generalMethod("3",nameInput) # Fitgirl Repacks
+        generalMethod("4",nameInput) # FTUApps
+        generalMethod("5",nameInput) # VSTorrent
+        generalMethod("6",nameInput) # 1337x
+        generalMethod("7",nameInput) # GOG Games
+        generalMethod("8",nameInput) # STEAMRIP
     
     elif chosenNum == "-1":
-        generalMethod("1") # FileCR
-        generalMethod("2") # monkrus
-        generalMethod("5") # FTUApps
-        generalMethod("6") # VSTorrent
-        generalMethod("7") # 1337x  
+        generalMethod("1",nameInput) # FileCR
+        generalMethod("2",nameInput) # monkrus
+        generalMethod("4",nameInput) # FTUApps
+        generalMethod("5",nameInput) # VSTorrent
+        generalMethod("6",nameInput) # 1337x  
 
     elif chosenNum == "-2":
-        generalMethod("3") # Pirated-Games
-        generalMethod("4") # Fitgirl Repacks
-        generalMethod("7") # 1337x
-        generalMethod("8") # GOG Games
-        generalMethod("9") # STEAMRIP
+        generalMethod("3",nameInput) # Fitgirl Repacks
+        generalMethod("6",nameInput) # 1337x
+        generalMethod("7",nameInput) # GOG Games
+        generalMethod("8",nameInput) # STEAMRIP
 
     else:
-        generalMethod(chosenNum)    
+        generalMethod(chosenNum,nameInput)    
     
     noduplLinks = list(dict.fromkeys(allLinks))
     if len(noduplLinks) > 0:
@@ -162,6 +154,6 @@ def askUser():
     print("[-2] All Game Sites")
 
     chosenNum = input("Where do you want to search? Enter number: ")
-    checkChosenNum(chosenNum)
+    checkChosenNum(chosenNum,nameInput)
 
 askUser()
