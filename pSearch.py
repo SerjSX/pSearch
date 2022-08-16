@@ -1,5 +1,7 @@
 import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
+import bs4.element
+import fnmatch
 
 header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ' 
       'AppleWebKit/537.11 (KHTML, like Gecko) '
@@ -11,27 +13,26 @@ header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
       'Connection': 'keep-alive'}
 
 website_library = {
-    "1": "FileCR - https://filecr.com/?s=", "2": "monkrus - https://w14.monkrus.ws/search?q=",
-    "3": "Pirated-Games - https://pirated-games.com/?s", "4": "FTUApps - https://ftuapps.dev/?s=", 
-    "5": "VSTorrent - https://vstorrent.org/?s=",
+    "1": "FileCR", "2": "monkrus", "3": "Pirated-Games", "4" : "FitGirl Repacks",
+    "5": "FTUApps", "6": "VSTorrent", "7": "1337x", "8": "GOG Games",
+    "9": "STEAMRIP"
 }
 
 direct_websites = [
     "https://filecr.com/?s=", "https://w14.monkrus.ws/search?q=",
-    "https://pirated-games.com/?s=", "https://ftuapps.dev/?s=", 
-    "https://vstorrent.org/?s=",
+    "https://pirated-games.com/?s=", "https://fitgirl-repacks.site/?s=",
+    "https://ftuapps.dev/?s=", "https://vstorrent.org/?s=",
+    "https://1337x.to/search/", "https://gog-games.com/search/",
+    "https://steamrip.com/?s="
 ]
 
-nameInput = input("Enter Software Name - ")
-nameInputFixed = nameInput.replace(' ', '+')
-
-print("Available websites:")
-for webnum in website_library:
-    print("[", webnum, "] ", website_library[webnum])
-print("[-1] All Software Sites")
-print("[-2] All Game Sites")
-
-chosenNum = input("Where do you want to search? Enter number (Default (0) = all): ")
+static_websites = [
+    "https://filecr.com/", "https://w14.monkrus.ws/",
+    "https://pirated-games.com/", "https://fitgirl-repacks.site/",
+    "https://ftuapps.dev/", "https://vstorrent.org/",
+    "https://1337x.to/", "https://gog-games.com/",
+    "https://steamrip.com/"    
+]
 
 bestResults = list()
 
@@ -39,25 +40,21 @@ allLinks = list()
 rmmLinks = list()
 generalLinks = list()
 
-# FileCR (1) Monkrus (2) and Pirated Games (3)
+# FileCR (1) Monkrus (2), Pirated Games (3), FitGirl Repacks (4), FTUApps (5), VSTorrent (6), 1337x (7)
 def generalMethod(website):
     generalUrls = list()
     tagSoups = list()
 
+    generalUrls.append(direct_websites[int(website)-1])
 
-    if website == "1":
-        generalUrls.append(direct_websites[0])
-    elif website == "2":
-        generalUrls.append(direct_websites[1])
-    elif website == "3":
-        generalUrls.append(direct_websites[2])
-    else:
-        for value in direct_websites[0:3]:
-            generalUrls.append(value)
-
-    oldPos = 0
     for url in generalUrls:
-        searchUrl = url + nameInputFixed
+        if url.startswith("https://1337x.to/"):
+            nameInputFixed = urllib.parse.quote(nameInput)
+            searchUrl = url + nameInputFixed + "/1/"
+        else:      
+            nameInputFixed = urllib.parse.quote_plus(nameInput)
+            searchUrl = url + nameInputFixed
+
         print("\nSearching", nameInput, "at", searchUrl)
 
         generalcount = 0
@@ -69,116 +66,103 @@ def generalMethod(website):
         if website == "1":
             tags = soup('div', {'class': 'product-info'})
             tagSoups.append(tags)
-        elif website == "2":
+        elif website == "2" or website == "5" or website == "6":
             tags = soup('h2', {'class': 'entry-title'})
             tagSoups.append(tags)
         elif website == "3":
-            tags = soup('h3', {'class': 'cactus-post-title entry-title h4'})
+            tags = soup('h3', {'class': 'h4'})
+            tagSoups.append(tags)
+        elif website == "4":
+            tags = soup('h1', {'class': 'entry-title'})
+            tagSoups.append(tags)
+        elif website == "7":
+            tags = soup('a')
+            tagSoups.append(tags)
+        elif website == "8":
+            tags = soup('a', {'class': 'block'})
+            tagSoups.append(tags)
+        elif website == "9":
+            tags = soup('div', {'class': 'thumb-content'})
             tagSoups.append(tags)
         else:
-            tag1 = soup('div', {'class': 'product-info'})
-            tagSoups.append(tag1)
-            tag2 = soup('h2', {'class': 'entry-title'})
-            tagSoups.append(tag2)
-            tag3 = soup('h3', {'class': 'cactus-post-title entry-title h4'})
-            tagSoups.append(tag3)
+            print("Not a valid option.")
+            exit()
         
         for tagS in tagSoups:
             for tag in tagS:
                 links = tag.find('a')
-                mainLink = links.get("href")
                 if links != None:
-                    if mainLink.startswith('https://w14.monkrus.ws') or not mainLink.startswith("https://w14.monkrus.ws/search/label/") and not mainLink.startswith("https://w14.monkrus.ws/search?") and mainLink != "https://w14.monkrus.ws/":
-                        generalLinks.append(mainLink)
+                    mainLinkA = links.get("href")
+                    if mainLinkA != None:
+                        if not mainLinkA.startswith("https://w14.monkrus.ws/search/label/") or not mainLinkA.startswith("https://w14.monkrus.ws/search?") or mainLinkA != "https://w14.monkrus.ws/":
+                            if website == "9":
+                                generalLinks.append("https://steamrip/" + mainLinkA)
+                            else: 
+                                generalLinks.append(mainLinkA)
+                    
+                elif links == None:
+                    mainLinkB = tag.get("href")
+                    if mainLinkB != None:
+                        if mainLinkB.startswith("/torrent") and url.startswith("https://1337x"):
+                            generalLinks.append("https://1337x" + mainLinkB)                        
+                        elif mainLinkB.startswith("/game") and url.startswith("https://gog-games.com"):
+                            generalLinks.append("https://gog-games.com" + mainLinkB)                     
 
-        noduplLinks = list(dict.fromkeys(generalLinks))
+    noduplLinks = list(dict.fromkeys(generalLinks))
+    for link in noduplLinks:
+        allLinks.append(link)
 
-        if len(noduplLinks) == 0:
-            print("No results")
-        else:        
-            fullPos = len(noduplLinks)
-            realfullPos = fullPos - 1
-            if oldPos == 0:
-                lastPos = fullPos - fullPos + 1
-                oldPos = fullPos
-            else:
-                lastPos = oldPos + 1
-                oldPos = fullPos
-            bestResults.append(noduplLinks[lastPos-1])
 
-            print("Results:")
-            for link in noduplLinks:
-                print(link)
 
-# FTUApps (4) and VSTorrent (5)
-def rmMethod(website):
-    generalUrls = list()
-    if website == "4":
-        generalUrls.append(direct_websites[3])
-    elif website == "5":
-        generalUrls.append(direct_websites[4])
-    else:
-        for value in direct_websites[3:5]:
-            generalUrls.append(value)
-
-    oldPos = 0
-    for url in generalUrls:
-        searchUrl = url + nameInputFixed
-        print("\nSearching", nameInput, "at", searchUrl)
-
-        req = urllib.request.Request(url=searchUrl, headers=header) 
-        html = urllib.request.urlopen(req).read()
-        soup = BeautifulSoup(html, 'html.parser')
-        tags = soup('a')
-        for tag in tags:
-            tagContent = tag.contents[0]
-            if tagContent != None:
-                if tagContent == "Read More »" or tagContent == "Read More":
-                    getLink = tag.get('href', None)
-                    rmmLinks.append(getLink)
-        
-        noduplLinks = list(dict.fromkeys(rmmLinks))
-
-        if len(noduplLinks) == 0:
-            print("No results")
-        else:        
-            fullPos = len(noduplLinks)
-            realfullPos = fullPos - 1
-            if oldPos == 0:
-                lastPos = fullPos - fullPos + 1
-                oldPos = fullPos
-            else:
-                lastPos = oldPos + 1
-                oldPos = fullPos
-            bestResults.append(noduplLinks[lastPos-1])
-
-            print("Results:")
-            for link in noduplLinks:
-                print(link)
-
-def checkChosenNum():
+def checkChosenNum(chosenNum):
     if chosenNum == '0' or chosenNum == '':
-        generalMethod(chosenNum)
-        rmMethod(chosenNum)
+        generalMethod("1") # FileCR
+        generalMethod("2") # monkrus
+        generalMethod("3") # Pirated-Games
+        generalMethod("4") # Fitgirl Repacks
+        generalMethod("5") # FTUApps
+        generalMethod("6") # VSTorrent
+        generalMethod("7") # 1337x
+        generalMethod("8") # GOG Games
+        generalMethod("9") # STEAMRIP
 
-    elif chosenNum == "1" or chosenNum == "2" or chosenNum == "3":
-        generalMethod(chosenNum)
-
-    elif chosenNum == "4" or chosenNum == "5":
-        rmMethod(chosenNum)        
     
     elif chosenNum == "-1":
-        generalMethod("2")
-        rmMethodSoftware("0")
+        generalMethod("1") # FileCR
+        generalMethod("2") # monkrus
+        generalMethod("5") # FTUApps
+        generalMethod("6") # VSTorrent
+        generalMethod("7") # 1337x  
 
     elif chosenNum == "-2":
-        generalMethod("3")
+        generalMethod("3") # Pirated-Games
+        generalMethod("4") # Fitgirl Repacks
+        generalMethod("7") # 1337x
+        generalMethod("8") # GOG Games
+        generalMethod("9") # STEAMRIP
 
-    if len(bestResults) > 0:
-        print("\nBest Results:")
-        for link in bestResults:
+    else:
+        generalMethod(chosenNum)    
+    
+    noduplLinks = list(dict.fromkeys(allLinks))
+    if len(noduplLinks) > 0:
+        print("Found", len(noduplLinks), "results:")
+        for link in noduplLinks:
             print(link)
     else:
-        print("No Best Results")
+        print("No results")
 
-checkChosenNum()
+def askUser():
+    nameInput = input("Enter Software Name - ")
+
+    print("Available websites:")
+    for webnum in website_library:
+        print("[", webnum, "] ", website_library[webnum])
+    print("[0] All Sites")
+    print("[-1] All Software Sites")
+    print("[-2] All Game Sites")
+
+    chosenNum = input("Where do you want to search? Enter number: ")
+    checkChosenNum(chosenNum)
+
+askUser()
