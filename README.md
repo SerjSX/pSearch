@@ -19,3 +19,4 @@ Make sure you have pip installed.
     monkrus
     FTUApps
     VSTorrent
+    pirated-games (WIP but overall works, just shows results when there is none because it showcases some games at the bottom)
