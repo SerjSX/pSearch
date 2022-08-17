@@ -1,12 +1,16 @@
 # pSearch
  Searching tool written in Python for Piracy related websites. Asks you where to search, or if you want you can search in all of the websites available. Gives you maximum results available on the first page only, and at the end "Best Results" showcasing the first result ever shown on the website.
 
-## Requirements
+## Requirements and Running
 This software uses BeautifulSoup. Use this command within the extracted folder to install everything from the requirements.txt file:
  
     pip install -r requirements.txt
 
-Make sure you have pip installed.
+Make sure you have pip and Python installed. I will work on web and program version (with UI) in the future.
+Keep in mind, running it with native Python will always be faster than with a UI/web version, once you install Python and the requirements it's easy and fast to run it.
+
+    Open terminal in the program's folder (from Linux point) and run
+        python3 pSearch.py
 
  ## Notice
  This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original page of the website. YOU CANNOT DOWNLOAD ANYTHING WITH THIS TOOL.
@@ -17,6 +21,9 @@ Make sure you have pip installed.
  #### Available websites (for now):
     FileCR
     monkrus
+    FitGirl Repacks
     FTUApps
     VSTorrent
-    pirated-games (WIP but overall works, just shows results when there is none because it showcases some games at the bottom)
+    1337x
+    GOG Games
+    STEAMRIP
