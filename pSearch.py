@@ -164,6 +164,11 @@ def checkChosenNum(chosenNum,nameInput):
                 # Run generalMethod with forwarding its site["id"]     
                 generalMethod(nameInput, site["id"])
 
+    elif chosenNum == "-3":
+        for site in sites:
+            if site["type"] == "android":
+                generalMethod(nameInput, site["id"])
+
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
     else:
@@ -194,6 +199,7 @@ def askUser():
     print("[0/empty] All Sites")
     print("[-1] All Software Sites")
     print("[-2] All Game Sites")
+    print("[-3] All Android Sites")
     print("[exit/quit] Quits the program")
 
     chosenNum = input("Where do you want to search? Enter number: ")

@@ -1,7 +1,7 @@
 [
     {
         "id": "1",
-        "name": "FileCR",
+        "name": "FileCR - All",
         "link": "https://filecr.com/",
         "slink": "https://filecr.com/?s=",
         "skey1": "div",
@@ -78,5 +78,26 @@
         "skey2": "class",
         "skey3": "thumb-content",
         "type": "game"
+    },
+    {
+        "id": "9",
+        "name": "FlsAudio",
+        "link": "https://flsaudio.com/new/",
+        "slink": "https://flsaudio.com/new/?s=",
+        "skey1": "h2",
+        "skey2": "null",
+        "skey3": "null",
+        "type": "software"
+    },
+    {
+        "id": "10",
+        "name": "revdl",
+        "link": "https://www.revdl.com/",
+        "slink": "https://www.revdl.com/?s=",
+        "skey1": "h3",
+        "skey2": "class",
+        "skey3": "post-title entry-title",
+        "type": "android"        
     }
+
 ]
