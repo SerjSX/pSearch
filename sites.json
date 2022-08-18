@@ -98,6 +98,16 @@
         "skey2": "class",
         "skey3": "post-title entry-title",
         "type": "android"        
+    },
+    {
+        "id": "11",
+        "name": "APKMB",
+        "link": "https://apkmb.com/",
+        "slink": "https://apkmb.com/?s=",
+        "skey1": "div",
+        "skey2": "class",
+        "skey3": "bloque-app",
+        "type": "android"
     }
 
 ]
