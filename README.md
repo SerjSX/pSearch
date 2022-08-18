@@ -27,6 +27,8 @@ Keep in mind, running it with native Python will always be faster than with a UI
     1337x
     GOG Games
     STEAMRIP
+    FlsAudio 
+    revdl 
 
 #### Collaboration - JSON
 Check this page: https://github.com/SerjSX/pSearch/wiki/Collaboration---JSON-Explanation
