@@ -30,5 +30,5 @@ Keep in mind, running it with native Python will always be faster than with a UI
     FlsAudio 
     revdl 
 
-#### Collaboration - JSON
+#### Contribution - JSON
 Check this page: https://github.com/SerjSX/pSearch/wiki/Collaboration---JSON-Explanation
