@@ -260,7 +260,7 @@ def checkChosenNum(chosenNum,nameInput):
         # for each site in sites
         for site in sites:
             # Activate the generalMethod function with forwarding the site's ID.
-            generalMethod(nameInput, site["id"])
+            generalMethod(nameInput, site["id"], 0)
     
     # If user chose -1...
     elif chosenNum == "-1":
@@ -295,7 +295,7 @@ def checkChosenNum(chosenNum,nameInput):
     # for a specific software.
     else:
         site_chosen = sites[int(chosenNum)-1]
-        generalMethod(nameInput, site_chosen["id"])    
+        generalMethod(nameInput, site_chosen["id"], 0)    
     
     # At the end, it prints the results if the length of allLinks is greater than 0
     if len(allLinks) > 0:
