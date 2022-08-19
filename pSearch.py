@@ -42,7 +42,7 @@ sites_json = ''' [
         "skey1": "h2",
         "skey2": "class",
         "skey3": "entry-title",
-        "type": ["software", "android"]
+        "type": ["software"]
     },
     {
         "id": "5",
@@ -176,6 +176,8 @@ def generalMethod(nameInput, site_id, chosen_type):
             searchUrl = siteSLink + nameInputFixed + "/1/"
     # If it doesn't starts with https://1337x.to/ then quote it with + (it replaces space with +), this is
     # the default method as most sites work this way.
+    elif site_id == "1" and chosen_type == "android":
+        searchUrl = siteSLink + urllib.parse.quote(nameInput) + "&subcat_filter=&category-type=23"
     else:      
         nameInputFixed = urllib.parse.quote_plus(nameInput)
         # Connect the url with the software name the user put at the beginning
@@ -311,6 +313,13 @@ def checkChosenNum(chosenNum,nameInput):
     # If it isn't greater than 0, it says No Results
     else:
         print("\nNo results")
+
+    searchAsk = input("\nSearch again? [Y/n]")
+    if searchAsk == "" or searchAsk == "Y" or searchAsk == "y":
+        askUser()
+    else: 
+        print("Quitting program...")
+        quit()
 
 # Asks user to insert inputs, the beginning of the program.
 def askUser():
