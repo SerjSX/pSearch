@@ -1,9 +1,14 @@
 import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
 import json
+import configparser
+
+config = configparser.ConfigParser()
+config.read('locations.ini')
+jsonPath = config.get('sites_json', 'filepath')
 
 # Opens the json file which includes the supported sites and its information.
-with open('sites.json', 'r') as sites_file:
+with open(jsonPath, 'r') as sites_file:
     # Loads it, sites will be used for representation.
     sites = json.load(sites_file)
 
