@@ -12,7 +12,7 @@ sites_json = ''' [
         "skey1": "div",
         "skey2": "class",
         "skey3": "product-info",
-        "type": "software"
+        "type": ["software", "android"]
     },
     {
         "id": "2",
@@ -22,7 +22,7 @@ sites_json = ''' [
         "skey1": "h2",
         "skey2": "class",
         "skey3": "entry-title",
-        "type": "software"
+        "type": ["software"]
     },
     {
         "id": "3",
@@ -32,7 +32,7 @@ sites_json = ''' [
         "skey1": "h1",
         "skey2": "class",
         "skey3": "entry-title",
-        "type": "game"
+        "type": ["game"]
     },
     {
         "id": "4",
@@ -42,7 +42,7 @@ sites_json = ''' [
         "skey1": "h2",
         "skey2": "class",
         "skey3": "entry-title",
-        "type": "software"
+        "type": ["software", "android"]
     },
     {
         "id": "5",
@@ -52,7 +52,7 @@ sites_json = ''' [
         "skey1": "h2",
         "skey2": "class",
         "skey3": "entry-title",
-        "type": "software"
+        "type": ["software"]
     },    
     {
         "id": "6",
@@ -62,7 +62,7 @@ sites_json = ''' [
         "skey1": "a",
         "skey2": "null",
         "skey3": "null",
-        "type": "duo"
+        "type": ["software", "game", "android", "movie"]
     },    
     {
         "id": "7",
@@ -72,7 +72,7 @@ sites_json = ''' [
         "skey1": "a",
         "skey2": "class",
         "skey3": "block",
-        "type": "game"
+        "type": ["game"]
     },    
     {
         "id": "8",
@@ -82,7 +82,7 @@ sites_json = ''' [
         "skey1": "div",
         "skey2": "class",
         "skey3": "thumb-content",
-        "type": "game"
+        "type": ["game"]
     },
     {
         "id": "9",
@@ -92,7 +92,7 @@ sites_json = ''' [
         "skey1": "h2",
         "skey2": "null",
         "skey3": "null",
-        "type": "software"
+        "type": ["software"]
     },
     {
         "id": "10",
@@ -102,7 +102,7 @@ sites_json = ''' [
         "skey1": "h3",
         "skey2": "class",
         "skey3": "post-title entry-title",
-        "type": "android"        
+        "type": ["android"]        
     },
     {
         "id": "11",
@@ -112,7 +112,7 @@ sites_json = ''' [
         "skey1": "div",
         "skey2": "class",
         "skey3": "bloque-app",
-        "type": "android"
+        "type": ["android"]
     }
 ]'''
 
@@ -135,7 +135,7 @@ bestResults = list()
 allLinks = list()
 
 # generalMethod(nameInput,site_id) is the main function that searching process works in
-def generalMethod(nameInput, site_id):
+def generalMethod(nameInput, site_id, chosen_type):
     # These variables below are for the information necessary for the searching process.
     # siteLink has the normal link of the website, useful when the grabbed URL doesn't start with the
     # website URL, so we can just add it easily.
@@ -165,9 +165,15 @@ def generalMethod(nameInput, site_id):
     # If it starts with https://1337x.to/ then quote it with %20 (space), this is unique for this site 
     # because of its web structure.
     if siteLink.startswith("https://1337x.to/"):
-        nameInputFixed = urllib.parse.quote(nameInput)
-        # Connect the url with the software name the user put at the beginning
-        searchUrl = siteSLink + nameInputFixed + "/1/"
+        # If chosen_type is Android, add the keyword "android" at the end.
+        if chosen_type == "android":
+            nameInputFixed = urllib.parse.quote(nameInput + " android")
+            # Connect the url with the software name the user put at the beginning
+            searchUrl = siteSLink + nameInputFixed + "/1/"
+        else:
+            nameInputFixed = urllib.parse.quote(nameInput)
+            # Connect the url with the software name the user put at the beginning
+            searchUrl = siteSLink + nameInputFixed + "/1/"
     # If it doesn't starts with https://1337x.to/ then quote it with + (it replaces space with +), this is
     # the default method as most sites work this way.
     else:      
@@ -262,23 +268,28 @@ def checkChosenNum(chosenNum,nameInput):
         for site in sites:
             # if the site's type is software OR duo (duo means the site results both software
             # and games)...
-            if site["type"] == "software" or site["type"] == "duo":      
+            if "software" in site["type"]:      
                 # Run generalMethod with forwarding its site["id"]  
-                generalMethod(nameInput, site["id"])
+                generalMethod(nameInput, site["id"], 0)
 
     # If user chose -2... 
     elif chosenNum == "-2":
         # for each site in sites
         for site in sites:
             # If the site's type is game or duo...
-            if site["type"] == "game" or site["type"] == "duo":     
+            if "game" in site["type"]:     
                 # Run generalMethod with forwarding its site["id"]     
-                generalMethod(nameInput, site["id"])
+                generalMethod(nameInput, site["id"], 0)
 
     elif chosenNum == "-3":
         for site in sites:
-            if site["type"] == "android":
-                generalMethod(nameInput, site["id"])
+            if "android" in site["type"]:
+                generalMethod(nameInput, site["id"], "android")
+            
+    elif chosenNum == "-4":
+        for site in sites:
+            if "movie" in site["type"]:
+                generalMethod(nameInput, site["id"], 0)
 
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
@@ -311,6 +322,7 @@ def askUser():
     print("[-1] All Software Sites")
     print("[-2] All Game Sites")
     print("[-3] All Android Sites")
+    print("[-4] All Movie/Series Sites")
     print("[exit/quit] Quits the program")
 
     chosenNum = input("Where do you want to search? Enter number: ")
