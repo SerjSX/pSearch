@@ -1,16 +1,122 @@
 import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
 import json
-import configparser
 
-config = configparser.ConfigParser()
-config.read('locations.ini')
-jsonPath = config.get('sites_json', 'filepath')
+# Sites list in JSON. Originally had it in a separate file but that caused issues.
+sites_json = ''' [
+    {
+        "id": "1",
+        "name": "FileCR - All",
+        "link": "https://filecr.com/",
+        "slink": "https://filecr.com/?s=",
+        "skey1": "div",
+        "skey2": "class",
+        "skey3": "product-info",
+        "type": "software"
+    },
+    {
+        "id": "2",
+        "name": "monkrus",
+        "link": "https://w14.monkrus.ws/",
+        "slink": "https://w14.monkrus.ws/search?q=",
+        "skey1": "h2",
+        "skey2": "class",
+        "skey3": "entry-title",
+        "type": "software"
+    },
+    {
+        "id": "3",
+        "name": "FitGirl Repacks",
+        "link": "https://fitgirl-repacks.site/",
+        "slink": "https://fitgirl-repacks.site/?s=",
+        "skey1": "h1",
+        "skey2": "class",
+        "skey3": "entry-title",
+        "type": "game"
+    },
+    {
+        "id": "4",
+        "name": "FTUApps",
+        "link": "https://ftuapps.dev/",
+        "slink": "https://ftuapps.dev/?s=",
+        "skey1": "h2",
+        "skey2": "class",
+        "skey3": "entry-title",
+        "type": "software"
+    },
+    {
+        "id": "5",
+        "name": "VSTorrent",
+        "link": "https://vstorrent.org/",
+        "slink": "https://vstorrent.org/?s=",
+        "skey1": "h2",
+        "skey2": "class",
+        "skey3": "entry-title",
+        "type": "software"
+    },    
+    {
+        "id": "6",
+        "name": "1337x",
+        "link": "https://1337x.to/",
+        "slink": "https://1337x.to/search/",
+        "skey1": "a",
+        "skey2": "null",
+        "skey3": "null",
+        "type": "duo"
+    },    
+    {
+        "id": "7",
+        "name": "GOG Games",
+        "link": "https://gog-games.com/",
+        "slink": "https://gog-games.com/search/",
+        "skey1": "a",
+        "skey2": "class",
+        "skey3": "block",
+        "type": "game"
+    },    
+    {
+        "id": "8",
+        "name": "STEAMRIP",
+        "link": "https://steamrip.com/",
+        "slink": "https://steamrip.com/?s=",
+        "skey1": "div",
+        "skey2": "class",
+        "skey3": "thumb-content",
+        "type": "game"
+    },
+    {
+        "id": "9",
+        "name": "FlsAudio",
+        "link": "https://flsaudio.com/new/",
+        "slink": "https://flsaudio.com/new/?s=",
+        "skey1": "h2",
+        "skey2": "null",
+        "skey3": "null",
+        "type": "software"
+    },
+    {
+        "id": "10",
+        "name": "revdl",
+        "link": "https://www.revdl.com/",
+        "slink": "https://www.revdl.com/?s=",
+        "skey1": "h3",
+        "skey2": "class",
+        "skey3": "post-title entry-title",
+        "type": "android"        
+    },
+    {
+        "id": "11",
+        "name": "APKMB",
+        "link": "https://apkmb.com/",
+        "slink": "https://apkmb.com/?s=",
+        "skey1": "div",
+        "skey2": "class",
+        "skey3": "bloque-app",
+        "type": "android"
+    }
+]'''
 
-# Opens the json file which includes the supported sites and its information.
-with open(jsonPath, 'r') as sites_file:
-    # Loads it, sites will be used for representation.
-    sites = json.load(sites_file)
+sites = json.loads(sites_json)
 
 # Used as a header when requesting a website
 header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ' 
