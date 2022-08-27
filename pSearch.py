@@ -62,12 +62,12 @@ sites_json = ''' [
     {
         "id": "6",
         "name": "1337x",
-        "link": "https://1337x.to/",
+        "link": "https://1337x.to",
         "slink": "https://1337x.to/search/",
         "skey1": "a",
         "skey2": "null",
         "skey3": "null",
-        "type": ["software", "game", "android", "movie"],
+        "type": ["software", "game", "android", "movieseries"],
         "mainlink": "no"
     },    
     {
@@ -124,6 +124,28 @@ sites_json = ''' [
         "skey3": "bloque-app",
         "type": ["android"],
         "mainlink": "yes"
+    },
+    {
+        "id": "12",
+        "name": "scnlog",
+        "link": "https://scnlog.me/",
+        "slink": "https://scnlog.me/search/",
+        "skey1": "div",
+        "skey2": "class",
+        "skey3": "title",
+        "type": ["movieseries"],
+        "mainlink": "yes"
+    },
+    {
+        "id": "13",
+        "name": "RELEASE BB",
+        "link": "http://rlsbb.ru/",
+        "slink": "https://search.rlsbb.ru/?s=",
+        "skey1": "h1",
+        "skey2": "class",
+        "skey3": "entry-title",
+        "type": ["movieseries"],
+        "mainlink": "yes"
     }
 ]'''
 
@@ -173,9 +195,9 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
     # resultLinks used for appending links from the results.
     resultLinks = list()
 
-    # If it starts with https://1337x.to/ then quote it with %20 (space), this is unique for this site 
+    # If it starts with https://1337x.to then quote it with %20 (space), this is unique for this site 
     # because of its web structure.
-    if siteLink.startswith("https://1337x.to/"):
+    if siteLink.startswith("https://1337x.to"):
         # If chosen_type is Android, add the keyword "android" at the end for accurate results.
         if chosen_type == "android":
             nameInputFixed = urllib.parse.quote(nameInput + " android")
@@ -304,7 +326,7 @@ def checkChosenNum(chosenNum,nameInput):
             
     elif chosenNum == "-4":
         for site in sites:
-            if "movie" in site["type"]:
+            if "movieseries" in site["type"]:
                 generalMethod(nameInput, site["id"], 0, site["mainlink"])
 
     # This runs as the default method, which is when the user types a specific number
@@ -342,7 +364,7 @@ def askUser():
     # Shows available options to search from
     print("Available websites:")
     for site in sites:
-        print("[" + site['id'] + "] " + site['name'])
+        print("[" + site['id'] + "] " + site['name'], site['type'])
     print("\n[0/empty] All Sites")
     print("[-1] All Software Sites")
     print("[-2] All Game Sites")
