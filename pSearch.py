@@ -146,6 +146,28 @@ sites_json = ''' [
         "skey3": "entry-title",
         "type": ["movieseries"],
         "mainlink": "yes"
+    },
+    {
+        "id": "14",
+        "name": "downloadly",
+        "link": "https://downloadly.ir/",
+        "slink": "https://downloadly.ir/?s=",
+        "skey1": "h2",
+        "skey2": "class",
+        "skey3": "w-post-elm",
+        "type": ["software"],
+        "mainlink": "yes"
+    },
+    {
+        "id": "15",
+        "name": "yasdl",
+        "link": "https://www.yasdl.com/",
+        "slink": "https://www.yasdl.com/?s=",
+        "skey1": "h2",
+        "skey2": "class",
+        "skey3": "col",
+        "type": ["software"],
+        "mainlink": "yes"
     }
 ]'''
 
@@ -210,7 +232,7 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
     # If the site is FileCR and the chosen type is Android, then specifically search it in 
     # the android section for accurate results.
     elif site_id == "1" and chosen_type == "android":
-        searchUrl = siteSLink + urllib.parse.quote(nameInput) + "&subcat_filter=&category-type=23"
+        searchUrl = siteSLink + urllib.parse.quote_plus(nameInput) + "&subcat_filter=&category-type=23"
     # If it doesn't starts with https://1337x.to/ then quote it with + (it replaces space with +), this is
     # the default method as most sites work this way.
     else:      
