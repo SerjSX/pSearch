@@ -1,177 +1,22 @@
 import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
-import json
+import os
+import sqlite3 
 
-# Sites list in JSON. Originally had it in a separate file but that caused issues.
-sites_json = ''' [
-    {
-        "id": "1",
-        "name": "FileCR",
-        "link": "https://filecr.com/",
-        "slink": "https://filecr.com/?s=",
-        "skey1": "div",
-        "skey2": "class",
-        "skey3": "product-info",
-        "type": ["software", "android"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "2",
-        "name": "monkrus",
-        "link": "https://w14.monkrus.ws/",
-        "slink": "https://w14.monkrus.ws/search?q=",
-        "skey1": "h2",
-        "skey2": "class",
-        "skey3": "entry-title",
-        "type": ["software"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "3",
-        "name": "FitGirl Repacks",
-        "link": "https://fitgirl-repacks.site/",
-        "slink": "https://fitgirl-repacks.site/?s=",
-        "skey1": "h1",
-        "skey2": "class",
-        "skey3": "entry-title",
-        "type": ["game"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "4",
-        "name": "FTUApps",
-        "link": "https://ftuapps.dev/",
-        "slink": "https://ftuapps.dev/?s=",
-        "skey1": "h2",
-        "skey2": "class",
-        "skey3": "entry-title",
-        "type": ["software"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "5",
-        "name": "VSTorrent",
-        "link": "https://vstorrent.org/",
-        "slink": "https://vstorrent.org/?s=",
-        "skey1": "h2",
-        "skey2": "class",
-        "skey3": "entry-title",
-        "type": ["software"], 
-        "mainlink": "yes"
-    },    
-    {
-        "id": "6",
-        "name": "1337x",
-        "link": "https://1337x.to",
-        "slink": "https://1337x.to/search/",
-        "skey1": "a",
-        "skey2": "null",
-        "skey3": "null",
-        "type": ["software", "game", "android", "movieseries"],
-        "mainlink": "no"
-    },    
-    {
-        "id": "7",
-        "name": "GOG Games",
-        "link": "https://gog-games.com/",
-        "slink": "https://gog-games.com/search/",
-        "skey1": "a",
-        "skey2": "class",
-        "skey3": "block",
-        "type": ["game"],
-        "mainlink": "no"
-    },    
-    {
-        "id": "8",
-        "name": "STEAMRIP",
-        "link": "https://steamrip.com/",
-        "slink": "https://steamrip.com/?s=",
-        "skey1": "div",
-        "skey2": "class",
-        "skey3": "thumb-content",
-        "type": ["game"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "9",
-        "name": "FlsAudio",
-        "link": "https://flsaudio.com/new/",
-        "slink": "https://flsaudio.com/new/?s=",
-        "skey1": "h2",
-        "skey2": "null",
-        "skey3": "null",
-        "type": ["software"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "10",
-        "name": "revdl",
-        "link": "https://www.revdl.com/",
-        "slink": "https://www.revdl.com/?s=",
-        "skey1": "h3",
-        "skey2": "class",
-        "skey3": "post-title entry-title",
-        "type": ["android"],
-        "mainlink": "yes"   
-    },
-    {
-        "id": "11",
-        "name": "APKMB",
-        "link": "https://apkmb.com/",
-        "slink": "https://apkmb.com/?s=",
-        "skey1": "div",
-        "skey2": "class",
-        "skey3": "bloque-app",
-        "type": ["android"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "12",
-        "name": "scnlog",
-        "link": "https://scnlog.me/",
-        "slink": "https://scnlog.me/search/",
-        "skey1": "div",
-        "skey2": "class",
-        "skey3": "title",
-        "type": ["movieseries"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "13",
-        "name": "RELEASE BB",
-        "link": "http://rlsbb.ru/",
-        "slink": "https://search.rlsbb.ru/?s=",
-        "skey1": "h1",
-        "skey2": "class",
-        "skey3": "entry-title",
-        "type": ["movieseries"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "14",
-        "name": "downloadly",
-        "link": "https://downloadly.ir/",
-        "slink": "https://downloadly.ir/?s=",
-        "skey1": "h2",
-        "skey2": "class",
-        "skey3": "w-post-elm",
-        "type": ["software"],
-        "mainlink": "yes"
-    },
-    {
-        "id": "15",
-        "name": "yasdl",
-        "link": "https://www.yasdl.com/",
-        "slink": "https://www.yasdl.com/?s=",
-        "skey1": "h2",
-        "skey2": "class",
-        "skey3": "col",
-        "type": ["software"],
-        "mainlink": "yes"
-    }
-]'''
+# Grabs the directory name [BETA TESTING: to prevent file not found error]
+path = os.path.dirname(os.path.abspath(__file__))
 
-sites = json.loads(sites_json)
+# Connects to the database, and cur is used to pass/retrieve operations from the database.
+conn = sqlite3.connect(path + '/websitesdb')
+cur = conn.cursor()
+
+# The websites list
+websites = list()
+
+# Grabs the information from the Database
+for row in cur.execute('SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'):
+    # Appends it to the websites var list.
+    websites.append(row)
 
 # Used as a header when requesting a website
 header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) ' 
@@ -204,15 +49,15 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
     siteKey3 = None
 
     # for each website in the JSON file...
-    for site in sites:
+    for web in websites:
         # If the website from the file matches the user's inserted option...
-        if site["id"] == site_id:
+        if web[0] == site_id:
             # Sets its information to the appropriate variables.
-            siteSLink = site["slink"]
-            siteLink = site["link"]
-            siteKey1 = site["skey1"]
-            siteKey2 = site["skey2"]
-            siteKey3 = site["skey3"]
+            siteSLink = web[3]
+            siteLink = web[2]
+            siteKey1 = web[4]
+            siteKey2 = web[5]
+            siteKey3 = web[6]
 
     # resultLinks used for appending links from the results.
     resultLinks = list()
@@ -278,7 +123,7 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
                 if not mainLinkA.startswith("https://w14.monkrus.ws/search/label/") or not mainLinkA.startswith("https://w14.monkrus.ws/search?") or mainLinkA != "https://w14.monkrus.ws/":
                     # If the website chosen is 8, append it with the link. Some sites don't include the primary URL within 
                     # their href, so the program adds it. This is a special conditon for site 8.
-                    if main_link == "no":
+                    if main_link == 1:
                         resultLinks.append(siteLink + mainLinkA)
                     # If not, just append as it is. This is the default for most.
                     else: 
@@ -318,44 +163,44 @@ def checkChosenNum(chosenNum,nameInput):
     # If user chose 0 or empty...
     if chosenNum == '0' or chosenNum == '':
         # for each site in sites
-        for site in sites:
+        for site in websites:
             # Activate the generalMethod function with forwarding the site's ID.
-            generalMethod(nameInput, site["id"], 0, site["mainlink"])
+            generalMethod(nameInput, site[0], 0, site[8])
     
     # If user chose -1...
     elif chosenNum == "-1":
         # for each site in sites
-        for site in sites:
+        for site in websites:
             # if the site's type is software OR duo (duo means the site results both software
             # and games)...
-            if "software" in site["type"]:      
+            if "software" in site[7] or "all" in site[7]:      
                 # Run generalMethod with forwarding its site["id"]  
-                generalMethod(nameInput, site["id"], 0, site["mainlink"])
+                generalMethod(nameInput, site[0], 0, site[8])
 
     # If user chose -2... 
     elif chosenNum == "-2":
         # for each site in sites
-        for site in sites:
+        for site in websites:
             # If the site's type is game or duo...
-            if "game" in site["type"]:     
+            if "game" in site[7] or "all" in site[7]:     
                 # Run generalMethod with forwarding its site["id"]     
-                generalMethod(nameInput, site["id"], 0, site["mainlink"])
+                generalMethod(nameInput, site[0], 0, site[8])
 
     elif chosenNum == "-3":
-        for site in sites:
-            if "android" in site["type"]:
-                generalMethod(nameInput, site["id"], "android", site["mainlink"])
+        for site in websites:
+            if "android" in site[7] or "all" in site[7]:
+                generalMethod(nameInput, site[0], "android", site[8])
             
     elif chosenNum == "-4":
-        for site in sites:
-            if "movieseries" in site["type"]:
-                generalMethod(nameInput, site["id"], 0, site["mainlink"])
+        for site in websites:
+            if "movieseries" in site[7] or "all" in site[7]:
+                generalMethod(nameInput, site[0], 0, site[8])
 
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
     else:
-        site_chosen = sites[int(chosenNum)-1]
-        generalMethod(nameInput, site_chosen["id"], 0, site_chosen["mainlink"])    
+        site_chosen = websites[int(chosenNum)-1]
+        generalMethod(nameInput, site_chosen[0], 0, site_chosen[8])    
     
     # At the end, it prints the results if the length of allLinks is greater than 0
     if len(allLinks) > 0:
@@ -385,8 +230,8 @@ def checkChosenNum(chosenNum,nameInput):
 def askUser():
     # Shows available options to search from
     print("Available websites:")
-    for site in sites:
-        print("[" + site['id'] + "] " + site['name'], site['type'])
+    for web in websites:
+        print("[", web[0], "] " + web[1], " -- Type: " + web[7])
     print("\n[0/empty] All Sites")
     print("[-1] All Software Sites")
     print("[-2] All Game Sites")
