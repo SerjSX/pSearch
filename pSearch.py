@@ -12,6 +12,7 @@ cur = conn.cursor()
 
 # The websites list
 websites = list()
+ids_list = ['', '0', '-1', '-2', '-3', '-4']
 
 # Grabs the information from the Database
 for row in cur.execute('SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'):
@@ -232,6 +233,7 @@ def askUser():
     print("Available websites:")
     for web in websites:
         print("[", web[0], "] " + web[1], " -- Type: " + web[7])
+        ids_list.append(str(web[0]))
     print("\n[0/empty] All Sites")
     print("[-1] All Software Sites")
     print("[-2] All Game Sites")
@@ -241,17 +243,21 @@ def askUser():
 
     chosenNum = input("Where do you want to search? Enter number: ")
 
-    # If the user didn't type exit, ask the software's name. You can type "exit" to quit the program
-    if chosenNum != 'exit':
-        nameInput = input("Enter Software Name - ")
-        # If the user didn't type exit, run checkChosenNum.
-        if nameInput != 'exit':
-            checkChosenNum(chosenNum,nameInput)
+    if chosenNum in ids_list:
+        # If the user didn't type exit, ask the software's name. You can type "exit" to quit the program
+        if chosenNum != 'exit':
+            nameInput = input("Enter Software Name - ")
+            # If the user didn't type exit, run checkChosenNum.
+            if nameInput != 'exit':
+                checkChosenNum(chosenNum,nameInput)
+            else:
+                print("Exiting Program...")
+                exit()
         else:
             print("Exiting Program...")
             exit()
     else:
-        print("Exiting Program...")
+        print("Not a valid number! Exiting Program...")
         exit()
 
 # Welcome message, beginning of program.
