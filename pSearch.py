@@ -245,17 +245,16 @@ def askUser():
 
     if chosenNum in ids_list:
         # If the user didn't type exit, ask the software's name. You can type "exit" to quit the program
-        if chosenNum != 'exit':
-            nameInput = input("Enter Software Name - ")
-            # If the user didn't type exit, run checkChosenNum.
-            if nameInput != 'exit':
-                checkChosenNum(chosenNum,nameInput)
-            else:
-                print("Exiting Program...")
-                exit()
+        nameInput = input("Enter Software Name - ")
+        # If the user didn't type exit, run checkChosenNum.
+        if nameInput != 'exit':
+            checkChosenNum(chosenNum,nameInput)
         else:
             print("Exiting Program...")
             exit()
+    elif chosenNum == "exit":
+        print("Exiting Program...")
+        exit()        
     else:
         print("Not a valid number! Exiting Program...")
         exit()
