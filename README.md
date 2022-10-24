@@ -19,24 +19,24 @@ Keep in mind, running it with native Python will always be faster than with a UI
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
  
  #### Available websites (for now):
- FileCR
- monkrus
- FitGirl Repacks
- FTUApps
- VSTorrent
- 1337x
- GOG Games
- STEAMRIP
- FlsAudio
- revdl
- APKMB
- scnlog
- RELEASE BB
- downloadly
- yasdl
- CracksHash
- Pirate PC
- Crackhub
+ FileCR,
+ monkrus,
+ FitGirl Repacks,
+ FTUApps,
+ VSTorrent,
+ 1337x,
+ GOG Games,
+ STEAMRIP,
+ FlsAudio,
+ revdl,
+ APKMB,
+ scnlog,
+ RELEASE BB,
+ downloadly,
+ yasdl,
+ CracksHash,
+ Pirate PC,
+ Crackhub,
  OVA games
 
 #### Contribution - JSON
