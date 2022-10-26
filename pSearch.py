@@ -30,10 +30,10 @@ header= {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
       'Connection': 'keep-alive'}
 
 # List for best results
-bestResults = list()
+bestResults = {}
 
 # allLinks for appending all links at the end 
-allLinks = list()
+allLinks = {}
 
 # generalMethod(nameInput,site_id) is the main function that searching process works in
 def generalMethod(nameInput, site_id, chosen_type, main_link):
@@ -61,7 +61,7 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
             siteKey3 = web[6]
 
     # resultLinks used for appending links from the results.
-    resultLinks = list()
+    resultLinks = {}
 
     # If it starts with https://1337x.to then quote it with %20 (space), this is unique for this site 
     # because of its web structure.
@@ -125,10 +125,10 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
                     # If the website chosen is 8, append it with the link. Some sites don't include the primary URL within 
                     # their href, so the program adds it. This is a special conditon for site 8.
                     if main_link == 1:
-                        resultLinks.append(siteLink + mainLinkA)
+                        resultLinks[links.text] = siteLink + mainLinkA
                     # If not, just append as it is. This is the default for most.
                     else: 
-                        resultLinks.append(mainLinkA)
+                        resultLinks[links.text] = mainLinkA
                     
         # If Links resulted None, then the following have special conditions. 
         elif links == None:
@@ -141,19 +141,23 @@ def generalMethod(nameInput, site_id, chosen_type, main_link):
                 # This is to prevent others being shown and the site's structure doesn't include the
                 # primary URL in the beginning, so we add it first.
                 if mainLinkB.startswith("/torrent"):
-                    resultLinks.append(siteLink + mainLinkB)          
+                    # uses tag.text because the name/link is already in the looped tag.
+                    resultLinks[tag.text] = siteLink + mainLinkB       
                 # If it starts with /game and the url is gog-games, then append with the URL at first.              
                 elif mainLinkB.startswith("/game") and siteLink.startswith("https://gog-games.com"):
-                    resultLinks.append(siteLink + mainLinkB)                     
+                    resultLinks[tag.text] = siteLink + mainLinkB                 
 
     # If the length of resultLinks is greater than 0...
     if len(resultLinks) > 0:
+        brBool = False
         # Append the link to allLinks list.
-        for link in resultLinks:
-            allLinks.append(link)
-            
-        # append the first link to the bestResults list.
-        bestResults.append(resultLinks[0])
+        for link in resultLinks.items():
+            allLinks[link[0]] = link[1]
+
+            if brBool == False:   
+                # append the first link to the bestResults list.
+                bestResults[link[0]] = link[1]
+                brBool = True
     # If it's less than 0, most probably 0 itself, print that the URL showed no results.
     else:
         print("No results -", searchUrl)
@@ -206,13 +210,13 @@ def checkChosenNum(chosenNum,nameInput):
     # At the end, it prints the results if the length of allLinks is greater than 0
     if len(allLinks) > 0:
         print("Found", len(allLinks), "results:")
-        for link in allLinks:
-            print(link)
+        for link in allLinks.items():
+            print(link[0].strip(), "\n", link[1].strip(), "\n")
         
         # Also prints Best Results.
-        print("\n-- Best results --")
-        for link in bestResults:
-            print(link)
+        print("\n\n-- Best results --")
+        for link in bestResults.items():
+            print(link[0].strip(), "\n", link[1].strip(), "\n")
 
     # If it isn't greater than 0, it says No Results
     else:
@@ -225,6 +229,7 @@ def checkChosenNum(chosenNum,nameInput):
         askUser()
     else: 
         print("Quitting program...")
+        cur.close()
         quit()
 
 # Asks user to insert inputs, the beginning of the program.
@@ -251,12 +256,15 @@ def askUser():
             checkChosenNum(chosenNum,nameInput)
         else:
             print("Exiting Program...")
+            cur.close()
             exit()
     elif chosenNum == "exit":
         print("Exiting Program...")
+        cur.close()
         exit()        
     else:
         print("Not a valid number! Exiting Program...")
+        cur.close()
         exit()
 
 # Welcome message, beginning of program.
