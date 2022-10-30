@@ -12,7 +12,7 @@ cur = conn.cursor()
 
 # The websites list
 websites = list()
-ids_list = ['', '0', '-1', '-2', '-3', '-4']
+ids_list = ['', '0', '-1', '-2', '-3', '-4', '-5']
 
 # Grabs the information from the Database
 for row in cur.execute('SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'):
@@ -204,8 +204,9 @@ def checkChosenNum(chosenNum,nameInput):
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
     else:
-        site_chosen = websites[int(chosenNum)-1]
-        generalMethod(nameInput, site_chosen[0], 0, site_chosen[8])    
+        for web in websites:
+            if web[0] == int(chosenNum):
+                generalMethod(nameInput, web[0], 0, web[8])    
     
     # At the end, it prints the results if the length of allLinks is greater than 0
     if len(allLinks) > 0:
@@ -246,7 +247,7 @@ def askUser():
     print("[-4] All Movie/Series Sites")
     print("[exit] Quits the program\n")
 
-    chosenNum = input("Where do you want to search? Enter number: ")
+    chosenNum = input("Where do you want to search? Enter number: ").strip()
 
     if chosenNum in ids_list:
         # If the user didn't type exit, ask the software's name. You can type "exit" to quit the program
@@ -261,7 +262,7 @@ def askUser():
     elif chosenNum == "exit":
         print("Exiting Program...")
         cur.close()
-        exit()        
+        exit()   
     else:
         print("Not a valid number! Exiting Program...")
         cur.close()
