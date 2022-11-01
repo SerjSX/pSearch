@@ -1,0 +1,169 @@
+body.background {
+    font-family: 'Open Sans', sans-serif;
+    transition: background-color 0.2s;
+    background-color: #cfcfcf;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+a {
+    text-decoration: none;
+}
+
+div.middle {
+    display: flex;
+    justify-content: center;
+}
+
+div.title {
+    margin: 10px;
+    margin-top: 40px;
+    margin-bottom: 0px;
+}
+
+span.mtitle {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+}
+
+span.stitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+}
+
+div.top-buttons-wrap {
+    margin-bottom: 10px;
+}
+
+img.top-buttons {
+    background-color: #bcbcbc;
+    margin: 5px;
+    margin-top: 20px;
+    border-radius: 30px;
+    padding: 5px;
+    height: 25px;
+    transition: background-color 0.5s;
+}
+
+img.top-buttons:hover {
+    background-color: #eeeeee;
+    border-radius: 30px;
+    padding: 5px;
+    transition: background-color 0.5s;
+}
+
+img.preview-img {
+    margin-top: 10px;
+    max-width: 250px;
+}
+
+a.middle-buttons {
+    display: flex;
+    flex-direction: row;
+    background-color: #bcbcbc;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+    transition: background-color 0.5s;
+    color: black;
+}
+
+a.middle-buttons:hover {
+    background-color: #eeeeee;
+    transition: background-color 0.5s;
+}
+
+img.github-logo2 {
+    margin-top: 15px;
+    margin-left: 5px;
+    height: 20px;
+}
+
+p.middle-buttons-text {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+div.softinfo {
+    position: absolute;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+a.download-button-clr {
+    background-color: #a3a1a1;
+}
+
+a.download-button-clr:hover {
+    background-color: #a3a1a1be;
+}
+
+/* XXX Small screens (320px and up) */
+@media only screen and (min-width: 320px) {
+
+    span.mtitle {
+        font-family: 'Oswald', sans-serif;
+        font-size: 18px;
+    }
+
+    span.stitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+    }
+
+    img.preview-img {
+        max-width: 300px;
+    }
+
+    div.download-button {
+        margin-top: 20px;
+    }
+
+}
+
+/* X Small screens (425px and up) */
+@media only screen and (min-width: 425px) {
+
+    img.preview-img {
+        max-width: 350px;
+    }
+}
+
+/* Small screens (640px and up) */
+@media only screen and (min-width: 640px) {
+
+    span.mtitle {
+        font-family: 'Oswald', sans-serif;
+        font-size: 24px;
+    }
+
+    span.stitle {
+        font-family: 'Poppins', sans-serif;
+        font-size: 18px;
+    }
+
+    img.preview-img {
+        max-width: initial;
+    }
+
+    img.top-buttons {
+        height: 35px;
+    }
+}
+
+/* Medium screens (768px and up) */
+@media only screen and (min-width: 768px) {
+
+    a.middle-buttons {
+        margin-left: 20px;
+    }
+
+    div.buttonsprev {
+        display: flex;
+    }
+
+}

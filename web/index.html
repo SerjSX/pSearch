@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/main.css">
+  <title>pSearch - Piracy Multi-Search Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital@1&display=swap" rel="stylesheet"> 
+</head>
+
+<body class="background">
+
+<div class="middle">
+  <div class="topmenu">
+    <div class="title"><span class="mtitle">pSearch</span> <span class="stitle">Piracy Multi-Search Tool</span></div>
+    <div class="middle">
+      <div class="top-buttons-wrap">
+        <a href="https://github.com/SerjSX/pSearch/" target="_blank"><img src="media\GitHub-Mark\PNG\GitHub-Mark-64px.png" alt="Github Link" class="top-buttons"></a>
+        <a href="#info"><img src="media\info.png" alt="Info Button" class="top-buttons"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="middle"><div class="buttonsprev">
+  <img class="preview-img" src="media\preview.png">
+   <div class="middle"><div class="middle-buttons-wrap">
+       <a href="https://github.com/SerjSX/pSearch/releases/latest" target="_blank" class="download-button-clr middle-buttons">
+          <p class="middle-buttons-text">Download Source</p>
+          <div class="middle"><img class="github-logo2" src="media\GitHub-Logos\GitHub_Logo.png"></div>
+       </a>
+       <a href="#about" class="middle-buttons">
+          <p class="middle-buttons-text">About pSearch</p>
+       </a>
+       <a href="#dbcontent" class="middle-buttons">
+          <p class="middle-buttons-text">Database Content</p>
+       </a>
+       <a href="#installreq" class="middle-buttons">
+          <p class="middle-buttons-text">Installing Requirements</p>
+       </a>
+       <a href="#running" class="middle-buttons">
+          <p class="middle-buttons-text">Running pSearch</p>
+       </a>
+   </div></div>
+</div></div>
+
+<div class="softinfo" id="info">
+  <h3 id="about"><br>About pSearch</h3>
+  <p>pSearch is a multi-search tool coded with Python, it is mainly focused on piracy related websites.
+  It uses <a href="https://docs.python.org/3/library/urllib.html" target="_blank">urllib</a> and <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> to <b>connect</b> and <b>scrape</b> the websites.
+  <a href="https://docs.python.org/3/library/sqlite3.html" target="_blank">SQLite3</a> is used to store the information about the websites.<br />
+  This at first started as a practice for urllib and BeautifulSoup. After I finished their chapters from <a href="https://www.py4e.com/" target="_blank">https://www.py4e.com/</a>, I wanted to test them just to get
+  a real experience of them. I also thought that, someone at some point will have to search for a specific software and game, and they have to go to the piracy sites individually one by one,
+  so why not have a program that does it automatically? I know that there are a lot of other similar software and even websites, but for the sake of using urllib and BeautifulSoup, I wanted to do it.<br />
+  It has evolved a lot from the first version. At first it was specifically several sites, then I thought that the program should be built in a way that doesn't need a lot of modifications when new sites are added.
+  Hence, I added JSON for storing web information. Already at that point the program was automatic, every site I added didn't need configuration with the main program, only some have exceptions due to the links they 
+  put and the program scrapes. Then when I finished the Database chapter, I wanted to have an experience with that as well, just like with JSON. So now it works with SQLite, and with the SQLite Database Browser, 
+  it has become much simpler for other people to contribute to the project with new sites. The best part for me is that, implementing the SQLite Database needed only small configuration, which is the SQLite commands
+  itself, because I built the program that way. As time passes better mechanics have popped my mind and I've implemented them for more efficient results, to me it's a pretty good accomplished program. Of course I'm not saying it's the best!<br />
+  I will work on the following, while adding new sites, in the future:
+  <ul>
+    <li>Standalone executable with Nuitka.</li>
+    <li>GUI with Tkinter.</li>
+    <li>Django Web Framework Implementation (if possible, having a website with the code being functioned would be more 
+      convenient than a program without installation. However, it wouldn't be surprising if it isn't as fast as running it
+      on a desktop with the Python file directly.)</li>    
+  </ul></p>
+  
+  <h4 id="dbcontent"><br>Database Content</h4>
+  <ul>
+    <li><b>name:</b> the name of the software.</li>
+    <li><b>url:</b> the main url of the website.</li>
+    <li><b>searchurl</b>: the url used for searching.</li>
+    <li><b>key1_id, key2_id, key3_id:</b>The program scrapes with three values (in most cases, there are some exceptions), the key1_id for example would have 
+      the value "div", the key2_id would have "class", and the key3_id would have the name that's inside the class.
+      The program will use these three values in order to specifically find the area where the link (program's result)
+      stands.</li>
+    <li><b>type_id:</b> this will specify the type of the website; games, software, android, movieseries, all.</li>
+    <li><b>hasmainlink:</b> some sites won't have the main link of the website in the a's href value. For example,
+      they would just write /software-name.html, without the site's link at the first. The program would blow up
+      if it didn't take care of it! So the program adds the main site's url at the beginning of the value that it
+      scraped from the website.</li>
+  </ul>
+  <p>All of these above can be viewed with the SQLite Browser using the websitesdb file.</p>
+
+  <h4 id="installreq"><br>Installing Requirements</h4>
+  <p><a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> is required for the application 
+    to run. The bs4 folder is included with the source code, just downloading it with pip is required from the user's end.
+    To do this, you need to run the following command after having pip installed:<br>
+      pip install -r requirements.txt<br>
+    You can run this in the Command Prompt on Windows, and on a terminal of your choice on a Linux distribution. The
+    command prompt/terminal should be opened within the folder that the requirements.txt file is included, you can run
+    it normally but you have to identify the full directory/destination of the requirements.txt file instead of just
+    writing "requirements.txt" at the end. "pip" is installed automatically once you install Python, which is 
+    <b>necessary</b> for running the application. Python can be installed from their official website: <a href="https://www.python.org/" target="_blank">https://www.python.org/</a></p>
+
+   <h4 id="running"><br>Running pSearch</h4>
+   <p>You can run the program by either opening a terminal/command prompt within the folder that pSearch.py is, or
+    just normally but you have to include the full directory of the file:<br />
+    <b>python3 pSearch.py</b><br />
+    OR<br />
+    <b>python pSearch.py</b><br />
+    WITH DIRECTORY<br />
+    <b>python C:\Users\UserName\Documents\pSearch\pSearch.py</b><br /><br />
+    It should run without any problems if the requirements are installed.</p>
+
+    <h5 style="text-align: center"><br />Thank you for using the program!</h5>
+
+</div>
+
+</body>
+
+</html>
