@@ -40,5 +40,5 @@ C1NE,
 FREEGOGPCGAMES,
 ZIPERTO
 
-#### Contribution - JSON
-Check this page: https://github.com/SerjSX/pSearch/wiki/Collaboration---JSON-Explanation
+#### Contribution 
+Can be directly done by using https://sqlitebrowser.org/ and opening the database file.
