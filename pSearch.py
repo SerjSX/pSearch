@@ -2,6 +2,8 @@ import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
 import os
 import sqlite3 
+import sys
+import base64
 
 # Grabs the directory name [BETA TESTING: to prevent file not found error]
 path = os.path.dirname(os.path.abspath(__file__))
@@ -201,6 +203,11 @@ def checkChosenNum(chosenNum,nameInput):
             if "movieseries" in site[7] or "all" in site[7]:
                 generalMethod(nameInput, site[0], 0, site[8])
 
+    elif chosenNum == "-5":
+        for site in websites:
+            if "courses" in site[7] or "all" in site[7]:
+                generalMethod(nameInput, site[0], 0, site[8])
+
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
     else:
@@ -231,7 +238,7 @@ def checkChosenNum(chosenNum,nameInput):
     else: 
         print("Quitting program...")
         cur.close()
-        quit()
+        sys.exit()
 
 # Asks user to insert inputs, the beginning of the program.
 def askUser():
@@ -245,6 +252,7 @@ def askUser():
     print("[-2] All Game Sites")
     print("[-3] All Android Sites")
     print("[-4] All Movie/Series Sites")
+    print("[-5] All Course Sites")
     print("[exit] Quits the program\n")
 
     chosenNum = input("Where do you want to search? Enter number: ").strip()
@@ -258,15 +266,20 @@ def askUser():
         else:
             print("Exiting Program...")
             cur.close()
-            exit()
+            sys.exit()
     elif chosenNum == "exit":
         print("Exiting Program...")
         cur.close()
-        exit()   
+        sys.exit()   
+    elif chosenNum == "decode":
+        code = input("Enter code: ")
+        decodedBytes = base64.b64decode(code)
+        decodedStr = str(decodedBytes, "utf-8")
+        print("Output:", decodedStr)
     else:
         print("Not a valid number! Exiting Program...")
         cur.close()
-        exit()
+        sys.exit()
 
 # Welcome message, beginning of program.
 print("\n ---> Welcome to pSearch - Python based Piracy searching tool <--- \n")
