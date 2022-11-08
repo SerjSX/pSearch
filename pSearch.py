@@ -11,23 +11,51 @@ import traceback
 # Grabs the directory name [BETA TESTING: to prevent file not found error]
 path = os.path.dirname(os.path.abspath(__file__))
 
-# Connects to the database, and cur is used to pass/retrieve operations from the database.
-conn = sqlite3.connect(path + '/websitesdb')
-cur = conn.cursor()
+# Connects to the database file according to the user input.
+# A user can choose between Offline and Online database. Online has more efficient results, but slower.
+# Offline is faster, but the results may be inefficient and/or long.
+# Due to large size, searching in ALL the offline database at once isn't an option.
+print("You have two choices of search: offline database and online database.")
+print("Online allows you to choose a site, and search within that site. It has more efficient results.")
+print("Offline allows you to search a site directly in the offline database. It is faster, and you may find, "
+      "something you couldn't find before, but results may be inefficient and long.")
+print("Due to long searching and results, searching in offline ALL categories at once isn't allowed.")
+db_choice = input("\nDo you want to search in the offline or online database [ON/off]:").strip()
 
-# The websites list
-websites = list()
+if db_choice == "ON" or db_choice == "on" or db_choice == "":
+    print("Running in online database.")
+    conn = sqlite3.connect(path + '/websitesdb')
+    cur = conn.cursor()
+    # The websites list
+    websites = list()
+
+    # Grabs the information from the Database
+    for row in cur.execute('''
+        SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
+        Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink 
+            FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
+                ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
+                AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
+        # Appends it to the websites var list.
+        websites.append(row)
+elif db_choice == "OFF" or db_choice == "off":
+    print("Running in offline database.")
+    conn = sqlite3.connect(path + '/offline_database/offlinedb')
+    cur = conn.cursor()
+    # This will be used later to search in the database.
+    off_exec = '''SELECT Websites.name, Websites.link FROM Websites
+                            WHERE Websites.name LIKE ? AND Websites.type_id = ?'''
+
+# if user typed exit, the program quits
+elif db_choice == "exit":
+    sys.exit("Exiting Program...")
+
+# if the user typed anything other than ON/OFF/on/off/' '/exit, then it's an invalid choice and quits program.
+else:
+    sys.exit("Not a valid choice.")
+
+# ids_list is used in order to print the available options afterwards.
 ids_list = ['', '0', '-1', '-2', '-3', '-4', '-5']
-
-# Grabs the information from the Database
-for row in cur.execute('''
-    SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
-    Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink 
-        FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
-            ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
-            AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
-    # Appends it to the websites var list.
-    websites.append(row)
 
 # Used as a header when requesting a website
 header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
@@ -42,7 +70,7 @@ header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
 # List for best results
 bestResults = {}
 
-# allLinks for appending all links at the end 
+# allLinks for appending all links at the end
 allLinks = {}
 
 
@@ -51,7 +79,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
     # These variables below are for the information necessary for the searching process.
     # site_link has the normal link of the website, useful when the grabbed URL doesn't start with the
     # website URL, so we can just add it easily.
-    # site_slink has the search URL. 
+    # site_slink has the search URL.
     # site_key1-2-3 are used for grabbing the content from the website, which afterwards the links would
     # be shown from.
     site_link = None
@@ -74,7 +102,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
     # result_links used for appending links from the results.
     result_links = {}
 
-    # If it starts with https://1337x.to then quote it with %20 (space), this is unique for this site 
+    # If it starts with https://1337x.to then quote it with %20 (space), this is unique for this site
     # because of its web structure.
     if site_link.startswith("https://1337x.to"):
         # If chosen_type is Android, add the keyword "android" at the end for accurate results.
@@ -86,7 +114,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
             name_input_fixed = urllib.parse.quote(name_input)
             # Connect the url with the software name the user put at the beginning
             search_url = site_slink + name_input_fixed + "/1/"
-    # If the site is FileCR and the chosen type is Android, then specifically search it in 
+    # If the site is FileCR and the chosen type is Android, then specifically search it in
     # the android section for accurate results.
     elif site_id == "1" and chosen_type == "android":
         search_url = site_slink + urllib.parse.quote_plus(name_input) + "&subcat_filter=&category-type=23"
@@ -97,7 +125,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
         # Connect the url with the software name the user put at the beginning
         search_url = site_slink + name_input_fixed
 
-    # Inform the user where and what it's searching. 
+    # Inform the user where and what it's searching.
     print("\nSearching", name_input, "at", search_url)
 
     # Send a request to connect to the site with the header.
@@ -134,7 +162,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
 
             # If it didn't result "None"...
             if links is not None:
-                # Get the href (link) 
+                # Get the href (link)
                 main_link_a = links.get("href")
                 # If it isn't None...
                 if main_link_a is not None:
@@ -152,7 +180,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
                         else:
                             result_links[links.text] = main_link_a
 
-            # If Links resulted None, then the following have special conditions. 
+            # If Links resulted None, then the following have special conditions.
             elif links is None:
                 # Get the href from the tag, because at first we grabbed the "a" directly.
                 main_link_b = tag.get("href")
@@ -165,7 +193,7 @@ def online_method(name_input, site_id, chosen_type, main_link):
                     if main_link_b.startswith("/torrent"):
                         # uses tag.text because the name/link is already in the looped tag.
                         result_links[tag.text] = site_link + main_link_b
-                        # If it starts with /game and the url is gog-games, then append with the URL at first.              
+                        # If it starts with /game and the url is gog-games, then append with the URL at first.
                     elif main_link_b.startswith("/game") and site_link.startswith("https://gog-games.com"):
                         result_links[tag.text] = site_link + main_link_b
 
@@ -183,14 +211,37 @@ def online_method(name_input, site_id, chosen_type, main_link):
         # If it's less than 0, most probably 0 itself, print that the URL showed no results.
         else:
             print("No results -", search_url)
-    
+
     else:
         print("This site resulted an ERROR as shown above. Visit the site manually.")
         print("Cannot proceed if HTTP isn't 200. Most probably there's protection on the site.")
 
 
+# offline_method(chosen_num, name_input) is used for offline database searching.
+def offline_method(chosen_num, name_input):
+    print("Offline Database Results:")
+    # Logs the result count, for best results as well.
+    count = 0
+    bcount = 0
+
+    # For each website in the search results...
+    for web in cur.execute(off_exec, ("%" + name_input + "%", chosen_num)):
+        # Increase the count and print the result
+        count = count + 1
+        print("[", str(count), "]", web[0].strip(), web[1].strip())
+
+        # if the bcount variable reaches 5, then don't log the sites as Best Results anymore.
+        if bcount < 5:
+            bcount = bcount + 1
+            bestResults[web[0].strip()] = web[1].strip()
+
+    # Print the total results
+    print("Total results:", count)
+
+
 # Checks the chosen number the user input and operates accordingly.
 def check_chosen_num(chosen_num, name_input):
+    # If the user chose Online database...
     # If user chose 0 or empty...
     if chosen_num == '0' or chosen_num == '':
         # for each site in sites
@@ -205,16 +256,16 @@ def check_chosen_num(chosen_num, name_input):
             # if the site's type is software OR duo (duo means the site results both software
             # and games)...
             if "software" in site[7] or "all" in site[7]:
-                # Run onlineMethod with forwarding its site["id"]  
+                # Run onlineMethod with forwarding its site["id"]
                 online_method(name_input, site[0], 0, site[8])
 
-    # If user chose -2... 
+    # If user chose -2...
     elif chosen_num == "-2":
         # for each site in sites
         for site in websites:
             # If the site's type is game or duo...
             if "game" in site[7] or "all" in site[7]:
-                # Run onlineMethod with forwarding its site["id"]     
+                # Run onlineMethod with forwarding its site["id"]
                 online_method(name_input, site[0], 0, site[8])
 
     elif chosen_num == "-3":
@@ -235,15 +286,21 @@ def check_chosen_num(chosen_num, name_input):
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
     else:
-        for web in websites:
-            if web[0] == int(chosen_num):
-                online_method(name_input, web[0], 0, web[8])
+        # If the database choice is online, forward it to the online_method function
+        if db_choice == "ON" or db_choice == "on" or db_choice == "":
+            for web in websites:
+                if web[0] == int(chosen_num):
+                    online_method(name_input, web[0], 0, web[8])
+        # If offline, forward it to the offline_method.
+        else:
+            offline_method(chosen_num, name_input)
 
-                # At the end, it prints the results if the length of allLinks is greater than 0
-    if len(allLinks) > 0:
-        print("Found", len(allLinks), "results:")
-        for link in allLinks.items():
-            print(link[0].strip(), "\n", link[1].strip(), "\n")
+    # At the end, it prints the results if the length of allLinks is greater than 0
+    if len(allLinks) > 0 or len(bestResults) > 0:
+        if len(allLinks) > 0:
+            print("Found", len(allLinks), "results:")
+            for link in allLinks.items():
+                print(link[0].strip(), "\n", link[1].strip(), "\n")
 
         # Also prints Best Results.
         print("\n\n-- Best results --")
@@ -268,43 +325,66 @@ def check_chosen_num(chosen_num, name_input):
 # Asks user to insert inputs, the beginning of the program.
 def ask_user():
     # Shows available options to search from
-    print("Available websites:")
-    for web in websites:
-        print("[", web[0], "] " + web[1], " -- Type: " + web[7])
-        ids_list.append(str(web[0]))
-    print("\n[0/empty] All Sites")
-    print("[-1] All Software Sites")
-    print("[-2] All Game Sites")
-    print("[-3] All Android Sites")
-    print("[-4] All Movie/Series Sites")
-    print("[-5] All Course Sites")
-    print("[exit] Quits the program\n")
+    if db_choice == "ON" or db_choice == "on" or db_choice == "":
+        print("Available websites:")
+        for web in websites:
+            print("[", web[0], "] " + web[1], " -- Type: " + web[7])
+            ids_list.append(str(web[0]))
+
+        print("\n[0/empty] All Sites")
+        print("[-1] All Software Sites")
+        print("[-2] All Game Sites")
+        print("[-3] All Android Sites")
+        print("[-4] All Movies and Series Sites")
+        print("[-5] All Courses Sites")
+        print("[exit] Quits the program\n")
+
+    elif db_choice == "off" or db_choice == "OFF":
+        print("Available choices:")
+        # Clears the ids_list list because you are not allowed to search in all database and
+        # the available choices are already as category, unlike the online database which is links.
+        ids_list.clear()
+        off_types = cur.execute('''
+            SELECT * FROM Types
+        ''')
+        for off_type in off_types:
+            print("[", off_type[0], "]", off_type[1])
+            ids_list.append(str(off_type[0]))
+
+        print("[exit] Quits the program\n")
 
     chosen_num = input("Where do you want to search? Enter number: ").strip()
 
+    # if the chosen_num is in ids_list...
     if chosen_num in ids_list:
         # If the user didn't type exit, ask the software's name. You can type "exit" to quit the program
         name_input = input("Enter Software Name - ")
         # If the user didn't type exit, run check_chosen_num.
         if name_input != 'exit':
+            # forward the chosen_num and name_input to the checking function.
             check_chosen_num(chosen_num, name_input)
+        # if it is exit then quit the program.
         else:
-            print("Exiting Program...")
             cur.close()
-            sys.exit()
+            sys.exit("Exiting Program...")
+
+    # if it is exit then quit the program
     elif chosen_num == "exit":
-        print("Exiting Program...")
         cur.close()
-        sys.exit()
+        sys.exit("Exiting Program...")
+
+    # if decode is entered as an input, launch a small tool to decode BASE64 codes.
+    # Used for the offline database by contributors/owner.
     elif chosen_num == "decode":
         code = input("Enter code: ")
         decoded_bytes = base64.b64decode(code)
         decoded_str = str(decoded_bytes, "utf-8")
         print("Output:", decoded_str)
+
+    # If the input is a valid number, say so and quit the program.
     else:
-        print("Not a valid number! Exiting Program...")
         cur.close()
-        sys.exit()
+        sys.exit("Not a valid number! Exiting Program...")
 
 
 # Welcome message, beginning of program.

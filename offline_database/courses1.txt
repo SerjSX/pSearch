@@ -1,0 +1,13 @@
+FROM: https://www.reddit.com/r/FREEMEDIAHECKYEAH/wiki/base64/#wiki_course_pastebins
+https://drive.google.com/drive/folders/1HmWNumeNoVVmDKhjKAC7thK9dCTuK6p7 | The Complete 2021 Guide Web Development
+https://drive.google.com/drive/folders/1mYJLIiba6LtFdHRdxf3LXtEHVYwkFBqU | Java Programming 
+https://drive.google.com/drive/folders/1JqgrtQGQAVlCKwhZj1DJqkvLWo8xEzme | Deep Learning A-Z Hands on Artificial Neural Networks
+https://drive.google.com/drive/folders/11WZvkrxCft0-aiqYxVo7sDb3f0bIx2yU | Arduino for makers
+https://drive.google.com/u/0/uc?id=13f6FLUz3ReoloeiLPNPZze1H0OgVYMZr&export=download | Ethical Hacking NMAP Complete
+https://drive.google.com/drive/folders/13yayGry4GFmtKd5uGOZ1UaiO0w72U9Q4 | Adobe XD Web Design 
+https://drive.google.com/drive/folders/1NfhWO8DDm3tRuBgmEInhei-h-xoBw4Ey | Adobe Creative Cloud 2021 Ultimate Course
+https://drive.google.com/drive/folders/1Gcb_M8-q0vJUesMgkVgJVBZfO21V-pMw | Learn Python By Making 4 Real Django Apps
+https://drive.google.com/drive/folders/1LIcSG4l5CxeTFWP1cQ7nF66Na1YJ0nKP | Building Modern Web Applications with GO
+https://drive.google.com/u/0/uc?id=1HMjQdGo647GkpnUR08G4pmBlwgtv9nP0&export=download | Learn Git in one hour
+https://drive.google.com/drive/folders/1Eg71T-g-JoNsH4aVW91-3dnY7AVKfbc2 | Complete WordPress Theme and Plugin Development
+https://drive.google.com/drive/folders/16E3fIclppL3a3rotIehliOClWsVzo6F0 | Ethical Hacking A-Z Expert
