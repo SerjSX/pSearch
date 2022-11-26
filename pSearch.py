@@ -55,7 +55,7 @@ else:
     sys.exit("Not a valid choice.")
 
 # ids_list is used in order to print the available options afterwards.
-ids_list = ['', '0', '-1', '-2', '-3', '-4', '-5']
+ids_list = ['', '0', '-1', '-2', '-3', '-4', '-5', '-6']
 
 # Used as a header when requesting a website
 header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
@@ -283,6 +283,11 @@ def check_chosen_num(chosen_num, name_input):
             if "courses" in site[7] or "all" in site[7]:
                 online_method(name_input, site[0], 0, site[8])
 
+    elif chosen_num == "-6":
+        for site in websites:
+            if "ebooks" in site[7] or "all" in site[7]:
+                online_method(name_input, site[0], 0, site[8])
+
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
     else:
@@ -337,6 +342,7 @@ def ask_user():
         print("[-3] All Android Sites")
         print("[-4] All Movies and Series Sites")
         print("[-5] All Courses Sites")
+        print("[-6] All eBook Sites")
         print("[exit] Quits the program\n")
 
     elif db_choice == "off" or db_choice == "OFF":
