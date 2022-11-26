@@ -1,5 +1,0 @@
-FROM: https://www.reddit.com/r/FREEMEDIAHECKYEAH/wiki/base64/
-Modern Python 3 Bootcamp Courses - https://mega.nz/folder/zfJQyLrT#uvGAaSb7Bs5bggzXXWqosQ 
-Java Beginners - https://drive.google.com/drive/folders/1AKga5F6UzHFhvuMPl9zWf6MGxJZfbhac
-Web Development Courses - https://drive.google.com/drive/folders/1AKga5F6UzHFhvuMPl9zWf6MGxJZfbhac 
-MongoDB Beginners Guide - https://mega.nz/folder/F5QwxJQa#ruNhz08Cl599MChOBbQeGA 
