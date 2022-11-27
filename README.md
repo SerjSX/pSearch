@@ -38,7 +38,22 @@ Pirate PC,
 OVA games,
 C1NE,
 FREEGOGPCGAMES,
-ZIPERTO
+ZIPERTO,
+Giga Course,
+FCS,
+Free Tutorials US,
+Free All Course,
+ebook hunter,
+OceanofPDF,
+Classic Bookshelf,
+TOKYBOOK,
+PDFDRIVE,
+AudioBook Bay,
+ElAmigos Games,
+MAGAZINELIB,
+GetComics,
+ComicExtra,
+Course Club,
 
 #### Contribution 
 Can be directly done by using https://sqlitebrowser.org/ and opening the database file.
