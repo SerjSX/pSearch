@@ -331,6 +331,7 @@ def process_chosen_input(chosen_input):
         search_return_btn = Button(process_chosen_frame, image=back_img, command=lambda: beginProgram(True), cursor="hand2")
         search_return_btn.pack(side=LEFT, padx=10, pady=10)
         search_entry_input.pack(side=LEFT)
+        search_entry_input.focus_set()
         search_submit_btn.pack(side=LEFT, padx=10)
         
         # Creates a another frame in root for results
