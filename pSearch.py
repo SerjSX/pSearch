@@ -20,6 +20,7 @@ root.title("pSearch")
 root.iconbitmap("icon.ico")
 root.geometry("1200x600")
 
+search_progress_window = None
 search_progress_frame = None
 process_chosen_frame = None
 
@@ -213,14 +214,21 @@ def online_method(search_value, site_id, chosen_type, main_link):
 def search_process_signal(chosen_input, search_value):   
     allLinks.clear()
     best_results.clear()
+    global search_progress_window
 
+    if search_progress_window:
+        search_progress_window.destroy()
 
+    # Create a result window for the frame
+    search_progress_window = Toplevel(root)
+    search_progress_window.geometry("1200x600")
+    
     # Create a canvas for the frame
-    search_progress_canvas = Canvas(search_progress_frame)
+    search_progress_canvas = Canvas(search_progress_window)
     search_progress_canvas.pack(side=LEFT, fill=BOTH, expand=True)
 
     # Add a scrollbar to the canvas
-    search_progress_scrollbar = ttk.Scrollbar(search_progress_frame, orient=VERTICAL, command=search_progress_canvas.yview)
+    search_progress_scrollbar = ttk.Scrollbar(search_progress_window, orient=VERTICAL, command=search_progress_canvas.yview)
     search_progress_scrollbar.pack(side=RIGHT, fill=Y)
 
     # Configure the canvas
@@ -239,6 +247,7 @@ def search_process_signal(chosen_input, search_value):
             if chosen_input in site[7] or "all" in site[7]:
                 # Activate the onlineMethod function with forwarding the site's ID.
                 online_method(search_value, site[0], 0, site[8])
+                search_progress_window.title("pSearch - " + chosen_input + " results")
 
     # This runs as the default method, which is when the user types a specific number
     # for a specific software.
@@ -247,6 +256,7 @@ def search_process_signal(chosen_input, search_value):
         for web in websites:
             if web[0] == int(chosen_input):
                 online_method(search_value, web[0], 0, web[8])
+                search_progress_window.title("pSearch - " + web[1] + " results")
 
     # At the end, it prints the results if the length of allLinks is greater than 0
     if len(allLinks) > 0 or len(best_results) > 0:
@@ -290,10 +300,10 @@ def search_process_signal(chosen_input, search_value):
                 else:
                     result_site_name = Label(result_frame, text=site_name, bg="#F9F1F0", pady=5, padx=5)
 
-                if len(link) > 60:
-                    result_link = Label(result_frame, text=link[:59].strip() + "...")
-                if len(name) > 70:
-                    result_name = Label(result_frame, text=name[:69].strip() + "...")
+                if len(link) > 50:
+                    result_link = Label(result_frame, text=link[:49].strip() + "...")
+                if len(name) > 60:
+                    result_name = Label(result_frame, text=name[:59].strip() + "...")
                 else:
                     result_link = Label(result_frame, text=link.strip())
                     result_name = Label(result_frame, text=name.strip())
@@ -306,7 +316,6 @@ def search_process_signal(chosen_input, search_value):
                 result_name.configure(font = result_name_font)            
 
                 result_count = result_count + 1
-
 
     # If it isn't greater than 0, it says No Results
     else:
@@ -376,15 +385,8 @@ def beginProgram(doublesession):
         if process_chosen_frame != None:
             process_chosen_frame.destroy()
 
-    if doublesession == "True2":
-        ask_user_frame.destroy()
-        wlcmsg.destroy()
-
-        if process_chosen_frame != None:
-            process_chosen_frame.destroy()
-
-        if search_progress_frame != None:
-            search_progress_frame.destroy()
+        if search_progress_window != None:
+            search_progress_window.destroy()
 
     ask_user_frame = LabelFrame(root, bd=0)
     ask_user_frame.pack(padx=10, pady=30)
