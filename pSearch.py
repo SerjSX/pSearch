@@ -15,10 +15,14 @@ from PIL import ImageTk, Image
 
 # Colors used https://www.canva.com/colors/color-palettes/rosy-dew/
 
+# Grabs the directory name [BETA TESTING: to prevent file not found error]
+path = os.getcwd()
+print(path)
+
 root = Tk()
 root.title("pSearch")
-root.iconbitmap("icon.ico")
-root.geometry("1200x600")
+root.iconbitmap(path + "\media\icon.ico")
+root.geometry("800x400")
 
 search_progress_window = None
 search_progress_frame = None
@@ -27,27 +31,32 @@ process_chosen_frame = None
 result_name_font = tkinter.font.Font(weight = "bold")
 title_font = tkinter.font.Font(size=16, weight="bold")
 
-# Used for identifying row position, 1 becauase on 0 there's usually a text
-error_count = 1
-
-# Grabs the directory name [BETA TESTING: to prevent file not found error]
-path = os.path.dirname(os.path.abspath(__file__))
-
-visit_site_img = Image.open("open_url_button.png")
+visit_site_img = Image.open(path + "\media\open_url_button.png")
 visit_site_img = visit_site_img.resize((30,30))
 visit_site_img = ImageTk.PhotoImage(visit_site_img)
 
-search_img = Image.open("search_button.png")
+search_img = Image.open(path + "\media\search_button.png")
 search_img = search_img.resize((25,25))
 search_img = ImageTk.PhotoImage(search_img)
 
-back_img = Image.open("back_button.png")
+back_img = Image.open(path + "\media\_back_button.png")
 back_img = back_img.resize((25,25))
 back_img = ImageTk.PhotoImage(back_img)
 
-arrow_forward_img = Image.open("arrow_forward_button.png")
+arrow_forward_img = Image.open(path + "\media\_arrow_forward_button.png")
 arrow_forward_img = arrow_forward_img.resize((25,25))
 arrow_forward_img = ImageTk.PhotoImage(arrow_forward_img)
+
+# Used to show images for each type afterwards
+type_images = {
+    'android': path + '\media\_android_image.png',
+    'comics_manga': path + '\media\_comics_manga_image.png',
+    'courses': path + '\media\_courses_image.png',
+    'ebooks': path + '\media\_ebooks_image.png',
+    'games': path + '\media\_games_image.png',
+    'movieseries': path + "\media\_movieseries_image.png",
+    'software': path + '\media\_software_image.png'
+}
 
 # Used as a header when requesting a website
 header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
@@ -76,9 +85,7 @@ def callback(link):
     webbrowser.open_new(link)
     
 # onlineMethod(search_value,site_id) is the main function that searching process works in
-def online_method(search_value, site_id, chosen_type, main_link):
-    global error_count
-    
+def online_method(search_value, site_id, chosen_type, main_link):    
     # These variables below are for the information necessary for the searching process.
     # site_link has the normal link of the website, useful when the grabbed URL doesn't start with the
     # website URL, so we can just add it easily.
@@ -137,7 +144,6 @@ def online_method(search_value, site_id, chosen_type, main_link):
         page_connect = urllib.request.urlopen(req)
         page_code = page_connect.getcode()
     except:
-        error_count = error_count + 1
         messagebox.showerror("Error!", "The following site " + search_url + " resulted the following error (search will continue):\n" + traceback.format_exc())
         page_code = -1
 
@@ -212,11 +218,18 @@ def online_method(search_value, site_id, chosen_type, main_link):
                     allLinks[("default", site_name, link[0])] = link[1]
 
 def search_process_signal(chosen_input, search_value):   
+    # Clears allLinks and best_results to start over with a new search.
     allLinks.clear()
     best_results.clear()
     global search_progress_window
 
-    if search_progress_window:
+    # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
+    # needs to just select the ID number of the site.
+    chosen_input = chosen_input.split()[0]
+
+    # If the search results window isn't None then most probably there's another one already on-screen,
+    # so it destroys it to just have one window.
+    if search_progress_window != None:
         search_progress_window.destroy()
 
     # Create a result window for the frame
@@ -241,6 +254,7 @@ def search_process_signal(chosen_input, search_value):
     # Adding a new frame to the window
     search_progress_canvas.create_window((0,0), window=search_progress_frame_two, anchor="nw") 
 
+    # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
     if chosen_input in types_list:
         # for each site in sites
         for site in websites:
@@ -249,8 +263,7 @@ def search_process_signal(chosen_input, search_value):
                 online_method(search_value, site[0], 0, site[8])
                 search_progress_window.title("pSearch - " + chosen_input + " results")
 
-    # This runs as the default method, which is when the user types a specific number
-    # for a specific software.
+    # This runs as the default method, which is when the user selects a specific site
     else:
         # Forward it to the online_method function
         for web in websites:
@@ -258,26 +271,33 @@ def search_process_signal(chosen_input, search_value):
                 online_method(search_value, web[0], 0, web[8])
                 search_progress_window.title("pSearch - " + web[1] + " results")
 
-    # At the end, it prints the results if the length of allLinks is greater than 0
+    # At the end, it prints the results if the length of allLinks OR best results is greater than 0
     if len(allLinks) > 0 or len(best_results) > 0:
+        # result_count is used to limit how much results the program is allowed to show.
         result_count = 0 
-        result_row_count = 1
 
-        if len(allLinks) > 0:
-            shuffled_links = [*allLinks.items()]
-            shuffle(shuffled_links)
+        # Shuffles the allLinks dictionary items
+        shuffled_links = [*allLinks.items()]
+        shuffle(shuffled_links)
         
+        # Shuffles the best links dictionary items
         shuffled_best_links = [*best_results.items()]
         shuffle(shuffled_best_links)
 
+        # Creates a new dictionary in order to merge both shuffled links
         final_links = dict()
 
+        # First appends from the best results because it shows best results at first
         for link in shuffled_best_links:
             final_links[link[0]] = link[1]
         
-        if len(allLinks) > 0:
-            for link in shuffled_links:
-                final_links[link[0]] = link[1]
+        # Then it appends from the normal links 
+        for link in shuffled_links:
+            final_links[link[0]] = link[1]
+
+        # Creates a notice block to always use an adblocker extension
+        notice_ublock = Label(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
+        notice_ublock.pack(expand=TRUE, fill=BOTH)
 
         for names,link in final_links.items():
             if result_count < 200:
@@ -311,7 +331,6 @@ def search_process_signal(chosen_input, search_value):
                 result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
                 result_name.pack(side=LEFT, expand=TRUE, fill=BOTH, anchor="w")
                 result_link.pack(side=LEFT, expand=TRUE, fill=BOTH, anchor="w")
-                result_row_count = result_row_count + 3   
 
                 result_name.configure(font = result_name_font)            
 
@@ -320,87 +339,45 @@ def search_process_signal(chosen_input, search_value):
     # If it isn't greater than 0, it says No Results
     else:
         noresult = messagebox.showwarning("No results!", "Click Ok to search again.")
+        search_progress_window.destroy()
 
-
-def process_chosen_input(chosen_input):
-
-    # if the chosen_input is in info_list...
-    if chosen_input in id_list or chosen_input in types_list:   
-        global search_progress_frame
-        global process_chosen_frame
-
-        if search_progress_frame != None:
-            search_progress_frame.destroy()
-
-        ask_user_frame.destroy()
-        process_chosen_frame = LabelFrame(root, text="Enter what you want to search below, then click the Search button", padx=10, pady=10)
-        process_chosen_frame.pack(side=TOP, padx=10, pady=30)          
-        search_entry_input = Entry(process_chosen_frame, width=40)
-        search_submit_btn = Button(process_chosen_frame, image=search_img, command=lambda: search_process_signal(chosen_input, search_entry_input.get()), cursor="hand2")
-        search_return_btn = Button(process_chosen_frame, image=back_img, command=lambda: beginProgram(True), cursor="hand2")
-        search_return_btn.pack(side=LEFT, padx=10, pady=10)
-        search_entry_input.pack(side=LEFT)
-        search_entry_input.focus_set()
-        search_submit_btn.pack(side=LEFT, padx=10)
-        
-        # Creates a another frame in root for results
-        search_progress_frame = Frame(root)
-        search_progress_frame.pack(fill=BOTH, expand=True)
-        
-
-    # If the input is a valid number, ask the user to start over.
-    else:
-        cur.close()
-        invalid_input = messagebox.showerror("No input!", "Click OK to start over")
-        
-        if invalid_input == "ok":
-            beginProgram(True)
+# This is used when the user clicks the buttons to search all at once. It adds the value to 
+# the option_chosen variable to it would be processed later on.
+def apply_to_variable(chosen_input):
+    global option_chosen
+    option_chosen.set(chosen_input)
 
 
 # Asks user to insert inputs, the beginning of the program.
-def beginProgram(doublesession):
-    global ask_user_frame
-    global chosen_id
+def beginProgram():
+    # Variables required to be global in order to function properly
+    global option_chosen
     global websites
     global cur
-    global info_list
-    global id_list
-    global error_count
     global wlcmsg
     global types_list
+    global search_progress_frame
+    global process_chosen_frame
 
-    wlcmsg = Label(root, text="---> pSearch - Piracy Multi-Search Tool <---", bg="#FADCD9", padx=10, pady=10)
+    # Top text in the program, introducing the program name
+    wlcmsg = Label(root, text="---> pSearch - Piracy Multi-Search Tool <---", bg="#FADCD9")
     wlcmsg.pack(side=TOP, expand=TRUE, fill=BOTH)
+
+    # Applies the title font to the label
     wlcmsg.configure(font = title_font)
 
-    error_count = 1
+    if search_progress_frame != None:
+        search_progress_frame.destroy()
 
-    if doublesession == True:
-        ask_user_frame.destroy()
-        wlcmsg.destroy()
-        
-        if search_progress_frame != None:
-            search_progress_frame.destroy()
-
-        if process_chosen_frame != None:
-            process_chosen_frame.destroy()
-
-        if search_progress_window != None:
-            search_progress_window.destroy()
-
-    ask_user_frame = LabelFrame(root, bd=0)
-    ask_user_frame.pack(padx=10, pady=30)
-    chosen_id = StringVar()
-    chosen_id.set('ID')
-
-    # info_list is used to print the available options afterwards.
-    info_list = list()
-    id_list = list()
+    # types_list is used to check if chosen_input is one of the buttons or not.
     types_list = list()
     
+    # Connects to the websites database
     conn = sqlite3.connect(path + '/websitesdb')
+    # Asigns cursor to execute database functions
     cur = conn.cursor()
-    # The websites list
+
+    # The websites grabbed from the database are inserted in this list.
     websites = list()
 
     # Grabs the information from the Database
@@ -410,52 +387,83 @@ def beginProgram(doublesession):
             FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
                 ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
                 AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
-        # Appends it to the websites var list.
+        # Appends it to the websites list.
         websites.append(row)
 
-    # webcount and columncount will be used in the grid while printing websites, to prevent a long list of texts.
-    webcount = 0
-    columncount = 0
+    # Creates a list for storing the available sites from the database, to be put in dropdown menu afterwards
+    websites_list_dropdown = list()
+
+    # For each web in websites, append the id, name and type to websites_list_dropdown to use in dropdown menu
     for web in websites:
-        info_list.append((str(web[0]), web[1], web[7]))
-        id_list.append(str(web[0]))
+        websites_list_dropdown.append(str(web[0]) + " --- " + web[1] + "- Type: " + web[7])
 
-    for info_id, info_name, info_type in info_list:
-        # Creates a text label for it.
-        websites_rbutton = Radiobutton(ask_user_frame, text = "[" + info_id + "] " + info_name + " -- Type: " + info_type, variable=chosen_id, value=info_id, cursor="hand2")
-        # Adds it to ask_user_frame Frame,and the row and column are adjusted in a way to prevent a one column long list.
-        websites_rbutton.grid(row=webcount, column=columncount)
-        webcount = webcount + 1
-        # If webcounts exceeds 8, it resets webcount to 0 and increases columncount by 1.
-        if webcount > 8:
-            columncount = columncount + 1
-            webcount = 0
+    # Create a StringVar to insert the chosen value in it (either by clicking one of the buttons or from dropdown menu)
+    option_chosen = StringVar()
 
+    # Sets the first item in the list as the default chosen input.
+    option_chosen.set(websites_list_dropdown[0])
+
+    # Creates a frame to put the search bar, dropdown menu, and search button in it.
+    process_chosen_frame = LabelFrame(root, padx=10, pady=10, bd=0)
+    process_chosen_frame.pack(padx=10, pady=40) 
+
+    # Create the options dropdown menu
+    options_available = OptionMenu(process_chosen_frame, option_chosen, *websites_list_dropdown)
+    options_available.pack(side=LEFT) 
+
+    # Creates entry for user input space with width 60        
+    search_entry_input = Entry(process_chosen_frame, width=60)
+
+    # Creates the search button widget, with the on-click command heading towards search_process_signal function
+    # with passing the option chosen and the search entry.
+    search_submit_btn = Button(process_chosen_frame, image=search_img, command=lambda: search_process_signal(option_chosen.get(), search_entry_input.get()), cursor="hand2")
+    search_entry_input.pack(side=LEFT)
+
+    # Focus on the search entry so the user directly starts typing
+    search_entry_input.focus_set()
+
+    search_submit_btn.pack(side=RIGHT, padx=10)
+
+    # Bind the keyboard function Enter to the entry so user can directly click Enter to search.
+    search_entry_input.bind("<Return>", lambda e: search_process_signal(option_chosen.get(), search_entry_input.get()))
+
+    # Creates an outer frame for displaying all-in-one types search
+    types_outer_frame = LabelFrame(root, bd=0, bg="#F9F1F0")
+    types_outer_frame.pack(pady=20)
+
+    # Gets the types from the database in order to display them afterwards
     get_types = cur.execute("SELECT * FROM Types")
 
-    type_count = 0
-    type_row_count = 10
-    type_column_count = 0
-
+    # For each type in the grabbed types (get_types variable)...
     for type in get_types:
+        # Save the name of the type in a separate variable, [0] is the id, [1] is the name
         type_name = type[1]
 
+        # Searching all at once is not allowed to prevent long search time and unnecessary 
+        # amount of long results, so it makes sure the type_name isn't all.
         if type_name != "all":
-            type_btns = Button(ask_user_frame, text=type[1] + " sites", command=lambda type_name=type_name: process_chosen_input(type_name), padx=20, pady=20, bg="#F9F1F0", bd=0.5, cursor="hand2")
-            type_btns.grid(row=type_row_count, column=type_column_count, pady=30)
-            type_count = type_count + 1
-            type_column_count = type_column_count + 1
+
+            # Create a frame to insert image and name under it
+            type_frame = Frame(types_outer_frame, cursor="hand2", bd=0.5, relief=SUNKEN)
+            type_frame.pack(side=LEFT, pady=10, padx=10)
+
+            # Generates the image for the type.
+            # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
+            # according to the type's name.
+            type_images["{0}".format(type_name)] = Image.open(type_images[type_name])
+            type_images["{0}".format(type_name)] = ImageTk.PhotoImage(type_images["{0}".format(type_name)])
+            type_img_btn = Button(type_frame, image=type_images["{0}".format(type_name)], command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
+            type_img_btn.pack(side=TOP)
+
+            # Creates the buttons for each type to display type name
+            type_btns = Button(type_frame, text=type_name.capitalize() + " sites", command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
+            type_btns.pack(side=TOP)
+            
+            # Appends the type name to types_list list to be used for button click identification afterwards
             types_list.append(type[1])
 
-            if type_count > 3:
-                type_row_count = type_row_count + 1
-                type_column_count = 0
-                type_count = 0
+# The beginning program runs beginProgram() function
+beginProgram()
 
-    user_choice_btn = Button(ask_user_frame, image=arrow_forward_img, command=lambda: process_chosen_input( chosen_id.get()), pady=10, padx=10, cursor="hand2")
-    user_choice_btn.grid(row=11, column=3, pady=5)
-
-
-
-beginProgram(False)
+# Running loop for Tkinter
 root.mainloop()
