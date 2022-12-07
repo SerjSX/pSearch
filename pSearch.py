@@ -403,7 +403,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 button_value = int(button_split[1])
 
                 # create the button by passing starting position(button_id*50) and ending position(button_id*50+button_value)
-                other_page_btns = Button(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), padx=10, pady=15)
+                other_page_btns = Button(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), padx=10, pady=5)
                 other_page_btns.pack(side=LEFT, padx=10)
 
 
