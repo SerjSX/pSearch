@@ -54,6 +54,13 @@ MAGAZINELIB,
 GetComics,
 ComicExtra,
 Course Club,
+UniqueStream,
+World Cinema,
+COMIX-LOAD iN,
+ZipComic,
+XOXOCOMICS,
+Torrent Galaxy,
+online-courses,
 
 #### Contribution 
 Can be directly done by using https://sqlitebrowser.org/ and opening the database file.

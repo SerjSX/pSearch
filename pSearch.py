@@ -12,12 +12,12 @@ import traceback
 import webbrowser
 from random import shuffle
 from PIL import ImageTk, Image
+import math
 
 # Colors used https://www.canva.com/colors/color-palettes/rosy-dew/
 
 # Grabs the directory name [BETA TESTING: to prevent file not found error]
 path = os.getcwd()
-print(path)
 
 root = Tk()
 root.title("pSearch")
@@ -83,7 +83,7 @@ print("The terminal will be used for displaying errors. Any error you face repor
 # Used when clicking on the results to visit link
 def callback(link):
     webbrowser.open_new(link)
-    
+
 # onlineMethod(search_value,site_id) is the main function that searching process works in
 def online_method(search_value, site_id, chosen_type, main_link):    
     # These variables below are for the information necessary for the searching process.
@@ -198,7 +198,7 @@ def online_method(search_value, site_id, chosen_type, main_link):
                     # similar to the steamrip one above.
                     # This is to prevent others being shown and the site's structure doesn't include the
                     # primary URL in the beginning, so we add it first.
-                    if main_link_b.startswith("/torrent"):
+                    if main_link_b.startswith("/torrent/"):
                         # uses tag.text because the name/link is already in the looped tag.
                         result_links[tag.text] = site_link + main_link_b
                         # If it starts with /game and the url is gog-games, then append with the URL at first.
@@ -217,10 +217,8 @@ def online_method(search_value, site_id, chosen_type, main_link):
                 else:
                     allLinks[("default", site_name, link[0])] = link[1]
 
-def search_process_signal(chosen_input, search_value):   
-    # Clears allLinks and best_results to start over with a new search.
-    allLinks.clear()
-    best_results.clear()
+def search_process_signal(button_num, nwindow, chosen_input, 
+                        search_value, start_position, end_position):   
     global search_progress_window
 
     # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
@@ -234,7 +232,7 @@ def search_process_signal(chosen_input, search_value):
 
     # Create a result window for the frame
     search_progress_window = Toplevel(root)
-    search_progress_window.geometry("1200x600")
+    search_progress_window.geometry("1250x650")
     
     # Create a canvas for the frame
     search_progress_canvas = Canvas(search_progress_window)
@@ -254,57 +252,77 @@ def search_process_signal(chosen_input, search_value):
     # Adding a new frame to the window
     search_progress_canvas.create_window((0,0), window=search_progress_frame_two, anchor="nw") 
 
-    # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
-    if chosen_input in types_list:
-        # for each site in sites
-        for site in websites:
-            if chosen_input in site[7] or "all" in site[7]:
-                # Activate the onlineMethod function with forwarding the site's ID.
-                online_method(search_value, site[0], 0, site[8])
-                search_progress_window.title("pSearch - " + chosen_input + " results")
+    if nwindow == False:
+        # Clears allLinks and best_results to start over with a new search.
+        allLinks.clear()
+        best_results.clear()
 
-    # This runs as the default method, which is when the user selects a specific site
-    else:
-        # Forward it to the online_method function
-        for web in websites:
-            if web[0] == int(chosen_input):
-                online_method(search_value, web[0], 0, web[8])
-                search_progress_window.title("pSearch - " + web[1] + " results")
+        # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
+        if chosen_input in types_list:
+            # for each site in sites
+            for site in websites:
+                if chosen_input in site[7] or "all" in site[7]:
+                    # Activate the onlineMethod function with forwarding the site's ID.
+                    online_method(search_value, site[0], 0, site[8])
+
+        # This runs as the default method, which is when the user selects a specific site
+        else:
+            # Forward it to the online_method function
+            for web in websites:
+                if web[0] == int(chosen_input):
+                    online_method(search_value, web[0], 0, web[8])
 
     # At the end, it prints the results if the length of allLinks OR best results is greater than 0
     if len(allLinks) > 0 or len(best_results) > 0:
         # result_count is used to limit how much results the program is allowed to show.
         result_count = 0 
 
-        # Shuffles the allLinks dictionary items
-        shuffled_links = [*allLinks.items()]
-        shuffle(shuffled_links)
+        # If nwindow is false then it shuffles the results, or else 
+        # if true then it's a signal for new window, so no need to shuffle to keep
+        # order stable and still.
+        if nwindow == False:
+            # Shuffles the allLinks dictionary items
+            shuffled_links = [*allLinks.items()]
+            shuffle(shuffled_links)
         
-        # Shuffles the best links dictionary items
-        shuffled_best_links = [*best_results.items()]
-        shuffle(shuffled_best_links)
+            # Shuffles the best links dictionary items
+            shuffled_best_links = [*best_results.items()]
+            shuffle(shuffled_best_links)
 
-        # Creates a new dictionary in order to merge both shuffled links
-        final_links = dict()
+            # Creates a new dictionary in order to merge both shuffled links
+            global final_links
+            final_links = dict()
 
-        # First appends from the best results because it shows best results at first
-        for link in shuffled_best_links:
-            final_links[link[0]] = link[1]
+            # First appends from the best results because it shows best results at first
+            for link in shuffled_best_links:
+                final_links[link[0]] = link[1]
         
-        # Then it appends from the normal links 
-        for link in shuffled_links:
-            final_links[link[0]] = link[1]
+            # Then it appends from the normal links 
+            for link in shuffled_links:
+                final_links[link[0]] = link[1]
+
+            start_position = 0
+            end_position = len(final_links)
 
         # Creates a notice block to always use an adblocker extension
         notice_ublock = Label(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
         notice_ublock.pack(expand=TRUE, fill=BOTH)
 
-        for names,link in final_links.items():
-            if result_count < 200:
-                type = names[0]
-                site_name = names[1]
-                name = names[2]
-                link = link
+        # Convert dictionary keys and values to list to select accordingly afterwards
+        keys = list(final_links.keys())
+        values = list(final_links.values())
+
+        for i in range(start_position, end_position):
+            if result_count < 50:
+                global result_link
+                global result_name
+
+                # Assign variables to each necessary information
+                # i = index number according to start_position and end_position
+                type = keys[i][0]
+                site_name = keys[i][1]
+                name = keys[i][2]
+                link = values[i]
 
                 result_primary_frame = Frame(search_progress_frame_two)
                 result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two)
@@ -335,6 +353,59 @@ def search_process_signal(chosen_input, search_value):
                 result_name.configure(font = result_name_font)            
 
                 result_count = result_count + 1
+
+        search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
+
+            # If it's greater than 100
+        if len(final_links) > 50:
+            # _count is used for counting each number from the input
+            several_btn_count = 0
+            # _length has the length of the results
+            several_btn_length = len(final_links)
+            # _list to append the amount for each button
+            global several_btn_list
+            several_btn_list = list()
+
+            # Divides the input by 50 (to get appx how many buttons it needs)
+            btn_count = math.ceil(several_btn_length/50)
+
+            # For b in the range of btn_count...
+            for b in range(btn_count):
+                # for i in the range of the input plus one...
+                for i in range(several_btn_length + 1):      
+            
+                    # If the _count reached 100
+                    if several_btn_count == 50:
+                        # append it to the list
+                        several_btn_list.append(str(b) + "-" + str(several_btn_count))
+                        # deduct from _length the appended amount
+                        several_btn_length = several_btn_length - several_btn_count
+                        # reset the btn count to 0
+                        several_btn_count = 0
+                        # break and start over
+                        break
+
+                    # if the b is the last button count and the _count matches the _length, which means
+                    # it's the last button's amount...
+                    if b == btn_count - 1 and several_btn_count == several_btn_length:
+                        # append _count to the list
+                        several_btn_list.append(str(b) + "-" + str(several_btn_count))
+
+                    # Increment several_btn_count by 1
+                    several_btn_count += 1
+
+            # For each button in the buttons list
+            for button in several_btn_list:
+                # Split the value
+                button_split = button.split("-")
+                # Put the id and value in separate variables
+                button_id = int(button_split[0])
+                button_value = int(button_split[1])
+
+                # create the button by passing starting position(button_id*50) and ending position(button_id*50+button_value)
+                other_page_btns = Button(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), padx=10, pady=15)
+                other_page_btns.pack(side=LEFT, padx=10)
+
 
     # If it isn't greater than 0, it says No Results
     else:
@@ -416,7 +487,7 @@ def beginProgram():
 
     # Creates the search button widget, with the on-click command heading towards search_process_signal function
     # with passing the option chosen and the search entry.
-    search_submit_btn = Button(process_chosen_frame, image=search_img, command=lambda: search_process_signal(option_chosen.get(), search_entry_input.get()), cursor="hand2")
+    search_submit_btn = Button(process_chosen_frame, image=search_img, command=lambda: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0), cursor="hand2")
     search_entry_input.pack(side=LEFT)
 
     # Focus on the search entry so the user directly starts typing
@@ -425,7 +496,7 @@ def beginProgram():
     search_submit_btn.pack(side=RIGHT, padx=10)
 
     # Bind the keyboard function Enter to the entry so user can directly click Enter to search.
-    search_entry_input.bind("<Return>", lambda e: search_process_signal(option_chosen.get(), search_entry_input.get()))
+    search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0))
 
     # Creates an outer frame for displaying all-in-one types search
     types_outer_frame = LabelFrame(root, bd=0, bg="#F9F1F0")
