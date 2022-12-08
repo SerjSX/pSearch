@@ -16,13 +16,13 @@ import math
 
 # Colors used https://www.canva.com/colors/color-palettes/rosy-dew/
 
-# Grabs the directory name [BETA TESTING: to prevent file not found error]
+# Grabs the directory name
 path = os.getcwd()
 
 root = Tk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
-root.geometry("800x400")
+root.geometry("900x500")
 
 search_progress_window = None
 search_progress_frame = None
@@ -55,7 +55,8 @@ type_images = {
     'ebooks': path + '\media\_ebooks_image.png',
     'games': path + '\media\_games_image.png',
     'movieseries': path + "\media\_movieseries_image.png",
-    'software': path + '\media\_software_image.png'
+    'software': path + '\media\_software_image.png',
+    'all': path + '\media\_all_image.png',
 }
 
 # Used as a header when requesting a website
@@ -257,8 +258,14 @@ def search_process_signal(button_num, nwindow, chosen_input,
         allLinks.clear()
         best_results.clear()
 
+        # in case user chose all sites...
+        if chosen_input == "all":
+            for site in websites:
+                # Activate the onlineMethod function with forwarding the site's ID.
+                online_method(search_value, site[0], 0, site[8])
+
         # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
-        if chosen_input in types_list:
+        elif chosen_input in types_list:
             # for each site in sites
             for site in websites:
                 if chosen_input in site[7] or "all" in site[7]:
@@ -340,8 +347,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
                 if len(link) > 50:
                     result_link = Label(result_frame, text=link[:49].strip() + "...")
-                if len(name) > 60:
-                    result_name = Label(result_frame, text=name[:59].strip() + "...")
+                if len(name) > 70:
+                    result_name = Label(result_frame, text=name[:69].strip() + "...")
                 else:
                     result_link = Label(result_frame, text=link.strip())
                     result_name = Label(result_frame, text=name.strip())
@@ -510,28 +517,24 @@ def beginProgram():
         # Save the name of the type in a separate variable, [0] is the id, [1] is the name
         type_name = type[1]
 
-        # Searching all at once is not allowed to prevent long search time and unnecessary 
-        # amount of long results, so it makes sure the type_name isn't all.
-        if type_name != "all":
+        # Create a frame to insert image and name under it
+        type_frame = Frame(types_outer_frame, cursor="hand2", bd=0.5, relief=SUNKEN)
+        type_frame.pack(side=LEFT, pady=10, padx=10)
 
-            # Create a frame to insert image and name under it
-            type_frame = Frame(types_outer_frame, cursor="hand2", bd=0.5, relief=SUNKEN)
-            type_frame.pack(side=LEFT, pady=10, padx=10)
+        # Generates the image for the type.
+        # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
+        # according to the type's name.
+        type_images["{0}".format(type_name)] = Image.open(type_images[type_name])
+        type_images["{0}".format(type_name)] = ImageTk.PhotoImage(type_images["{0}".format(type_name)])
+        type_img_btn = Button(type_frame, image=type_images["{0}".format(type_name)], command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
+        type_img_btn.pack(side=TOP)
 
-            # Generates the image for the type.
-            # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
-            # according to the type's name.
-            type_images["{0}".format(type_name)] = Image.open(type_images[type_name])
-            type_images["{0}".format(type_name)] = ImageTk.PhotoImage(type_images["{0}".format(type_name)])
-            type_img_btn = Button(type_frame, image=type_images["{0}".format(type_name)], command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
-            type_img_btn.pack(side=TOP)
-
-            # Creates the buttons for each type to display type name
-            type_btns = Button(type_frame, text=type_name.capitalize() + " sites", command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
-            type_btns.pack(side=TOP)
+        # Creates the buttons for each type to display type name
+        type_btns = Button(type_frame, text=type_name.capitalize() + " sites", command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
+        type_btns.pack(side=TOP)
             
-            # Appends the type name to types_list list to be used for button click identification afterwards
-            types_list.append(type[1])
+        # Appends the type name to types_list list to be used for button click identification afterwards
+        types_list.append(type[1])
 
 # The beginning program runs beginProgram() function
 beginProgram()
