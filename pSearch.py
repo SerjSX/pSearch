@@ -347,10 +347,12 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
                 if len(link) > 50:
                     result_link = Label(result_frame, text=link[:49].strip() + "...")
+                else:
+                    result_link = Label(result_frame, text=link.strip())
+
                 if len(name) > 70:
                     result_name = Label(result_frame, text=name[:69].strip() + "...")
                 else:
-                    result_link = Label(result_frame, text=link.strip())
                     result_name = Label(result_frame, text=name.strip())
                 
                 result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
