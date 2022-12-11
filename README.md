@@ -61,6 +61,10 @@ ZipComic,
 XOXOCOMICS,
 Torrent Galaxy,
 online-courses,
+ebook3000,
+READ ANY BOOK,
+eBookBB,
+PDFGet,
 
 #### Contribution 
 Can be directly done by using https://sqlitebrowser.org/ and opening the database file.
