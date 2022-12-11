@@ -13,6 +13,7 @@ import webbrowser
 from random import shuffle
 from PIL import ImageTk, Image
 import math
+import db_checker as dc
 
 # Colors used https://www.canva.com/colors/color-palettes/rosy-dew/
 
@@ -439,7 +440,14 @@ def beginProgram():
     global search_progress_frame
     global process_chosen_frame
 
-    # Top text in the program, introducing the program name
+    # This frame includes other buttons with small functions
+    top_functions_frame = Frame(root)
+    top_functions_frame.pack(side=TOP, fill=BOTH)
+
+    # db_checker button
+    db_checker_btn = Button(top_functions_frame, text="DB Checker", command=dc.db_checker, cursor="hand2")
+    db_checker_btn.pack(side=LEFT)
+
     wlcmsg = Label(root, text="---> pSearch - Piracy Multi-Search Tool <---", bg="#FADCD9")
     wlcmsg.pack(side=TOP, expand=TRUE, fill=BOTH)
 
@@ -453,7 +461,7 @@ def beginProgram():
     types_list = list()
     
     # Connects to the websites database
-    conn = sqlite3.connect(path + '/websitesdb')
+    conn = sqlite3.connect(path + '\others\websitesdb')
     # Asigns cursor to execute database functions
     cur = conn.cursor()
 
@@ -481,7 +489,7 @@ def beginProgram():
     option_chosen = StringVar()
 
     # Sets the first item in the list as the default chosen input.
-    option_chosen.set(websites_list_dropdown[0])
+    option_chosen.set("all")
 
     # Creates a frame to put the search bar, dropdown menu, and search button in it.
     process_chosen_frame = LabelFrame(root, padx=10, pady=10, bd=0)
@@ -508,7 +516,7 @@ def beginProgram():
     search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0))
 
     # Creates an outer frame for displaying all-in-one types search
-    types_outer_frame = LabelFrame(root, bd=0, bg="#F9F1F0")
+    types_outer_frame = LabelFrame(root, bd=0)
     types_outer_frame.pack(pady=20)
 
     # Gets the types from the database in order to display them afterwards
@@ -520,7 +528,7 @@ def beginProgram():
         type_name = type[1]
 
         # Create a frame to insert image and name under it
-        type_frame = Frame(types_outer_frame, cursor="hand2", bd=0.5, relief=SUNKEN)
+        type_frame = Frame(types_outer_frame, cursor="hand2", bd=0.5, relief=SUNKEN, bg="#F9F1F0")
         type_frame.pack(side=LEFT, pady=10, padx=10)
 
         # Generates the image for the type.
@@ -528,11 +536,11 @@ def beginProgram():
         # according to the type's name.
         type_images["{0}".format(type_name)] = Image.open(type_images[type_name])
         type_images["{0}".format(type_name)] = ImageTk.PhotoImage(type_images["{0}".format(type_name)])
-        type_img_btn = Button(type_frame, image=type_images["{0}".format(type_name)], command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
+        type_img_btn = Button(type_frame, image=type_images["{0}".format(type_name)], command=lambda type_name=type_name: apply_to_variable(type_name), bd=0, bg="#F9F1F0")
         type_img_btn.pack(side=TOP)
 
         # Creates the buttons for each type to display type name
-        type_btns = Button(type_frame, text=type_name.capitalize() + " sites", command=lambda type_name=type_name: apply_to_variable(type_name), bd=0)
+        type_btns = Button(type_frame, text=type_name.capitalize() + " sites", command=lambda type_name=type_name: apply_to_variable(type_name), bd=0, bg="#F9F1F0")
         type_btns.pack(side=TOP)
             
         # Appends the type name to types_list list to be used for button click identification afterwards
