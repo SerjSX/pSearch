@@ -1,4 +1,5 @@
 # This program is used for checking if the sites have a valid page return code.
+# Can be used from within the main program.
 import urllib.parse
 import urllib.request
 import urllib.error
@@ -28,7 +29,7 @@ cur = conn.cursor()
 def db_checker():
 
     db_checker_confirm = messagebox.askyesno("Database Checking Operation",
-    '''This operation is used for checking if all of the sites in the database return healthy page codes.\n
+    '''This operation is used for checking if all of the sites in the database return healthy page codes. It might take some time and you won't be able to use the program until it's done.\n
     Click Yes if you want to proceed; progress will be displayed via message boxes like this, and errored sites will be printed in the command line terminal.\n
     Click No if you want to return to the program.''')
 

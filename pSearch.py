@@ -32,10 +32,6 @@ process_chosen_frame = None
 result_name_font = tkinter.font.Font(weight = "bold")
 title_font = tkinter.font.Font(size=16, weight="bold")
 
-visit_site_img = Image.open(path + "\media\open_url_button.png")
-visit_site_img = visit_site_img.resize((30,30))
-visit_site_img = ImageTk.PhotoImage(visit_site_img)
-
 search_img = Image.open(path + "\media\search_button.png")
 search_img = search_img.resize((25,25))
 search_img = ImageTk.PhotoImage(search_img)
@@ -185,10 +181,10 @@ def online_method(search_value, site_id, chosen_type, main_link):
                         # If the website chosen is 8, append it with the link. Some sites don't include the
                         # primary URL within their href, so the program adds it. This is a special condition for site 8.
                         if main_link == 1:
-                            result_links[links.text] = site_link + main_link_a
+                            result_links[links.get_text(" ",strip=True)] = site_link + main_link_a
                         # If not, just append as it is. This is the default for most.
                         else:
-                            result_links[links.text] = main_link_a
+                            result_links[links.get_text(" ",strip=True)] = main_link_a
 
             # If Links resulted None, then the following have special conditions.
             elif links is None:
@@ -202,10 +198,10 @@ def online_method(search_value, site_id, chosen_type, main_link):
                     # primary URL in the beginning, so we add it first.
                     if main_link_b.startswith("/torrent/"):
                         # uses tag.text because the name/link is already in the looped tag.
-                        result_links[tag.text] = site_link + main_link_b
+                        result_links[tag.get_text(" ",strip=True)] = site_link + main_link_b
                         # If it starts with /game and the url is gog-games, then append with the URL at first.
                     elif main_link_b.startswith("/game") and site_link.startswith("https://gog-games.com"):
-                        result_links[tag.text] = site_link + main_link_b
+                        result_links[tag.get_text(" ",strip=True)] = site_link + main_link_b
 
         results_count = 0
 
@@ -333,32 +329,35 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 link = values[i]
 
                 result_primary_frame = Frame(search_progress_frame_two)
-                result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two)
+                result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two, pady=20)
 
-                result_button = Button(result_primary_frame, image=visit_site_img, command=lambda link=link: callback(link), pady=10, padx=10, cursor="hand2")
-                result_button.pack(side=LEFT, padx=10)
+                result_frame = Frame(result_primary_frame)
+                result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)
 
-                result_frame = Frame(result_primary_frame, bd=1, relief=SUNKEN)
-                result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame, pady=20)
+                result_link_frame = Frame(result_primary_frame)
+                result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
 
                 if type == "best":
                     result_site_name = Label(result_frame, text=site_name, bg="#FADCD9", pady=5, padx=5)
                 else:
                     result_site_name = Label(result_frame, text=site_name, bg="#F9F1F0", pady=5, padx=5)
 
-                if len(link) > 50:
-                    result_link = Label(result_frame, text=link[:49].strip() + "...")
+                if len(link) > 200:
+                    result_link = Label(result_link_frame, text=link[:199].strip() + "...", cursor="hand2")
                 else:
-                    result_link = Label(result_frame, text=link.strip())
+                    result_link = Label(result_link_frame, text=link.strip(), cursor="hand2")
 
-                if len(name) > 70:
-                    result_name = Label(result_frame, text=name[:69].strip() + "...")
+                if len(name) > 300:
+                    result_name = Label(result_frame, text=name[:299].strip() + "...", cursor="hand2")
                 else:
-                    result_name = Label(result_frame, text=name.strip())
+                    result_name = Label(result_frame, text=name.strip(), cursor="hand2")
                 
                 result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
-                result_name.pack(side=LEFT, expand=TRUE, fill=BOTH, anchor="w")
-                result_link.pack(side=LEFT, expand=TRUE, fill=BOTH, anchor="w")
+                result_name.pack(side=LEFT, anchor="w", padx=10)
+                result_link.pack(side=LEFT, anchor="w")
+                
+                result_name.bind("<Button-1>", lambda e,link=link: callback(link))
+                result_link.bind("<Button-1>", lambda e,link=link: callback(link))
 
                 result_name.configure(font = result_name_font)            
 
@@ -448,7 +447,7 @@ def beginProgram():
     db_checker_btn = Button(top_functions_frame, text="DB Checker", command=dc.db_checker, cursor="hand2")
     db_checker_btn.pack(side=LEFT)
 
-    wlcmsg = Label(root, text="---> pSearch - Piracy Multi-Search Tool <---", bg="#FADCD9")
+    wlcmsg = Label(root, text="pSearch - Piracy Multi-Search Tool", bg="#FADCD9")
     wlcmsg.pack(side=TOP, expand=TRUE, fill=BOTH)
 
     # Applies the title font to the label
