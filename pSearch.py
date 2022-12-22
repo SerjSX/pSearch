@@ -1,7 +1,7 @@
 from tkinter import * 
 from tkinter import messagebox
 from tkinter import ttk
-import tkinter.font
+import customtkinter
 import urllib.parse
 import urllib.request
 import urllib.error
@@ -15,34 +15,37 @@ from PIL import ImageTk, Image
 import math
 import db_checker as dc
 
-# Colors used https://www.canva.com/colors/color-palettes/rosy-dew/
+# customtkinter.set_appearance_mode("light")
+# Colors used https://m2.material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=3E2723&secondary.color=BDBDBD
 
 # Grabs the directory name
 path = os.getcwd()
 
-root = Tk()
+root = customtkinter.CTk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
-root.geometry("900x500")
+root.geometry("1000x500")
 
 search_progress_window = None
 search_progress_frame = None
 process_chosen_frame = None
 
-result_name_font = tkinter.font.Font(weight = "bold")
-title_font = tkinter.font.Font(size=16, weight="bold")
-
-search_img = Image.open(path + "\media\search_button.png")
-search_img = search_img.resize((25,25))
-search_img = ImageTk.PhotoImage(search_img)
+search_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\search_button.png"),
+                                    size=(25,25))
 
 back_img = Image.open(path + "\media\_back_button.png")
 back_img = back_img.resize((25,25))
 back_img = ImageTk.PhotoImage(back_img)
 
+back_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\_back_button.png"),
+                                    size=(25,25))
+
 arrow_forward_img = Image.open(path + "\media\_arrow_forward_button.png")
 arrow_forward_img = arrow_forward_img.resize((25,25))
 arrow_forward_img = ImageTk.PhotoImage(arrow_forward_img)
+
+arrow_forward_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\_arrow_forward_button.png"),
+                                    size=(25,25))
 
 # Used to show images for each type afterwards
 type_images = {
@@ -53,6 +56,7 @@ type_images = {
     'games': path + '\media\_games_image.png',
     'movieseries': path + "\media\_movieseries_image.png",
     'software': path + '\media\_software_image.png',
+    'music': path + '\media\_music_image.png',
     'all': path + '\media\_all_image.png',
 }
 
@@ -343,14 +347,14 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     result_site_name = Label(result_frame, text=site_name, bg="#F9F1F0", pady=5, padx=5)
 
                 if len(link) > 200:
-                    result_link = Label(result_link_frame, text=link[:199].strip() + "...", cursor="hand2")
+                    result_link = Label(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
                 else:
-                    result_link = Label(result_link_frame, text=link.strip(), cursor="hand2")
+                    result_link = Label(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
 
                 if len(name) > 300:
-                    result_name = Label(result_frame, text=name[:299].strip() + "...", cursor="hand2")
+                    result_name = Label(result_frame, text=name[:299].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 else:
-                    result_name = Label(result_frame, text=name.strip(), cursor="hand2")
+                    result_name = Label(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 
                 result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
                 result_name.pack(side=LEFT, anchor="w", padx=10)
@@ -358,8 +362,6 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 
                 result_name.bind("<Button-1>", lambda e,link=link: callback(link))
                 result_link.bind("<Button-1>", lambda e,link=link: callback(link))
-
-                result_name.configure(font = result_name_font)            
 
                 result_count = result_count + 1
 
@@ -440,18 +442,15 @@ def beginProgram():
     global process_chosen_frame
 
     # This frame includes other buttons with small functions
-    top_functions_frame = Frame(root)
+    top_functions_frame = customtkinter.CTkFrame(root)
     top_functions_frame.pack(side=TOP, fill=BOTH)
 
     # db_checker button
-    db_checker_btn = Button(top_functions_frame, text="DB Checker", command=dc.db_checker, cursor="hand2")
+    db_checker_btn = customtkinter.CTkButton(top_functions_frame, text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
     db_checker_btn.pack(side=LEFT)
 
-    wlcmsg = Label(root, text="pSearch - Piracy Multi-Search Tool", bg="#FADCD9")
-    wlcmsg.pack(side=TOP, expand=TRUE, fill=BOTH)
-
-    # Applies the title font to the label
-    wlcmsg.configure(font = title_font)
+    wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
+    wlcmsg.pack(side=TOP, pady=100)
 
     if search_progress_frame != None:
         search_progress_frame.destroy()
@@ -491,23 +490,25 @@ def beginProgram():
     option_chosen.set("all")
 
     # Creates a frame to put the search bar, dropdown menu, and search button in it.
-    process_chosen_frame = LabelFrame(root, padx=10, pady=10, bd=0)
-    process_chosen_frame.pack(padx=10, pady=40) 
+    process_chosen_frame = customtkinter.CTkFrame(root, fg_color="transparent")
+    process_chosen_frame.pack(padx=10, pady=10) 
 
     # Create the options dropdown menu
-    options_available = OptionMenu(process_chosen_frame, option_chosen, *websites_list_dropdown)
-    options_available.pack(side=LEFT) 
+    options_available = customtkinter.CTkOptionMenu(process_chosen_frame, variable=option_chosen, values=websites_list_dropdown)
+    options_available.pack(side=LEFT, padx=10) 
 
     # Creates entry for user input space with width 60        
-    search_entry_input = Entry(process_chosen_frame, width=60)
+    search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=300, placeholder_text="What do you want to search today?")
 
     # Creates the search button widget, with the on-click command heading towards search_process_signal function
     # with passing the option chosen and the search entry.
-    search_submit_btn = Button(process_chosen_frame, image=search_img, command=lambda: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0), cursor="hand2")
+    search_submit_btn = customtkinter.CTkButton(process_chosen_frame, 
+                                                text="", 
+                                                image=search_img, 
+                                                command=lambda: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0), 
+                                                width=10,
+                                                height=10)
     search_entry_input.pack(side=LEFT)
-
-    # Focus on the search entry so the user directly starts typing
-    search_entry_input.focus_set()
 
     search_submit_btn.pack(side=RIGHT, padx=10)
 
@@ -515,7 +516,7 @@ def beginProgram():
     search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0))
 
     # Creates an outer frame for displaying all-in-one types search
-    types_outer_frame = LabelFrame(root, bd=0)
+    types_outer_frame = customtkinter.CTkFrame(root, fg_color="transparent")
     types_outer_frame.pack(pady=20)
 
     # Gets the types from the database in order to display them afterwards
@@ -527,23 +528,28 @@ def beginProgram():
         type_name = type[1]
 
         # Create a frame to insert image and name under it
-        type_frame = Frame(types_outer_frame, cursor="hand2", bd=0.5, relief=SUNKEN, bg="#F9F1F0")
-        type_frame.pack(side=LEFT, pady=10, padx=10)
+        type_frame = customtkinter.CTkFrame(master=types_outer_frame)
+        type_frame.pack(side=LEFT, pady=10, padx=5)
 
         # Generates the image for the type.
         # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
         # according to the type's name.
-        type_images["{0}".format(type_name)] = Image.open(type_images[type_name])
-        type_images["{0}".format(type_name)] = ImageTk.PhotoImage(type_images["{0}".format(type_name)])
-        type_img_btn = Button(type_frame, image=type_images["{0}".format(type_name)], command=lambda type_name=type_name: apply_to_variable(type_name), bd=0, bg="#F9F1F0")
-        type_img_btn.pack(side=TOP)
+        type_images["{0}".format(type_name)] = customtkinter.CTkImage(light_image=Image.open(type_images[type_name]),
+                                                                    size=(48,48))
 
         # Creates the buttons for each type to display type name
-        type_btns = Button(type_frame, text=type_name.capitalize() + " sites", command=lambda type_name=type_name: apply_to_variable(type_name), bd=0, bg="#F9F1F0")
+        type_btns = customtkinter.CTkButton(master=type_frame, 
+                                            width=70,
+                                            height=32,
+                                            text=type_name.capitalize() + " sites", 
+                                            command=lambda type_name=type_name: apply_to_variable(type_name),
+                                            image=type_images["{0}".format(type_name)],
+                                            compound="top")
         type_btns.pack(side=TOP)
-            
+
         # Appends the type name to types_list list to be used for button click identification afterwards
         types_list.append(type[1])
+
 
 # The beginning program runs beginProgram() function
 beginProgram()
