@@ -21,9 +21,6 @@ import db_checker as dc
 # Grabs the directory name
 path = os.getcwd()
 
-# Extracts current theme
-current_theme = customtkinter.get_appearance_mode()
-
 root = customtkinter.CTk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
@@ -88,6 +85,18 @@ print("The terminal will be used for displaying errors. Any error you face repor
 # Used when clicking on the results to visit link
 def callback(link):
     webbrowser.open_new(link)
+
+# Used for changing the software's theme - dark or light
+def change_theme(current_theme):
+
+    # This removed current results windows, if there is one, to prevent theme bugs.
+    if search_progress_window != None:
+        search_progress_window.destroy()
+
+    if current_theme == "Light":
+        customtkinter.set_appearance_mode("dark")
+    else:
+        customtkinter.set_appearance_mode("light")
 
 # onlineMethod(search_value,site_id) is the main function that searching process works in
 def online_method(search_value, site_id, chosen_type, main_link):    
@@ -246,7 +255,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
     search_progress_canvas = customtkinter.CTkCanvas(search_progress_frame)
     search_progress_canvas.pack(side=LEFT, fill=BOTH, expand=True)
 
-    if current_theme == "Light":
+    if customtkinter.get_appearance_mode() == "Light":
         search_progress_canvas.configure(bg="white")
     
     else:
@@ -363,8 +372,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 else:
                     result_link = customtkinter.CTkLabel(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
 
-                if len(name) > 109:
-                    result_name = customtkinter.CTkLabel(result_frame, text=name[:110].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
+                if len(name) > 110:
+                    result_name = customtkinter.CTkLabel(result_frame, text=name[:109].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 else:
                     result_name = customtkinter.CTkLabel(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 
@@ -460,6 +469,10 @@ def beginProgram():
     # db_checker button
     db_checker_btn = customtkinter.CTkButton(top_functions_frame, text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
     db_checker_btn.pack(side=LEFT)
+
+    # theme changer button
+    toggle_theme_btn = customtkinter.CTkButton(top_functions_frame, text=" Change Theme ", command=lambda: change_theme(customtkinter.get_appearance_mode()), width=40, corner_radius=0)
+    toggle_theme_btn.pack(side=LEFT, padx=5)
 
     wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
     wlcmsg.pack(side=TOP, pady=100)
