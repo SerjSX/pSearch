@@ -21,6 +21,9 @@ import db_checker as dc
 # Grabs the directory name
 path = os.getcwd()
 
+# Extracts current theme
+current_theme = customtkinter.get_appearance_mode()
+
 root = customtkinter.CTk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
@@ -213,7 +216,7 @@ def online_method(search_value, site_id, chosen_type, main_link):
         if len(result_links) > 0:
             # Append the link to allLinks list.
             for link in result_links.items():
-                if results_count < 3:
+                if results_count < 1:
                     best_results[("best", site_name, link[0])] = link[1]
                     results_count = results_count + 1
                 else:
@@ -233,15 +236,24 @@ def search_process_signal(button_num, nwindow, chosen_input,
         search_progress_window.destroy()
 
     # Create a result window for the frame
-    search_progress_window = Toplevel(root)
+    search_progress_window = customtkinter.CTkToplevel(root)
     search_progress_window.geometry("1250x650")
     
+    search_progress_frame = customtkinter.CTkFrame(search_progress_window)
+    search_progress_frame.pack(side=RIGHT, fill=BOTH, expand=True)
+
     # Create a canvas for the frame
-    search_progress_canvas = Canvas(search_progress_window)
+    search_progress_canvas = customtkinter.CTkCanvas(search_progress_frame)
     search_progress_canvas.pack(side=LEFT, fill=BOTH, expand=True)
 
+    if current_theme == "Light":
+        search_progress_canvas.configure(bg="white")
+    
+    else:
+        search_progress_canvas.configure(bg="#302c2c")
+
     # Add a scrollbar to the canvas
-    search_progress_scrollbar = ttk.Scrollbar(search_progress_window, orient=VERTICAL, command=search_progress_canvas.yview)
+    search_progress_scrollbar = customtkinter.CTkScrollbar(search_progress_frame, orientation=VERTICAL, command=search_progress_canvas.yview)
     search_progress_scrollbar.pack(side=RIGHT, fill=Y)
 
     # Configure the canvas
@@ -249,7 +261,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
     search_progress_canvas.bind('<Configure>', lambda e: search_progress_canvas.configure(scrollregion = search_progress_canvas.bbox("all")))
 
     # Creating another frame in the canvas
-    search_progress_frame_two = Frame(search_progress_canvas)
+    search_progress_frame_two = customtkinter.CTkFrame(search_progress_canvas, fg_color="transparent")
 
     # Adding a new frame to the window
     search_progress_canvas.create_window((0,0), window=search_progress_frame_two, anchor="nw") 
@@ -313,7 +325,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
             end_position = len(final_links)
 
         # Creates a notice block to always use an adblocker extension
-        notice_ublock = Label(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
+        notice_ublock = customtkinter.CTkLabel(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
         notice_ublock.pack(expand=TRUE, fill=BOTH)
 
         # Convert dictionary keys and values to list to select accordingly afterwards
@@ -332,29 +344,29 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 name = keys[i][2]
                 link = values[i]
 
-                result_primary_frame = Frame(search_progress_frame_two)
+                result_primary_frame = customtkinter.CTkFrame(search_progress_frame_two)
                 result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two, pady=20)
 
-                result_frame = Frame(result_primary_frame)
+                result_frame = customtkinter.CTkFrame(result_primary_frame)
                 result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)
 
-                result_link_frame = Frame(result_primary_frame)
+                result_link_frame = customtkinter.CTkFrame(result_primary_frame)
                 result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
 
                 if type == "best":
-                    result_site_name = Label(result_frame, text=site_name, bg="#FADCD9", pady=5, padx=5)
+                    result_site_name = customtkinter.CTkLabel(result_frame, text=site_name, bg_color="lightgreen", text_color="black", pady=5, padx=5)
                 else:
-                    result_site_name = Label(result_frame, text=site_name, bg="#F9F1F0", pady=5, padx=5)
+                    result_site_name = customtkinter.CTkLabel(result_frame, text=site_name, bg_color="yellow", text_color="black", pady=5, padx=5)
 
                 if len(link) > 200:
-                    result_link = Label(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
+                    result_link = customtkinter.CTkLabel(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
                 else:
-                    result_link = Label(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
+                    result_link = customtkinter.CTkLabel(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
 
-                if len(name) > 300:
-                    result_name = Label(result_frame, text=name[:299].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
+                if len(name) > 109:
+                    result_name = customtkinter.CTkLabel(result_frame, text=name[:110].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 else:
-                    result_name = Label(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
+                    result_name = customtkinter.CTkLabel(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 
                 result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
                 result_name.pack(side=LEFT, anchor="w", padx=10)
@@ -367,7 +379,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
 
-            # If it's greater than 100
+            # If it's greater than 50
         if len(final_links) > 50:
             # _count is used for counting each number from the input
             several_btn_count = 0
@@ -385,7 +397,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 # for i in the range of the input plus one...
                 for i in range(several_btn_length + 1):      
             
-                    # If the _count reached 100
+                    # If the _count reached 50
                     if several_btn_count == 50:
                         # append it to the list
                         several_btn_list.append(str(b) + "-" + str(several_btn_count))
