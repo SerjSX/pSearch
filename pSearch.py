@@ -1,6 +1,5 @@
 from tkinter import * 
 from tkinter import messagebox
-from tkinter import ttk
 import customtkinter
 import urllib.parse
 import urllib.request
@@ -9,14 +8,17 @@ from bs4 import BeautifulSoup
 import os
 import sqlite3
 import traceback
-import webbrowser
 from random import shuffle
 from PIL import ImageTk, Image
 import math
+
+# Database Checker py checks the health of the websites in the database
 import db_checker as dc
 
+# Callback py redirects user to browser with a defined link
+import callback as cb
+
 # customtkinter.set_appearance_mode("light")
-# Colors used https://m2.material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=3E2723&secondary.color=BDBDBD
 
 # Grabs the directory name
 path = os.getcwd()
@@ -31,20 +33,6 @@ search_progress_frame = None
 process_chosen_frame = None
 
 search_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\search_button.png"),
-                                    size=(25,25))
-
-back_img = Image.open(path + "\media\_back_button.png")
-back_img = back_img.resize((25,25))
-back_img = ImageTk.PhotoImage(back_img)
-
-back_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\_back_button.png"),
-                                    size=(25,25))
-
-arrow_forward_img = Image.open(path + "\media\_arrow_forward_button.png")
-arrow_forward_img = arrow_forward_img.resize((25,25))
-arrow_forward_img = ImageTk.PhotoImage(arrow_forward_img)
-
-arrow_forward_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\_arrow_forward_button.png"),
                                     size=(25,25))
 
 # Used to show images for each type afterwards
@@ -76,19 +64,10 @@ allLinks = {}
 # best results
 best_results = {}
 
-#getting screen width and height of display
-width= root.winfo_screenwidth()
-height= root.winfo_screenheight()
-
 print("The terminal will be used for displaying errors. Any error you face report on Github with full details.")
-
-# Used when clicking on the results to visit link
-def callback(link):
-    webbrowser.open_new(link)
 
 # Used for changing the software's theme - dark or light
 def change_theme(current_theme):
-
     # This removed current results windows, if there is one, to prevent theme bugs.
     if search_progress_window != None:
         search_progress_window.destroy()
@@ -97,6 +76,14 @@ def change_theme(current_theme):
         customtkinter.set_appearance_mode("dark")
     else:
         customtkinter.set_appearance_mode("light")
+
+
+# This is used when the user clicks the buttons to search all at once. It adds the value to 
+# the option_chosen variable to it would be processed later on.
+def apply_to_variable(chosen_input):
+    global option_chosen
+    option_chosen.set(chosen_input)
+
 
 # onlineMethod(search_value,site_id) is the main function that searching process works in
 def online_method(search_value, site_id, chosen_type, main_link):    
@@ -226,10 +213,11 @@ def online_method(search_value, site_id, chosen_type, main_link):
             # Append the link to allLinks list.
             for link in result_links.items():
                 if results_count < 1:
-                    best_results[("best", site_name, link[0])] = link[1]
+                    best_results[("best", site_name, site_link, link[0])] = link[1]
                     results_count = results_count + 1
                 else:
-                    allLinks[("default", site_name, link[0])] = link[1]
+                    allLinks[("default", site_name, site_link, link[0])] = link[1]
+
 
 def search_process_signal(button_num, nwindow, chosen_input, 
                         search_value, start_position, end_position):   
@@ -350,7 +338,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 # i = index number according to start_position and end_position
                 type = keys[i][0]
                 site_name = keys[i][1]
-                name = keys[i][2]
+                site_link = keys[i][2]
+                name = keys[i][3]
                 link = values[i]
 
                 result_primary_frame = customtkinter.CTkFrame(search_progress_frame_two)
@@ -363,9 +352,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
 
                 if type == "best":
-                    result_site_name = customtkinter.CTkLabel(result_frame, text=site_name, bg_color="lightgreen", text_color="black", pady=5, padx=5)
+                    result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
                 else:
-                    result_site_name = customtkinter.CTkLabel(result_frame, text=site_name, bg_color="yellow", text_color="black", pady=5, padx=5)
+                    result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
 
                 if len(link) > 200:
                     result_link = customtkinter.CTkLabel(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
@@ -381,8 +370,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 result_name.pack(side=LEFT, anchor="w", padx=10)
                 result_link.pack(side=LEFT, anchor="w")
                 
-                result_name.bind("<Button-1>", lambda e,link=link: callback(link))
-                result_link.bind("<Button-1>", lambda e,link=link: callback(link))
+                result_name.bind("<Button-1>", lambda e,link=link: cb.callback(link))
+                result_link.bind("<Button-1>", lambda e,link=link: cb.callback(link))
 
                 result_count = result_count + 1
 
@@ -435,20 +424,13 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 button_value = int(button_split[1])
 
                 # create the button by passing starting position(button_id*50) and ending position(button_id*50+button_value)
-                other_page_btns = Button(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), padx=10, pady=5)
+                other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), width=30, height=30)
                 other_page_btns.pack(side=LEFT, padx=10)
-
 
     # If it isn't greater than 0, it says No Results
     else:
         noresult = messagebox.showwarning("No results!", "Click Ok to search again.")
         search_progress_window.destroy()
-
-# This is used when the user clicks the buttons to search all at once. It adds the value to 
-# the option_chosen variable to it would be processed later on.
-def apply_to_variable(chosen_input):
-    global option_chosen
-    option_chosen.set(chosen_input)
 
 
 # Asks user to insert inputs, the beginning of the program.
@@ -522,7 +504,7 @@ def beginProgram():
     options_available = customtkinter.CTkOptionMenu(process_chosen_frame, variable=option_chosen, values=websites_list_dropdown)
     options_available.pack(side=LEFT, padx=10) 
 
-    # Creates entry for user input space with width 60        
+    # Creates entry for user input space with width 300      
     search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=300, placeholder_text="What do you want to search today?")
 
     # Creates the search button widget, with the on-click command heading towards search_process_signal function
