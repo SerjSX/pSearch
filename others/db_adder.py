@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-# Grabs the directory name [BETA TESTING: to prevent file not found error]
+# Grabs the directory name 
 path = os.getcwd()
 print(path)
 

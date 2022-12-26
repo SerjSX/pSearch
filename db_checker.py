@@ -5,6 +5,8 @@ import urllib.request
 import urllib.error
 import sqlite3
 from tkinter import messagebox
+from tkinter import * 
+import customtkinter
 import os
 
 # Grabs the directory name
@@ -27,7 +29,6 @@ cur = conn.cursor()
 
 # db_checker is used for checking if all sites from the database are healthy.
 def db_checker():
-
     db_checker_confirm = messagebox.askyesno("Database Checking Operation",
     '''This operation is used for checking if all of the sites in the database return healthy page codes. It might take some time and you won't be able to use the program until it's done.\n
     Click Yes if you want to proceed; progress will be displayed via message boxes like this, and errored sites will be printed in the command line terminal.\n
@@ -72,3 +73,4 @@ def db_checker():
 
         print("Database Checking Operation is done")
 
+    

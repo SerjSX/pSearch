@@ -9,7 +9,7 @@ import os
 import sqlite3
 import traceback
 from random import shuffle
-from PIL import ImageTk, Image
+from PIL import  Image
 import math
 
 # Database Checker py checks the health of the websites in the database
@@ -17,6 +17,9 @@ import db_checker as dc
 
 # Callback py redirects user to browser with a defined link
 import callback as cb
+
+# Base64 Decoding/Encoding function
+import base64_functions as b64f
 
 # customtkinter.set_appearance_mode("light")
 
@@ -26,13 +29,18 @@ path = os.getcwd()
 root = customtkinter.CTk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
-root.geometry("1000x500")
+root.geometry("1000x530")
 
 search_progress_window = None
 search_progress_frame = None
 process_chosen_frame = None
 
 search_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\search_button.png"),
+                                    size=(25,25))
+
+
+github_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\github\GitHub-Mark-Light-32px.png"), 
+                                    dark_image=Image.open(path + "\media\github\GitHub-Mark-32px.png"),
                                     size=(25,25))
 
 # Used to show images for each type afterwards
@@ -93,11 +101,6 @@ def online_method(search_value, site_id, chosen_type, main_link):
     # site_slink has the search URL.
     # site_key1-2-3 are used for grabbing the content from the website, which afterwards the links would
     # be shown from.
-    site_link = None
-    site_slink = None
-    site_key1 = None
-    site_key2 = None
-    site_key3 = None
 
     # for each website from the database file...
     for web in websites:
@@ -448,13 +451,17 @@ def beginProgram():
     top_functions_frame = customtkinter.CTkFrame(root)
     top_functions_frame.pack(side=TOP, fill=BOTH)
 
+    # theme changer button
+    toggle_theme_btn = customtkinter.CTkButton(top_functions_frame, text=" Change Theme ", command=lambda: change_theme(customtkinter.get_appearance_mode()), width=40, corner_radius=0)
+    toggle_theme_btn.pack(side=LEFT, padx=5)
+
     # db_checker button
     db_checker_btn = customtkinter.CTkButton(top_functions_frame, text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
     db_checker_btn.pack(side=LEFT)
 
     # theme changer button
-    toggle_theme_btn = customtkinter.CTkButton(top_functions_frame, text=" Change Theme ", command=lambda: change_theme(customtkinter.get_appearance_mode()), width=40, corner_radius=0)
-    toggle_theme_btn.pack(side=LEFT, padx=5)
+    base64_functions_btn = customtkinter.CTkButton(top_functions_frame, text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
+    base64_functions_btn.pack(side=LEFT, padx=5)
 
     wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
     wlcmsg.pack(side=TOP, pady=100)
@@ -556,6 +563,9 @@ def beginProgram():
 
         # Appends the type name to types_list list to be used for button click identification afterwards
         types_list.append(type[1])
+
+    like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
+    github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb.callback("https://github.com/SerjSX/pSearch/")).pack(pady=5)
 
 
 # The beginning program runs beginProgram() function
