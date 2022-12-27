@@ -11,6 +11,7 @@ import traceback
 from random import shuffle
 from PIL import  Image
 import math
+import random
 
 # Database Checker py checks the health of the websites in the database
 import db_checker as dc
@@ -29,7 +30,7 @@ path = os.getcwd()
 root = customtkinter.CTk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
-root.geometry("1000x530")
+root.geometry("1000x600")
 
 search_progress_window = None
 search_progress_frame = None
@@ -65,6 +66,15 @@ header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
           'Accept-Encoding': 'none',
           'Accept-Language': 'en-US,en;q=0.8',
           'Connection': 'keep-alive'}
+
+search_text = ["What do you want to search today?",
+                "What do you want to search?",
+                "Enter what you want to search here!",
+                "Try searching in the FMHY starred collections.",
+                "Here is where you put what you want to search.",
+                "Enter search value here...",
+                "Make sure you fill this before clicking the search button!",
+                "Searching ALL sites might take some time, so try to avoid it."]
 
 # allLinks for appending all links at the end (used in Online Database)
 allLinks = {}
@@ -226,6 +236,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                         search_value, start_position, end_position):   
     global search_progress_window
 
+    # Used for collection, need whole chosen text
+    actual_chosen_input = chosen_input
+
     # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
     # needs to just select the ID number of the site.
     chosen_input = chosen_input.split()[0]
@@ -283,6 +296,12 @@ def search_process_signal(button_num, nwindow, chosen_input,
             for site in websites:
                 if chosen_input in site[7] or "all" in site[7]:
                     # Activate the onlineMethod function with forwarding the site's ID.
+                    online_method(search_value, site[0], 0, site[8])
+
+        elif actual_chosen_input.startswith("Collection"):
+            split = actual_chosen_input.split("-")
+            for site in websites:
+                if int(split[1].strip()) == site[9]:
                     online_method(search_value, site[0], 0, site[8])
 
         # This runs as the default method, which is when the user selects a specific site
@@ -471,6 +490,9 @@ def beginProgram():
 
     # types_list is used to check if chosen_input is one of the buttons or not.
     types_list = list()
+
+    # collection_list is used for storing collection names and ids from the database
+    collection_list = list()
     
     # Connects to the websites database
     conn = sqlite3.connect(path + '\others\websitesdb')
@@ -483,7 +505,8 @@ def beginProgram():
     # Grabs the information from the Database
     for row in cur.execute('''
         SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
-        Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink 
+        Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink,
+        Websites.collection_id
             FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
                 ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
                 AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
@@ -512,7 +535,7 @@ def beginProgram():
     options_available.pack(side=LEFT, padx=10) 
 
     # Creates entry for user input space with width 300      
-    search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=300, placeholder_text="What do you want to search today?")
+    search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=350, placeholder_text=random.choice(search_text))
 
     # Creates the search button widget, with the on-click command heading towards search_process_signal function
     # with passing the option chosen and the search entry.
@@ -563,6 +586,37 @@ def beginProgram():
 
         # Appends the type name to types_list list to be used for button click identification afterwards
         types_list.append(type[1])
+
+    # Creates an outer frame for displaying all-in-one types search
+    collection_outer_frame = customtkinter.CTkFrame(root, fg_color="transparent")
+    collection_outer_frame.pack()
+
+    # Used for collection buttons
+    get_collections = cur.execute("SELECT * FROM Collections")
+
+    for collection in get_collections:
+        # Save the name of the type in a separate variable, [0] is the id, [1] is the name
+        collection_name = collection[1]
+        collection_id = collection[0]
+
+        # Create a frame to insert image and name under it
+        collection_frame = customtkinter.CTkFrame(master=collection_outer_frame)
+        collection_frame.pack(side=LEFT, pady=10, padx=5)
+
+        # Creates the buttons for each type to display type name
+        collection_btns = customtkinter.CTkButton(master=collection_frame, 
+                                            width=50,
+                                            height=50,
+                                            text=collection_name, 
+                                            command=lambda collection_name=collection_name, collection_id=collection_id: apply_to_variable("Collection - " + str(collection_id) + " - " + collection_name),
+                                            fg_color="gold",
+                                            hover_color="yellow",
+                                            text_color="black",
+                                            compound="top")
+        collection_btns.pack(side=TOP)
+
+        # Appends the type name to types_list list to be used for button click identification afterwards
+        collection_list.append(collection[1])
 
     like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
     github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb.callback("https://github.com/SerjSX/pSearch/")).pack(pady=5)
