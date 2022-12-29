@@ -12,7 +12,6 @@ from random import shuffle
 from PIL import  Image
 import math
 import random
-
 # Database Checker py checks the health of the websites in the database
 import db_checker as dc
 
@@ -21,6 +20,9 @@ import callback as cb
 
 # Base64 Decoding/Encoding function
 import base64_functions as b64f
+
+# About button
+import info
 
 # customtkinter.set_appearance_mode("light")
 
@@ -81,6 +83,25 @@ allLinks = {}
 
 # best results
 best_results = {}
+
+# Connects to the websites database
+conn = sqlite3.connect(path + '\others\websitesdb')
+# Asigns cursor to execute database functions
+cur = conn.cursor()
+
+# The websites grabbed from the database are inserted in this list.
+websites = list()
+
+# Grabs the information from the Database
+for row in cur.execute('''
+    SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
+    Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink,
+    Websites.collection_id
+        FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
+            ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
+            AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
+    # Appends it to the websites list.
+    websites.append(row)
 
 print("The terminal will be used for displaying errors. Any error you face report on Github with full details.")
 
@@ -465,6 +486,7 @@ def beginProgram():
     global types_list
     global search_progress_frame
     global process_chosen_frame
+    global get_collections
 
     # This frame includes other buttons with small functions
     top_functions_frame = customtkinter.CTkFrame(root)
@@ -478,9 +500,13 @@ def beginProgram():
     db_checker_btn = customtkinter.CTkButton(top_functions_frame, text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
     db_checker_btn.pack(side=LEFT)
 
-    # theme changer button
+    # base64_functions button
     base64_functions_btn = customtkinter.CTkButton(top_functions_frame, text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
     base64_functions_btn.pack(side=LEFT, padx=5)
+
+    # about/info button
+    about_btn = customtkinter.CTkButton(top_functions_frame, text=" About pSearch ", command=info.info_message, width=40, corner_radius=0)
+    about_btn.pack(side=RIGHT, padx=5)
 
     wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
     wlcmsg.pack(side=TOP, pady=100)
@@ -493,25 +519,6 @@ def beginProgram():
 
     # collection_list is used for storing collection names and ids from the database
     collection_list = list()
-    
-    # Connects to the websites database
-    conn = sqlite3.connect(path + '\others\websitesdb')
-    # Asigns cursor to execute database functions
-    cur = conn.cursor()
-
-    # The websites grabbed from the database are inserted in this list.
-    websites = list()
-
-    # Grabs the information from the Database
-    for row in cur.execute('''
-        SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
-        Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink,
-        Websites.collection_id
-            FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
-                ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
-                AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
-        # Appends it to the websites list.
-        websites.append(row)
 
     # Creates a list for storing the available sites from the database, to be put in dropdown menu afterwards
     websites_list_dropdown = list()
@@ -621,6 +628,7 @@ def beginProgram():
     like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
     github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb.callback("https://github.com/SerjSX/pSearch/")).pack(pady=5)
 
+    
 
 # The beginning program runs beginProgram() function
 beginProgram()
