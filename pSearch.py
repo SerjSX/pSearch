@@ -269,211 +269,216 @@ def search_process_signal(button_num, nwindow, chosen_input,
     if search_progress_window != None:
         search_progress_window.destroy()
 
-    # Create a result window for the frame
-    search_progress_window = customtkinter.CTkToplevel(root)
-    search_progress_window.geometry("1250x650")
+    if len(search_value) != 0:
     
-    search_progress_frame = customtkinter.CTkFrame(search_progress_window)
-    search_progress_frame.pack(side=RIGHT, fill=BOTH, expand=True)
-
-    # Create a canvas for the frame
-    search_progress_canvas = customtkinter.CTkCanvas(search_progress_frame)
-    search_progress_canvas.pack(side=LEFT, fill=BOTH, expand=True)
-
-    if customtkinter.get_appearance_mode() == "Light":
-        search_progress_canvas.configure(bg="white")
+        # Create a result window for the frame
+        search_progress_window = customtkinter.CTkToplevel(root)
+        search_progress_window.geometry("1250x650")
     
-    else:
-        search_progress_canvas.configure(bg="#302c2c")
+        search_progress_frame = customtkinter.CTkFrame(search_progress_window)
+        search_progress_frame.pack(side=RIGHT, fill=BOTH, expand=True)
 
-    # Add a scrollbar to the canvas
-    search_progress_scrollbar = customtkinter.CTkScrollbar(search_progress_frame, orientation=VERTICAL, command=search_progress_canvas.yview)
-    search_progress_scrollbar.pack(side=RIGHT, fill=Y)
+        # Create a canvas for the frame
+        search_progress_canvas = customtkinter.CTkCanvas(search_progress_frame)
+        search_progress_canvas.pack(side=LEFT, fill=BOTH, expand=True)
 
-    # Configure the canvas
-    search_progress_canvas.configure(yscrollcommand=search_progress_scrollbar.set)
-    search_progress_canvas.bind('<Configure>', lambda e: search_progress_canvas.configure(scrollregion = search_progress_canvas.bbox("all")))
+        if customtkinter.get_appearance_mode() == "Light":
+            search_progress_canvas.configure(bg="white")
+    
+        else:
+            search_progress_canvas.configure(bg="#302c2c")
 
-    # Creating another frame in the canvas
-    search_progress_frame_two = customtkinter.CTkFrame(search_progress_canvas, fg_color="transparent")
+        # Add a scrollbar to the canvas
+        search_progress_scrollbar = customtkinter.CTkScrollbar(search_progress_frame, orientation=VERTICAL, command=search_progress_canvas.yview)
+        search_progress_scrollbar.pack(side=RIGHT, fill=Y)
 
-    # Adding a new frame to the window
-    search_progress_canvas.create_window((0,0), window=search_progress_frame_two, anchor="nw") 
+        # Configure the canvas
+        search_progress_canvas.configure(yscrollcommand=search_progress_scrollbar.set)
+        search_progress_canvas.bind('<Configure>', lambda e: search_progress_canvas.configure(scrollregion = search_progress_canvas.bbox("all")))
 
-    if nwindow == False:
-        # Clears allLinks and best_results to start over with a new search.
-        allLinks.clear()
-        best_results.clear()
+        # Creating another frame in the canvas
+        search_progress_frame_two = customtkinter.CTkFrame(search_progress_canvas, fg_color="transparent")
 
-        # in case user chose all sites...
-        if chosen_input == "all":
-            for site in websites:
-                # Activate the onlineMethod function with forwarding the site's ID.
-                online_method(search_value, site[0], 0, site[8])
+        # Adding a new frame to the window
+        search_progress_canvas.create_window((0,0), window=search_progress_frame_two, anchor="nw") 
 
-        # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
-        elif chosen_input in types_list:
-            # for each site in sites
-            for site in websites:
-                if chosen_input in site[7] or "all" in site[7]:
+        if nwindow == False:
+            # Clears allLinks and best_results to start over with a new search.
+            allLinks.clear()
+            best_results.clear()
+
+            # in case user chose all sites...
+            if chosen_input == "all":
+                for site in websites:
                     # Activate the onlineMethod function with forwarding the site's ID.
                     online_method(search_value, site[0], 0, site[8])
 
-        elif actual_chosen_input.startswith("Collection"):
-            split = actual_chosen_input.split("-")
-            for site in websites:
-                if int(split[1].strip()) == site[9]:
-                    online_method(search_value, site[0], 0, site[8])
+            # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
+            elif chosen_input in types_list:
+                # for each site in sites
+                for site in websites:
+                    if chosen_input in site[7] or "all" in site[7]:
+                        # Activate the onlineMethod function with forwarding the site's ID.
+                        online_method(search_value, site[0], 0, site[8])
 
-        # This runs as the default method, which is when the user selects a specific site
-        else:
-            # Forward it to the online_method function
-            for web in websites:
-                if web[0] == int(chosen_input):
-                    online_method(search_value, web[0], 0, web[8])
+            elif actual_chosen_input.startswith("Collection"):
+                split = actual_chosen_input.split("-")
+                for site in websites:
+                    if int(split[1].strip()) == site[9]:
+                        online_method(search_value, site[0], 0, site[8])
 
-    # At the end, it prints the results if the length of allLinks OR best results is greater than 0
-    if len(allLinks) > 0 or len(best_results) > 0:
-        # result_count is used to limit how much results the program is allowed to show.
-        result_count = 0 
+            # This runs as the default method, which is when the user selects a specific site
+            else:
+                # Forward it to the online_method function
+                for web in websites:
+                    if web[0] == int(chosen_input):
+                        online_method(search_value, web[0], 0, web[8])
 
-        # If nwindow is false then it shuffles the results, or else 
-        # if true then it's a signal for new window, so no need to shuffle to keep
-        # order stable and still.
-        if nwindow == False:
-            # Shuffles the allLinks dictionary items
-            shuffled_links = [*allLinks.items()]
-            shuffle(shuffled_links)
+        # At the end, it prints the results if the length of allLinks OR best results is greater than 0
+        if len(allLinks) > 0 or len(best_results) > 0:
+            # result_count is used to limit how much results the program is allowed to show.
+            result_count = 0 
+
+            # If nwindow is false then it shuffles the results, or else 
+            # if true then it's a signal for new window, so no need to shuffle to keep
+            # order stable and still.
+            if nwindow == False:
+                # Shuffles the allLinks dictionary items
+                shuffled_links = [*allLinks.items()]
+                shuffle(shuffled_links)
         
-            # Shuffles the best links dictionary items
-            shuffled_best_links = [*best_results.items()]
-            shuffle(shuffled_best_links)
+                # Shuffles the best links dictionary items
+                shuffled_best_links = [*best_results.items()]
+                shuffle(shuffled_best_links)
 
-            # Creates a new dictionary in order to merge both shuffled links
-            global final_links
-            final_links = dict()
+                # Creates a new dictionary in order to merge both shuffled links
+                global final_links
+                final_links = dict()
 
-            # First appends from the best results because it shows best results at first
-            for link in shuffled_best_links:
-                final_links[link[0]] = link[1]
+                # First appends from the best results because it shows best results at first
+                for link in shuffled_best_links:
+                    final_links[link[0]] = link[1]
         
-            # Then it appends from the normal links 
-            for link in shuffled_links:
-                final_links[link[0]] = link[1]
+                # Then it appends from the normal links 
+                for link in shuffled_links:
+                    final_links[link[0]] = link[1]
 
-            start_position = 0
-            end_position = len(final_links)
+                start_position = 0
+                end_position = len(final_links)
 
-        # Creates a notice block to always use an adblocker extension
-        notice_ublock = customtkinter.CTkLabel(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
-        notice_ublock.pack(expand=TRUE, fill=BOTH)
+            # Creates a notice block to always use an adblocker extension
+            notice_ublock = customtkinter.CTkLabel(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
+            notice_ublock.pack(expand=TRUE, fill=BOTH)
 
-        # Convert dictionary keys and values to list to select accordingly afterwards
-        keys = list(final_links.keys())
-        values = list(final_links.values())
+            # Convert dictionary keys and values to list to select accordingly afterwards
+            keys = list(final_links.keys())
+            values = list(final_links.values())
 
-        for i in range(start_position, end_position):
-            if result_count < 50:
-                global result_link
-                global result_name
+            for i in range(start_position, end_position):
+                if result_count < 50:
+                    global result_link
+                    global result_name
 
-                # Assign variables to each necessary information
-                # i = index number according to start_position and end_position
-                type = keys[i][0]
-                site_name = keys[i][1]
-                site_link = keys[i][2]
-                name = keys[i][3]
-                link = values[i]
+                    # Assign variables to each necessary information
+                    # i = index number according to start_position and end_position
+                    type = keys[i][0]
+                    site_name = keys[i][1]
+                    site_link = keys[i][2]
+                    name = keys[i][3]
+                    link = values[i]
 
-                result_primary_frame = customtkinter.CTkFrame(search_progress_frame_two)
-                result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two, pady=20)
+                    result_primary_frame = customtkinter.CTkFrame(search_progress_frame_two)
+                    result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two, pady=20)
 
-                result_frame = customtkinter.CTkFrame(result_primary_frame)
-                result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)
+                    result_frame = customtkinter.CTkFrame(result_primary_frame)
+                    result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)
 
-                result_link_frame = customtkinter.CTkFrame(result_primary_frame)
-                result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
+                    result_link_frame = customtkinter.CTkFrame(result_primary_frame)
+                    result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
 
-                if type == "best":
-                    result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
-                else:
-                    result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
+                    if type == "best":
+                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
+                    else:
+                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
 
-                if len(link) > 200:
-                    result_link = customtkinter.CTkLabel(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
-                else:
-                    result_link = customtkinter.CTkLabel(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
+                    if len(link) > 200:
+                        result_link = customtkinter.CTkLabel(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
+                    else:
+                        result_link = customtkinter.CTkLabel(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
 
-                if len(name) > 110:
-                    result_name = customtkinter.CTkLabel(result_frame, text=name[:109].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
-                else:
-                    result_name = customtkinter.CTkLabel(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
+                    if len(name) > 110:
+                        result_name = customtkinter.CTkLabel(result_frame, text=name[:109].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
+                    else:
+                        result_name = customtkinter.CTkLabel(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 
-                result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
-                result_name.pack(side=LEFT, anchor="w", padx=10)
-                result_link.pack(side=LEFT, anchor="w")
+                    result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
+                    result_name.pack(side=LEFT, anchor="w", padx=10)
+                    result_link.pack(side=LEFT, anchor="w")
                 
-                result_name.bind("<Button-1>", lambda e,link=link: cb.callback(link))
-                result_link.bind("<Button-1>", lambda e,link=link: cb.callback(link))
+                    result_name.bind("<Button-1>", lambda e,link=link: cb.callback(link))
+                    result_link.bind("<Button-1>", lambda e,link=link: cb.callback(link))
 
-                result_count = result_count + 1
+                    result_count = result_count + 1
 
-        search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
+            search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
 
-            # If it's greater than 50
-        if len(final_links) > 50:
-            # _count is used for counting each number from the input
-            several_btn_count = 0
-            # _length has the length of the results
-            several_btn_length = len(final_links)
-            # _list to append the amount for each button
-            global several_btn_list
-            several_btn_list = list()
+                # If it's greater than 50
+            if len(final_links) > 50:
+                # _count is used for counting each number from the input
+                several_btn_count = 0
+                # _length has the length of the results
+                several_btn_length = len(final_links)
+                # _list to append the amount for each button
+                global several_btn_list
+                several_btn_list = list()
 
-            # Divides the input by 50 (to get appx how many buttons it needs)
-            btn_count = math.ceil(several_btn_length/50)
+                # Divides the input by 50 (to get appx how many buttons it needs)
+                btn_count = math.ceil(several_btn_length/50)
 
-            # For b in the range of btn_count...
-            for b in range(btn_count):
-                # for i in the range of the input plus one...
-                for i in range(several_btn_length + 1):      
+                # For b in the range of btn_count...
+                for b in range(btn_count):
+                    # for i in the range of the input plus one...
+                    for i in range(several_btn_length + 1):      
             
-                    # If the _count reached 50
-                    if several_btn_count == 50:
-                        # append it to the list
-                        several_btn_list.append(str(b) + "-" + str(several_btn_count))
-                        # deduct from _length the appended amount
-                        several_btn_length = several_btn_length - several_btn_count
-                        # reset the btn count to 0
-                        several_btn_count = 0
-                        # break and start over
-                        break
+                        # If the _count reached 50
+                        if several_btn_count == 50:
+                            # append it to the list
+                            several_btn_list.append(str(b) + "-" + str(several_btn_count))
+                            # deduct from _length the appended amount
+                            several_btn_length = several_btn_length - several_btn_count
+                            # reset the btn count to 0
+                            several_btn_count = 0
+                            # break and start over
+                            break
 
-                    # if the b is the last button count and the _count matches the _length, which means
-                    # it's the last button's amount...
-                    if b == btn_count - 1 and several_btn_count == several_btn_length:
-                        # append _count to the list
-                        several_btn_list.append(str(b) + "-" + str(several_btn_count))
+                        # if the b is the last button count and the _count matches the _length, which means
+                        # it's the last button's amount...
+                        if b == btn_count - 1 and several_btn_count == several_btn_length:
+                            # append _count to the list
+                            several_btn_list.append(str(b) + "-" + str(several_btn_count))
 
-                    # Increment several_btn_count by 1
-                    several_btn_count += 1
+                        # Increment several_btn_count by 1
+                        several_btn_count += 1
 
-            # For each button in the buttons list
-            for button in several_btn_list:
-                # Split the value
-                button_split = button.split("-")
-                # Put the id and value in separate variables
-                button_id = int(button_split[0])
-                button_value = int(button_split[1])
+                # For each button in the buttons list
+                for button in several_btn_list:
+                    # Split the value
+                    button_split = button.split("-")
+                    # Put the id and value in separate variables
+                    button_id = int(button_split[0])
+                    button_value = int(button_split[1])
 
-                # create the button by passing starting position(button_id*50) and ending position(button_id*50+button_value)
-                other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), width=30, height=30)
-                other_page_btns.pack(side=LEFT, padx=10)
+                    # create the button by passing starting position(button_id*50) and ending position(button_id*50+button_value)
+                    other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), width=30, height=30)
+                    other_page_btns.pack(side=LEFT, padx=10)
 
-    # If it isn't greater than 0, it says No Results
+        # If it isn't greater than 0, it says No Results
+        else:
+            noresult = messagebox.showwarning("No results!", "Click Ok to search again.")
+            search_progress_window.destroy()
+
     else:
-        noresult = messagebox.showwarning("No results!", "Click Ok to search again.")
-        search_progress_window.destroy()
+        messagebox.showerror("No search input!", "Hmm, you're going to search... Nothing? Try again.")
 
 
 # Asks user to insert inputs, the beginning of the program.
@@ -612,8 +617,7 @@ def beginProgram():
 
         # Creates the buttons for each type to display type name
         collection_btns = customtkinter.CTkButton(master=collection_frame, 
-                                            width=50,
-                                            height=50,
+                                            height=40,
                                             text=collection_name, 
                                             command=lambda collection_name=collection_name, collection_id=collection_id: apply_to_variable("Collection - " + str(collection_id) + " - " + collection_name),
                                             fg_color="gold",
