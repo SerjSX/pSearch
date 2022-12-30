@@ -270,7 +270,41 @@ def search_process_signal(button_num, nwindow, chosen_input,
         search_progress_window.destroy()
 
     if len(search_value) != 0:
-    
+
+        # if in: is in the search value then a special condition is detected.
+        # A special condition is a shortcut to directly search in a website without using the dropdown for selection.
+        if "in:" in search_value:
+            # foundPing is used for detecting if a matching site has been found, to prevent multiple sites.
+            foundPing = False
+
+            # Splits the value with in:
+            split_value = search_value.split("in:")
+            # Puts [0] into search_value and [1] into chosen_input for checking later.
+            search_value = split_value[0].strip()
+            chosen_input = split_value[1].strip()
+            # If the search_value and chosen_input aren't empty, then proceed. Or else show an error message.
+            if search_value != "" and chosen_input != "":
+                # For each website in websites...
+                for web in websites:
+                    # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
+                    # website (lowercased) then...
+                    if chosen_input.lower() in web[1].lower():
+                        # Asign the site's id to chosen_input
+                        chosen_input = str(web[0])
+                        # Change the ping to True
+                        foundPing = True
+                        # Break the loop
+                        break
+
+                # if the ping stays False then no matching sites were found, throws an error.
+                if foundPing == False:
+                    messagebox.showerror("Error!", "Invalid special condition input, try without it.")  
+                    return
+            # If there are empty values in the input then it specifies how the format should be.
+            else:
+                messagebox.showerror("Error!", '''If you want to use special conditions you have to first specify the search value then the condition. Like: adobe in:monkrus''')
+                return
+
         # Create a result window for the frame
         search_progress_window = customtkinter.CTkToplevel(root)
         search_progress_window.geometry("1250x650")
