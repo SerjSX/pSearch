@@ -3,6 +3,11 @@ import customtkinter
 from tkinter import * 
 from tkinter import messagebox
 
+# To prevent the error of root not being a valid thing.
+# This program is imported in pSearch, where root is the main window.
+root = None
+app = None
+
 def button_click_event(type, input):
     results = list()
     lines = input.split()
@@ -47,8 +52,11 @@ def button_click_event(type, input):
 
 def start_base64():
     global app
+    
+    if app != None:
+        app.destroy()
 
-    app = customtkinter.CTk()
+    app = customtkinter.CTkToplevel(root)
     app.geometry("750x350")
     app.title("Base64 Decoder/Encoder")
 
@@ -67,6 +75,3 @@ def start_base64():
     button_encode.pack(pady=10, padx=10, side=LEFT)
     button_sencode = customtkinter.CTkButton(app, text="URL and Filename Safe Encode", command=lambda: button_click_event("safe encode", input_textbox.get("0.0", "end")))
     button_sencode.pack(pady=10, padx=10, side=LEFT)
-
-    app.mainloop()
-
