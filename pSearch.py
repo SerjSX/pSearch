@@ -259,21 +259,21 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
     # Used for collection, need whole chosen text
     actual_chosen_input = chosen_input
-
-    # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
-    # needs to just select the ID number of the site.
-    chosen_input = chosen_input.split()[0]
+    
+    try:
+        # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
+        # needs to just select the ID number of the site.
+        chosen_input = chosen_input.split()[0]        
+    
+        chosen_input = int(chosen_input)
+        int_or_str = "int"
+    except:
+        int_or_str = "str"
 
     # If the search results window isn't None then most probably there's another one already on-screen,
     # so it destroys it to just have one window.
     if search_progress_window != None:
         search_progress_window.destroy()
-
-    try:
-        chosen_input = int(chosen_input)
-        int_or_str = "int"
-    except:
-        int_or_str = "str"
 
 
     if len(search_value) != 0:
