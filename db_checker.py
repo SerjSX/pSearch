@@ -6,7 +6,6 @@ import urllib.error
 import sqlite3
 from tkinter import messagebox
 from tkinter import * 
-import customtkinter
 import os
 
 # Grabs the directory name

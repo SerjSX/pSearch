@@ -1,9 +1,7 @@
 from tkinter import * 
 from tkinter import messagebox
 import customtkinter
-import urllib.parse
-import urllib.request
-import urllib.error
+import urllib.parse, urllib.request, urllib.error
 from bs4 import BeautifulSoup
 import os
 import sqlite3
@@ -32,7 +30,7 @@ path = os.getcwd()
 root = customtkinter.CTk()
 root.title("pSearch")
 root.iconbitmap(path + "\media\icon.ico")
-root.geometry("1000x600")
+root.geometry("1050x620")
 
 search_progress_window = None
 search_progress_frame = None
@@ -120,8 +118,8 @@ def change_theme(current_theme):
 # This is used when the user clicks the buttons to search all at once. It adds the value to 
 # the option_chosen variable to it would be processed later on.
 def apply_to_variable(chosen_input):
-    global option_chosen
-    option_chosen.set(chosen_input)
+    global site_entry_input
+    site_entry_input.set(chosen_input)
 
 
 # onlineMethod(search_value,site_id) is the main function that searching process works in
@@ -257,6 +255,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                         search_value, start_position, end_position):   
     global search_progress_window
 
+    int_or_str = None
+
     # Used for collection, need whole chosen text
     actual_chosen_input = chosen_input
 
@@ -269,40 +269,36 @@ def search_process_signal(button_num, nwindow, chosen_input,
     if search_progress_window != None:
         search_progress_window.destroy()
 
+    try:
+        chosen_input = int(chosen_input)
+        int_or_str = "int"
+    except:
+        int_or_str = "str"
+
+
     if len(search_value) != 0:
 
         # if in: is in the search value then a special condition is detected.
         # A special condition is a shortcut to directly search in a website without using the dropdown for selection.
-        if "in:" in search_value:
+        if int_or_str == "str" and not chosen_input.startswith("C-") and chosen_input not in types_list:
             # foundPing is used for detecting if a matching site has been found, to prevent multiple sites.
             foundPing = False
 
-            # Splits the value with in:
-            split_value = search_value.split("in:")
-            # Puts [0] into search_value and [1] into chosen_input for checking later.
-            search_value = split_value[0].strip()
-            chosen_input = split_value[1].strip()
-            # If the search_value and chosen_input aren't empty, then proceed. Or else show an error message.
-            if search_value != "" and chosen_input != "":
-                # For each website in websites...
-                for web in websites:
-                    # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
-                    # website (lowercased) then...
-                    if chosen_input.lower() in web[1].lower():
-                        # Asign the site's id to chosen_input
-                        chosen_input = str(web[0])
-                        # Change the ping to True
-                        foundPing = True
-                        # Break the loop
-                        break
+            # For each website in websites...
+            for web in websites:
+                # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
+                # website (lowercased) then...
+                if chosen_input.lower() in web[1].lower():
+                    # Asign the site's id to chosen_input
+                    chosen_input = str(web[0])
+                    # Change the ping to True
+                    foundPing = True
+                    # Break the loop
+                    break
 
-                # if the ping stays False then no matching sites were found, throws an error.
-                if foundPing == False:
-                    messagebox.showerror("Error!", "Invalid special condition input, try without it.")  
-                    return
-            # If there are empty values in the input then it specifies how the format should be.
-            else:
-                messagebox.showerror("Error!", '''If you want to use special conditions you have to first specify the search value then the condition. Like: adobe in:monkrus''')
+            # if the ping stays False then no matching sites were found, throws an error.
+            if foundPing == False:
+                messagebox.showerror("Error!", "Invalid site name input, either empty it or put a valid name.")  
                 return
 
         # Create a result window for the frame
@@ -355,7 +351,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                         # Activate the onlineMethod function with forwarding the site's ID.
                         online_method(search_value, site[0], 0, site[8])
 
-            elif actual_chosen_input.startswith("Collection"):
+            elif actual_chosen_input.startswith("C-"):
                 split = actual_chosen_input.split("-")
                 for site in websites:
                     if int(split[1].strip()) == site[9]:
@@ -526,6 +522,7 @@ def beginProgram():
     global search_progress_frame
     global process_chosen_frame
     global get_collections
+    global site_entry_input
 
     # This frame includes other buttons with small functions
     top_functions_frame = customtkinter.CTkFrame(root)
@@ -576,30 +573,40 @@ def beginProgram():
     process_chosen_frame = customtkinter.CTkFrame(root, fg_color="transparent")
     process_chosen_frame.pack(padx=10, pady=10) 
 
-    # Create the options dropdown menu
-    options_available = customtkinter.CTkOptionMenu(process_chosen_frame, variable=option_chosen, values=websites_list_dropdown)
-    options_available.pack(side=LEFT, padx=10) 
-
     # Creates entry for user input space with width 300      
     search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=350, placeholder_text=random.choice(search_text))
+
+    # Creates entry for user input space with width 300      
+    site_entry_input = customtkinter.CTkComboBox(process_chosen_frame, variable=option_chosen, values=websites_list_dropdown, height=30, width=200, command=lambda e: apply_to_variable(site_entry_input.get()))
+    site_entry_input.set("Enter site name here")
 
     # Creates the search button widget, with the on-click command heading towards search_process_signal function
     # with passing the option chosen and the search entry.
     search_submit_btn = customtkinter.CTkButton(process_chosen_frame, 
                                                 text="", 
                                                 image=search_img, 
-                                                command=lambda: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0), 
+                                                command=lambda: search_process_signal(0, False, site_entry_input.get(), search_entry_input.get(), 0, 0), 
                                                 width=10,
                                                 height=10)
+
+    site_entry_input.pack(side=LEFT, padx=5)
     search_entry_input.pack(side=LEFT)
 
     search_submit_btn.pack(side=RIGHT, padx=10)
 
     # Bind the keyboard function Enter to the entry so user can directly click Enter to search.
-    search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, option_chosen.get(), search_entry_input.get(), 0, 0))
+    search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, site_entry_input.get(), search_entry_input.get(), 0, 0))
+
+
+    tabview = customtkinter.CTkTabview(root, height=40)
+    tabview.pack(pady=20)
+
+    tabview.add("Types")
+    tabview.add("Collections")
+
 
     # Creates an outer frame for displaying all-in-one types search
-    types_outer_frame = customtkinter.CTkFrame(root, fg_color="transparent")
+    types_outer_frame = customtkinter.CTkFrame(tabview.tab("Types"), fg_color="transparent")
     types_outer_frame.pack(pady=20)
 
     # Gets the types from the database in order to display them afterwards
@@ -633,10 +640,6 @@ def beginProgram():
         # Appends the type name to types_list list to be used for button click identification afterwards
         types_list.append(type[1])
 
-    # Creates an outer frame for displaying all-in-one types search
-    collection_outer_frame = customtkinter.CTkFrame(root, fg_color="transparent")
-    collection_outer_frame.pack()
-
     # Used for collection buttons
     get_collections = cur.execute("SELECT * FROM Collections")
 
@@ -645,23 +648,21 @@ def beginProgram():
         collection_name = collection[1]
         collection_id = collection[0]
 
-        # Create a frame to insert image and name under it
-        collection_frame = customtkinter.CTkFrame(master=collection_outer_frame)
-        collection_frame.pack(side=LEFT, pady=10, padx=5)
-
-        # Creates the buttons for each type to display type name
-        collection_btns = customtkinter.CTkButton(master=collection_frame, 
-                                            height=40,
-                                            text=collection_name, 
-                                            command=lambda collection_name=collection_name, collection_id=collection_id: apply_to_variable("Collection - " + str(collection_id) + " - " + collection_name),
-                                            fg_color="gold",
-                                            hover_color="yellow",
-                                            text_color="black",
-                                            compound="top")
-        collection_btns.pack(side=TOP)
-
         # Appends the type name to types_list list to be used for button click identification afterwards
-        collection_list.append(collection[1])
+        collection_list.append("C-" + str(collection_id) + " - " + collection_name)
+
+    collection_text = customtkinter.CTkLabel(master=tabview.tab("Collections"), text="Sites that are in collections are starred in a popular megathread. For example, the sites in the FMHY collections have a star in their megathread.")
+    collection_text.pack()
+
+    segemented_button_var = customtkinter.StringVar(value="None")  # set initial value
+
+    segemented_button = customtkinter.CTkOptionMenu(master=tabview.tab("Collections"),
+                                                    values=collection_list,
+                                                    variable=segemented_button_var,
+                                                    command=lambda e: apply_to_variable(segemented_button.get())
+                                                )
+    
+    segemented_button.pack(pady=10)
 
     like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
     github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb.callback("https://github.com/SerjSX/pSearch/")).pack(pady=5)
