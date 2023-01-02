@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/total" alt="Downloads"/>
   <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/latest/total" alt="Latest Downloads"/>
   <img src="https://img.shields.io/github/license/SerjSX/pSearch" alt="License"/>
+  <img src="https://img.shields.io/github/languages/top/SerjSX/pSearch" alt="Top Language"/>
 </p>
 
 
