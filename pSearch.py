@@ -45,7 +45,12 @@ import info
 
 root = customtkinter.CTk()
 root.title("pSearch")
-root.iconbitmap(path + "/media/icon.ico")
+
+# .ico works only on windows, not linux - Thanks to  viggo-wellme  for mentioning it
+# https://github.com/SerjSX/pSearch/pull/3
+if os.name == "nt":
+    root.iconbitmap(path + "/media/icon.ico")
+
 root.geometry("1050x620")
 
 search_progress_window = None
@@ -56,8 +61,8 @@ search_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/search
                                     size=(25,25))
 
 
-github_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/github/GitHub-Mark-Light-32px.png"), 
-                                    dark_image=Image.open(path + "/media/github/GitHub-Mark-32px.png"),
+github_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/Github/GitHub-Mark-Light-32px.png"), 
+                                    dark_image=Image.open(path + "/media/Github/GitHub-Mark-32px.png"),
                                     size=(25,25))
 
 # Used to show images for each type afterwards
