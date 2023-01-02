@@ -10,6 +10,25 @@ from random import shuffle
 from PIL import  Image
 import math
 import random
+from zipfile import ZipFile
+
+# Grabs the directory name
+path = os.getcwd()
+
+# Extracts the module zip files needed for the program if they are not already there.
+if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkinter") == False:
+    for zipname in ["/bs4.zip", "/customtkinter.zip"]:
+        # opening the zip file in READ mode
+        with ZipFile(path + zipname, 'r') as zip: 
+            # printing all the contents of the zip file
+            zip.printdir() 
+            # extracting all the files
+            print('Extracting all the files now...')
+            zip.extractall()
+            print('Done!')
+else:
+    print("Folders already exist, starting program...")
+
 # Database Checker py checks the health of the websites in the database
 import db_checker as dc
 
@@ -24,37 +43,34 @@ import info
 
 # customtkinter.set_appearance_mode("light")
 
-# Grabs the directory name
-path = os.getcwd()
-
 root = customtkinter.CTk()
 root.title("pSearch")
-root.iconbitmap(path + "\media\icon.ico")
+root.iconbitmap(path + "/media/icon.ico")
 root.geometry("1050x620")
 
 search_progress_window = None
 search_progress_frame = None
 process_chosen_frame = None
 
-search_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\search_button.png"),
+search_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/search_button.png"),
                                     size=(25,25))
 
 
-github_img = customtkinter.CTkImage(light_image=Image.open(path + "\media\github\GitHub-Mark-Light-32px.png"), 
-                                    dark_image=Image.open(path + "\media\github\GitHub-Mark-32px.png"),
+github_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/github/GitHub-Mark-Light-32px.png"), 
+                                    dark_image=Image.open(path + "/media/github/GitHub-Mark-32px.png"),
                                     size=(25,25))
 
 # Used to show images for each type afterwards
 type_images = {
-    'android': path + '\media\_android_image.png',
-    'comics_manga': path + '\media\_comics_manga_image.png',
-    'courses': path + '\media\_courses_image.png',
-    'ebooks': path + '\media\_ebooks_image.png',
-    'games': path + '\media\_games_image.png',
-    'movieseries': path + "\media\_movieseries_image.png",
-    'software': path + '\media\_software_image.png',
-    'music': path + '\media\_music_image.png',
-    'all': path + '\media\_all_image.png',
+    'android': path + '/media/android_image.png',
+    'comics_manga': path + '/media/comics_manga_image.png',
+    'courses': path + '/media/courses_image.png',
+    'ebooks': path + '/media/ebooks_image.png',
+    'games': path + '/media/games_image.png',
+    'movieseries': path + "/media/movieseries_image.png",
+    'software': path + '/media/software_image.png',
+    'music': path + '/media/music_image.png',
+    'all': path + '/media/all_image.png',
 }
 
 # Used as a header when requesting a website
@@ -83,7 +99,7 @@ allLinks = {}
 best_results = {}
 
 # Connects to the websites database
-conn = sqlite3.connect(path + '\others\websitesdb')
+conn = sqlite3.connect(path + '/others/websitesdb')
 # Asigns cursor to execute database functions
 cur = conn.cursor()
 
