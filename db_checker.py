@@ -7,9 +7,10 @@ import sqlite3
 from tkinter import messagebox
 from tkinter import * 
 import os
+import sys
 
 # Grabs the directory name
-path = os.getcwd()
+path = sys.path[0]
 
 # Used as a header when requesting a website
 header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '

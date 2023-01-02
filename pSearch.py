@@ -11,20 +11,21 @@ from PIL import  Image
 import math
 import random
 from zipfile import ZipFile
+import sys
 
 # Grabs the directory name
-path = os.getcwd()
+path = sys.path[0]
 
 # Extracts the module zip files needed for the program if they are not already there.
 if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkinter") == False:
-    for zipname in ["/bs4.zip", "/customtkinter.zip"]:
+    for zipname in [path + "/bs4.zip", path + "/customtkinter.zip"]:
         # opening the zip file in READ mode
-        with ZipFile(path + zipname, 'r') as zip: 
+        with ZipFile(zipname, 'r') as zip: 
             # printing all the contents of the zip file
             zip.printdir() 
             # extracting all the files
             print('Extracting all the files now...')
-            zip.extractall()
+            zip.extractall(path)
             print('Done!')
 else:
     print("Folders already exist, starting program...")
