@@ -1,5 +1,12 @@
 ![pSearch on version 1.6.2](https://i.ibb.co/2cVk43b/Capture.png)
 
+<p align="center">
+  <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/total" alt="Downloads"/>
+  <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/latest/total" alt="Latest Downloads"/>
+  <img src="https://img.shields.io/github/license/SerjSX/pSearch" alt="License"/>
+</p>
+
+
 # pSearch
  Searching tool written in Python for Piracy related websites. You choose where you want to search, and the program does its own work and shows you the results. It is similar to normal search engines, however the program searches the site on-spot rather than having a database with different results.
 
