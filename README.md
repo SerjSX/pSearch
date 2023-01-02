@@ -1,3 +1,5 @@
+![pSearch on version 1.6.2](https://i.ibb.co/2cVk43b/Capture.png)
+
 # pSearch
  Searching tool written in Python for Piracy related websites. Asks you where to search, or if you want you can search in all of the websites available. Gives you maximum results available on the first page only, and at the end "Best Results" showcasing the first result ever shown on the website.
 
