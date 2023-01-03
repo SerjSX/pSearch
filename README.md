@@ -12,7 +12,7 @@
  Searching tool written in Python for Piracy related websites. You choose where you want to search, and the program does its own work and shows you the results. It is similar to normal search engines, however the program searches the site on-spot rather than having a database with different results.
 
 ## Requirements and Running
-This software uses BeautifulSoup and CustomTkinter. Use this command within the extracted folder to install everything from the requirements.txt file:
+This software uses <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> and <a href="https://pypi.org/project/customtkinter/" target="_blank">CustomTkinter</a>. Use this command within the extracted folder to install everything from the requirements.txt file, or you can manually from PyPI:
  
     pip install -r requirements.txt
 
