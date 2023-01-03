@@ -316,6 +316,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     # Change the ping to True
                     foundPing = True
                     # Break the loop
+                    
+                    print("Found it: " + web[1])
                     break
 
             # if the ping stays False then no matching sites were found, throws an error.
