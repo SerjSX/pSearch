@@ -199,7 +199,9 @@ def online_method(search_value, site_id, chosen_type, main_link):
         page_connect = urllib.request.urlopen(req)
         page_code = page_connect.getcode()
     except:
-        messagebox.showerror("Error!", "The following site " + search_url + " resulted the following error (search will continue):\n" + traceback.format_exc())
+        messagebox.showerror("Error!", "An error occurred during searching the following site: " + search_url + "\nSearch process will continue")
+        print(search_url + " resulted the following error (search will continue):\n" + traceback.format_exc())
+        print("Please report it to the developer on Github")
         page_code = -1
 
     if page_code == 200:
