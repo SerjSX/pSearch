@@ -27,7 +27,8 @@ Keep in mind, running it with native Python will always be faster than with a UI
 But as an alternative and a faster method, I also build the program in a standalone executable file which you can download from every release.
 
  ## Notice
- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. YOU CANNOT DOWNLOAD ANYTHING WITH THIS TOOL.
+- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. YOU CANNOT DOWNLOAD ANYTHING WITH THIS TOOL.
+- You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know, or in the Reddit post: https://www.reddit.com/r/Piracy/comments/zz9tn7/psearch_piracy_multisearching_tool/
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
