@@ -13,6 +13,11 @@
 
 ~ If you see a terminal/command line opening when you run the program, don't worry about it! It's for showing errors, that way you and I can see the error easily (if there is one). 
 
+## Version Differences
+1. Source Code: running pSearch from the source code requires BeautifulSoup and CustomTkinter (check Requirements and Running). This is the fastest way you can run the program, as it isn't built in any way and it's just it.
+2. Windows Standalone: this is a standalone .exe build of the program meant for distribution. The builds are done with Nuitka. You may face errors, if you do so please let me know about them. From version 1.6.3 I will build them with console enabled, that way you can see an error by running the program from the command prompt. (You open the command prompt in the folder and type pSearch.exe)
+3. Windows Onefile Standalone: this is a onefile standalone .exe build of the program. It is similar to the standalone, but there are less files for the modules because they are built within the program. Only the others and media folders are included, and bs4 and customtkinter zip files which the program extracts to use. This version may start the program slower, but it may show less errors. If you do face an error let me know about it.
+
 ## Requirements and Running
 This software uses <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> and <a href="https://pypi.org/project/customtkinter/" target="_blank">CustomTkinter</a>. Use this command within the extracted folder to install everything from the requirements.txt file, or you can manually from PyPI:
  
