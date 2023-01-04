@@ -17,7 +17,8 @@ def info_message():
     \t- db_checker: to check the health of each site.\n
     \t- callback: to visit the sites.\n
     \t- base64_functions: allows decoding/encoding base64 codes.\n
-    \t- Icons from Google Icons, and Github icon from their own site.\n\n
+    \t- Icons from Google Icons, and Github icon from their own site.\n
+    \t- pyperclip: for copying links to clipboard\n\n
 
     Thank you for using pSearch, and I hope it makes things searching for you!\n
     Program is open-source under the GPL-3.0 license, code can be found on Github.

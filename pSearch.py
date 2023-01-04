@@ -12,6 +12,7 @@ import math
 import random
 from zipfile import ZipFile
 import sys
+import pyperclip
 
 # Grabs the directory name
 path = sys.path[0]
@@ -61,6 +62,8 @@ process_chosen_frame = None
 search_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/search_button.png"),
                                     size=(25,25))
 
+copy_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/copy.png"),
+                                    size=(25,25))
 
 github_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/Github/GitHub-Mark-Light-32px.png"), 
                                     dark_image=Image.open(path + "/media/Github/GitHub-Mark-32px.png"),
@@ -144,7 +147,7 @@ def apply_to_variable(chosen_input):
     site_entry_input.set(chosen_input)
 
 
-# onlineMethod(search_value,site_id) is the main function that searching process works in
+# onlineMethod(search_value,site_id) is the main function where searching is done
 def online_method(search_value, site_id, chosen_type, main_link):    
     # These variables below are for the information necessary for the searching process.
     # site_link has the normal link of the website, useful when the grabbed URL doesn't start with the
@@ -447,10 +450,15 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two, pady=20)
 
                     result_frame = customtkinter.CTkFrame(result_primary_frame)
-                    result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)
+                    result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)                    
 
                     result_link_frame = customtkinter.CTkFrame(result_primary_frame)
                     result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
+
+                    copy_button = customtkinter.CTkButton(result_link_frame, image=copy_img, text="", width=20,
+                                                        corner_radius=0, fg_color="#EAE0DA", hover_color="#F7F5EB", 
+                                                        command=lambda link=link: pyperclip.copy(link))
+                    copy_button.pack(side=LEFT, anchor="w")
 
                     if type == "best":
                         result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
@@ -469,7 +477,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 
                     result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
                     result_name.pack(side=LEFT, anchor="w", padx=10)
-                    result_link.pack(side=LEFT, anchor="w")
+                    result_link.pack(side=LEFT, anchor="w", padx=5)
                 
                     result_name.bind("<Button-1>", lambda e,link=link: cb.callback(link))
                     result_link.bind("<Button-1>", lambda e,link=link: cb.callback(link))
