@@ -1,4 +1,5 @@
 from tkinter import * 
+from tkinter import ttk
 from tkinter import messagebox
 import customtkinter
 import urllib.parse, urllib.request, urllib.error
@@ -349,7 +350,10 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         # Add a scrollbar to the canvas
         search_progress_scrollbar = customtkinter.CTkScrollbar(search_progress_frame, orientation=VERTICAL, command=search_progress_canvas.yview)
-        search_progress_scrollbar.pack(side=RIGHT, fill=Y)
+        # ^ pack this when finished searching
+
+        search_progress_bar = ttk.Progressbar(search_progress_frame, orient=HORIZONTAL, maximum=len(websites))
+        search_progress_bar.place(x=0, y=0, relwidth=1)
 
         # Configure the canvas
         search_progress_canvas.configure(yscrollcommand=search_progress_scrollbar.set)
@@ -369,6 +373,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
             # in case user chose all sites...
             if chosen_input == "all":
                 for site in websites:
+                    # add 1 step to the progress bar
+                    search_progress_bar.step(1)
+                    search_progress_canvas.update()
                     # Activate the onlineMethod function with forwarding the site's ID.
                     online_method(search_value, site[0], 0, site[8])
 
@@ -376,6 +383,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
             elif chosen_input in types_list:
                 # for each site in sites
                 for site in websites:
+                    # add 1 step to the progress bar
+                    search_progress_bar.step(1)
+                    search_progress_canvas.update()
                     if chosen_input in site[7] or "all" in site[7]:
                         # Activate the onlineMethod function with forwarding the site's ID.
                         online_method(search_value, site[0], 0, site[8])
@@ -383,6 +393,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
             elif actual_chosen_input.startswith("C-"):
                 split = actual_chosen_input.split("-")
                 for site in websites:
+                    # add 1 step to the progress bar
+                    search_progress_bar.step(1)
+                    search_progress_canvas.update()
                     if int(split[1].strip()) == site[9]:
                         online_method(search_value, site[0], 0, site[8])
 
@@ -390,8 +403,14 @@ def search_process_signal(button_num, nwindow, chosen_input,
             else:
                 # Forward it to the online_method function
                 for web in websites:
+                    # add 1 step to the progress bar
+                    search_progress_bar.step(1)
+                    search_progress_canvas.update()
                     if web[0] == int(chosen_input):
                         online_method(search_value, web[0], 0, web[8])
+            # remove the progress bar when search is finished
+            search_progress_bar.place_forget()
+            search_progress_scrollbar.pack(side=RIGHT, fill=Y)
 
         # At the end, it prints the results if the length of allLinks OR best results is greater than 0
         if len(allLinks) > 0 or len(best_results) > 0:
