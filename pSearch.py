@@ -36,7 +36,7 @@ else:
 import db_checker as dc
 
 # Callback py redirects user to browser with a defined link
-import callback as cb
+from callback import callback as cb
 
 # Base64 Decoding/Encoding function
 import base64_functions as b64f
@@ -333,8 +333,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         # Create a result window for the frame
         search_progress_window = customtkinter.CTkToplevel(root)
-        search_progress_window.geometry("1250x650")
-    
+        search_progress_window.title("pSearch - Loading Results...")
+
         search_progress_frame = customtkinter.CTkFrame(search_progress_window)
         search_progress_frame.pack(side=RIGHT, fill=BOTH, expand=True)
 
@@ -411,6 +411,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
             # remove the progress bar when search is finished
             search_progress_bar.place_forget()
             search_progress_scrollbar.pack(side=RIGHT, fill=Y)
+            search_progress_window.geometry("1250x650")
+
 
         # At the end, it prints the results if the length of allLinks OR best results is greater than 0
         if len(allLinks) > 0 or len(best_results) > 0:
@@ -445,7 +447,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 end_position = len(final_links)
 
             # Creates a notice block to always use an adblocker extension
-            notice_ublock = customtkinter.CTkLabel(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links")
+            notice_ublock = customtkinter.CTkButton(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links",
+                                                    command=lambda e: cb("https://github.com/gorhill/uBlock#ublock-origin"))
             notice_ublock.pack(expand=TRUE, fill=BOTH)
 
             # Convert dictionary keys and values to list to select accordingly afterwards
@@ -480,12 +483,12 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     copy_button.pack(side=LEFT, anchor="w")
 
                     if type == "best":
-                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
+                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
                     else:
-                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb.callback(site_link))
+                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
 
-                    if len(link) > 200:
-                        result_link = customtkinter.CTkLabel(result_link_frame, text=link[:199].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
+                    if len(link) > 160:
+                        result_link = customtkinter.CTkLabel(result_link_frame, text=link[:159].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
                     else:
                         result_link = customtkinter.CTkLabel(result_link_frame, text=link.strip(), cursor="hand2", font=customtkinter.CTkFont(size=12))
 
@@ -498,8 +501,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     result_name.pack(side=LEFT, anchor="w", padx=10)
                     result_link.pack(side=LEFT, anchor="w", padx=5)
                 
-                    result_name.bind("<Button-1>", lambda e,link=link: cb.callback(link))
-                    result_link.bind("<Button-1>", lambda e,link=link: cb.callback(link))
+                    result_name.bind("<Button-1>", lambda e,link=link: cb(link))
+                    result_link.bind("<Button-1>", lambda e,link=link: cb(link))
 
                     result_count = result_count + 1
 
@@ -718,7 +721,8 @@ def beginProgram():
     segemented_button.pack(pady=10)
 
     like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
-    github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb.callback("https://github.com/SerjSX/pSearch/")).pack(pady=5)
+    github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb("https://github.com/SerjSX/pSearch/"))
+    github_button.pack(pady=5)
 
     
 
