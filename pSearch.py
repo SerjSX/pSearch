@@ -408,10 +408,6 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     search_progress_canvas.update()
                     if web[0] == int(chosen_input):
                         online_method(search_value, web[0], 0, web[8])
-            # remove the progress bar when search is finished
-            search_progress_bar.place_forget()
-            search_progress_scrollbar.pack(side=RIGHT, fill=Y)
-            search_progress_window.geometry("1250x650")
 
 
         # At the end, it prints the results if the length of allLinks OR best results is greater than 0
@@ -506,6 +502,10 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
                     result_count = result_count + 1
 
+            # remove the progress bar when search is finished
+            search_progress_bar.place_forget()
+            search_progress_scrollbar.pack(side=RIGHT, fill=Y)
+            search_progress_window.geometry("1250x650")
             search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
 
                 # If it's greater than 50
