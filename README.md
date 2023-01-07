@@ -48,7 +48,7 @@ But as an alternative and a faster method, I also build the program in a standal
 - **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality).
 
  ## Notice
-- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. YOU CANNOT DOWNLOAD ANYTHING WITH THIS TOOL.
+- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. Only the APIs may give you direct download links if the API only supports it.
 - You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know, or in the Reddit post: https://www.reddit.com/r/Piracy/comments/zz9tn7/psearch_piracy_multisearching_tool/
  
  ### Violation Notes

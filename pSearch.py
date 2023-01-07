@@ -44,6 +44,9 @@ import base64_functions as b64f
 # About button
 import info
 
+# Imports the API functons module
+import apis as api
+
 # customtkinter.set_appearance_mode("light")
 
 root = customtkinter.CTk()
@@ -102,6 +105,15 @@ search_text = ["What do you want to search today?",
                 "Make sure you fill this before clicking the search button!",
                 "Searching ALL sites might take some time, so try to avoid it."]
 
+# Options of places to search in RARBG
+rarbg_categories_list = [
+    "Games PC ISO", "Games PS3", "Games PS4","Games XBOX","Software",
+    "Movie XVID","Movie XVID 720p","Movie H264","Movie H264 1080p","Movie H264 720p",
+    "Movie H264 3D","Movie H264 4K","Movie H265 1080P","Movie H265 4K","Movie H265 4K HDR",
+    "Movie Full BD","Movie BD Remux","TV Episodes","TV Episodes HD","TV Episodes UHD",
+    "Music MP3","Music FLAC",
+]
+
 # allLinks for appending all links at the end (used in Online Database)
 allLinks = {}
 
@@ -146,7 +158,6 @@ def change_theme(current_theme):
 def apply_to_variable(chosen_input):
     global site_entry_input
     site_entry_input.set(chosen_input)
-
 
 # onlineMethod(search_value,site_id) is the main function where searching is done
 def online_method(search_value, site_id, chosen_type, main_link):    
@@ -308,7 +319,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         # if in: is in the search value then a special condition is detected.
         # A special condition is a shortcut to directly search in a website without using the dropdown for selection.
-        if int_or_str == "str" and not chosen_input.startswith("C-") and chosen_input not in types_list:
+        if int_or_str == "str" and not chosen_input.startswith("C-") and not chosen_input.startswith("RARBG-") and chosen_input not in types_list:
             # foundPing is used for detecting if a matching site has been found, to prevent multiple sites.
             foundPing = False
 
@@ -389,6 +400,14 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     if chosen_input in site[7] or "all" in site[7]:
                         # Activate the onlineMethod function with forwarding the site's ID.
                         online_method(search_value, site[0], 0, site[8])
+
+            elif actual_chosen_input.startswith("RARBG-"):
+                results = api.rarbg(search_value, actual_chosen_input.split("-")[1].strip())
+                allLinks.update(results)
+                
+                # add 1 step to the progress bar
+                search_progress_bar.step(1)
+                search_progress_canvas.update()
 
             elif actual_chosen_input.startswith("C-"):
                 split = actual_chosen_input.split("-")
@@ -653,13 +672,24 @@ def beginProgram():
     # Bind the keyboard function Enter to the entry so user can directly click Enter to search.
     search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, site_entry_input.get(), search_entry_input.get(), 0, 0))
 
-
+    # Tab view allows you to switch between shortcut buttons/choices easily
     tabview = customtkinter.CTkTabview(root, height=40)
     tabview.pack(pady=20)
 
+    # Adds the tabs
     tabview.add("Types")
     tabview.add("Collections")
+    tabview.add("APIs")
 
+    # rarbg_combobox is used for the RARBG API
+    rarbg_combobox_var = customtkinter.StringVar(value="RARBG - Category")  # set initial value
+
+    rarbg_combobox = customtkinter.CTkOptionMenu(tabview.tab("APIs"), 
+                                            values=rarbg_categories_list,
+                                            variable=rarbg_combobox_var,
+                                            command=lambda e: apply_to_variable("RARBG- " + rarbg_combobox.get())
+)
+    rarbg_combobox.pack(pady=20)
 
     # Creates an outer frame for displaying all-in-one types search
     types_outer_frame = customtkinter.CTkFrame(tabview.tab("Types"), fg_color="transparent")
