@@ -82,4 +82,3 @@ def rarbg(search_value, chosen_value):
         allLinks[("default", "RARBG", "https://rarbg.to/", str(result))] = str(result.download)
 
     return allLinks
-

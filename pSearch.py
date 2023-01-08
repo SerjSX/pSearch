@@ -152,7 +152,6 @@ def change_theme(current_theme):
     else:
         customtkinter.set_appearance_mode("light")
 
-
 # This is used when the user clicks the buttons to search all at once. It adds the value to 
 # the option_chosen variable to it would be processed later on.
 def apply_to_variable(chosen_input):
@@ -408,7 +407,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 # add 1 step to the progress bar
                 search_progress_bar.step(1)
                 search_progress_canvas.update()
-
+                
             elif actual_chosen_input.startswith("C-"):
                 split = actual_chosen_input.split("-")
                 for site in websites:
@@ -614,7 +613,7 @@ def beginProgram():
     # base64_functions button
     base64_functions_btn = customtkinter.CTkButton(top_functions_frame, text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
     base64_functions_btn.pack(side=LEFT, padx=5)
-
+    
     # about/info button
     about_btn = customtkinter.CTkButton(top_functions_frame, text=" About pSearch ", command=info.info_message, width=40, corner_radius=0)
     about_btn.pack(side=RIGHT, padx=5)
