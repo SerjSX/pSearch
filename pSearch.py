@@ -678,12 +678,12 @@ def beginProgram():
     # Adds the tabs
     tabview.add("Types")
     tabview.add("Collections")
-    tabview.add("APIs")
+    tabview.add("Others")
 
     # rarbg_combobox is used for the RARBG API
     rarbg_combobox_var = customtkinter.StringVar(value="RARBG - Category")  # set initial value
 
-    rarbg_combobox = customtkinter.CTkOptionMenu(tabview.tab("APIs"), 
+    rarbg_combobox = customtkinter.CTkOptionMenu(tabview.tab("Others"), 
                                             values=rarbg_categories_list,
                                             variable=rarbg_combobox_var,
                                             command=lambda e: apply_to_variable("RARBG- " + rarbg_combobox.get())
