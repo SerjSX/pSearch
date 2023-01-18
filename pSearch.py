@@ -14,6 +14,7 @@ import random
 from zipfile import ZipFile
 import sys
 import pyperclip
+import requests
 
 # Grabs the directory name
 path = sys.path[0]
@@ -23,12 +24,10 @@ if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkin
     for zipname in [path + "/bs4.zip", path + "/customtkinter.zip"]:
         # opening the zip file in READ mode
         with ZipFile(zipname, 'r') as zip: 
-            # printing all the contents of the zip file
-            zip.printdir() 
             # extracting all the files
-            print('Extracting all the files now...')
+            print('Extracting all the files now from ' + zipname + '...')
             zip.extractall(path)
-            print('Done!')
+            print('Done')
 else:
     print("Folders already exist, starting program...")
 
@@ -120,8 +119,46 @@ allLinks = {}
 # best results
 best_results = {}
 
-# Connects to the websites database
-conn = sqlite3.connect(path + '/others/websitesdb')
+# CONTRIBUTORS/DEVELOPERS ONLY: Change to True if you are adding a site,
+# that way it doesn't connect to the online database and it uses the offline one
+# with your modifications.
+testMode = False
+
+# Tries to download the latest database from Github
+try:
+    database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websitesdb"
+
+    if testMode == False:
+        print("Downloading database file...")
+        r = requests.get(database_url) # create HTTP response object
+
+        # send a HTTP request to the server and save
+        # the HTTP response in a response object called r
+        with open(path + "/websitesdb",'wb') as f:
+
+            # Saving received content as a png file in
+            # binary format
+
+            # write the contents of the response (r.content)
+            # to a new file in binary mode.
+            f.write(r.content)
+
+        print("Connecting to the database file...")
+        # Connects to the websites database
+        conn = sqlite3.connect('websitesdb')
+        
+        print("Done")
+    else:
+        print("Using test mode, connecting to the local database file.")
+        conn = sqlite3.connect(path + '/others/websitesdb')    
+
+# If it fails to connect and download...
+except:
+    print("Failed to connect to the server for downloading database, using default database from /others/")
+    # Connects to this database which is the one that came from the release, if
+    # it fails to connect to the internet
+    conn = sqlite3.connect(path + '/others/websitesdb')    
+
 # Asigns cursor to execute database functions
 cur = conn.cursor()
 
@@ -139,7 +176,7 @@ for row in cur.execute('''
     # Appends it to the websites list.
     websites.append(row)
 
-print("The terminal will be used for displaying errors. Any error you face report on Github with full details.")
+print("\nThe terminal will be used for displaying errors. Any error you face report on Github with full details.\n")
 
 # Used for changing the software's theme - dark or light
 def change_theme(current_theme):
