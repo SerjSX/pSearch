@@ -499,7 +499,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
             # Creates a notice block to always use an adblocker extension
             notice_ublock = customtkinter.CTkButton(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links",
-                                                    command=lambda e: cb("https://github.com/gorhill/uBlock#ublock-origin"))
+                                                    command=lambda: cb("https://github.com/gorhill/uBlock#ublock-origin"))
             notice_ublock.pack(expand=TRUE, fill=BOTH)
 
             # Convert dictionary keys and values to list to select accordingly afterwards
