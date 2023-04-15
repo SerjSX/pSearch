@@ -343,6 +343,14 @@ def search_process_signal(button_num, nwindow, chosen_input,
         chosen_input = int(chosen_input)
         int_or_str = "int"
     except:
+        mod_chosen_input = actual_chosen_input.split()
+
+        # Only add the values of the chosen_input with each other if there is more than one value
+        # in the splitted variable, or else keep it as it is. 
+        if len(mod_chosen_input) > 0:
+            chosen_input = ''
+            for i in mod_chosen_input:
+                chosen_input = chosen_input + i
         int_or_str = "str"
 
     # If the search results window isn't None then most probably there's another one already on-screen,
@@ -364,6 +372,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
                 # website (lowercased) then...
                 if chosen_input.lower() in web[1].lower():
+                    print(chosen_input.lower(), web[1].lower())
                     # Asign the site's id to chosen_input
                     chosen_input = str(web[0])
                     # Change the ping to True
