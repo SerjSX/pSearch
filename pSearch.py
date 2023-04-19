@@ -40,12 +40,6 @@ from callback import callback as cb
 # Base64 Decoding/Encoding function
 import base64_functions as b64f
 
-# About button
-import info
-
-# Imports the API functons module
-import apis as api
-
 # customtkinter.set_appearance_mode("light")
 
 root = customtkinter.CTk()
@@ -103,15 +97,6 @@ search_text = ["What do you want to search today?",
                 "Enter search value here...",
                 "Make sure you fill this before clicking the search button!",
                 "Searching ALL sites might take some time, so try to avoid it."]
-
-# Options of places to search in RARBG
-rarbg_categories_list = [
-    "Games PC ISO", "Games PS3", "Games PS4","Games XBOX","Software",
-    "Movie XVID","Movie XVID 720p","Movie H264","Movie H264 1080p","Movie H264 720p",
-    "Movie H264 3D","Movie H264 4K","Movie H265 1080P","Movie H265 4K","Movie H265 4K HDR",
-    "Movie Full BD","Movie BD Remux","TV Episodes","TV Episodes HD","TV Episodes UHD",
-    "Music MP3","Music FLAC",
-]
 
 # allLinks for appending all links at the end (used in Online Database)
 allLinks = {}
@@ -363,7 +348,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         # if in: is in the search value then a special condition is detected.
         # A special condition is a shortcut to directly search in a website without using the dropdown for selection.
-        if int_or_str == "str" and not chosen_input.startswith("C-") and not chosen_input.startswith("RARBG-") and chosen_input not in types_list:
+        if int_or_str == "str" and not chosen_input.startswith("C-") and chosen_input not in types_list:
             # foundPing is used for detecting if a matching site has been found, to prevent multiple sites.
             foundPing = False
 
@@ -445,14 +430,6 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     if chosen_input in site[7] or "all" in site[7]:
                         # Activate the onlineMethod function with forwarding the site's ID.
                         online_method(search_value, site[0], 0, site[8])
-
-            elif actual_chosen_input.startswith("RARBG-"):
-                results = api.rarbg(search_value, actual_chosen_input.split("-")[1].strip())
-                allLinks.update(results)
-                
-                # add 1 step to the progress bar
-                search_progress_bar.step(1)
-                search_progress_canvas.update()
                 
             elif actual_chosen_input.startswith("C-"):
                 split = actual_chosen_input.split("-")
@@ -660,10 +637,6 @@ def beginProgram():
     base64_functions_btn = customtkinter.CTkButton(top_functions_frame, text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
     base64_functions_btn.pack(side=LEFT, padx=5)
     
-    # about/info button
-    about_btn = customtkinter.CTkButton(top_functions_frame, text=" About pSearch ", command=info.info_message, width=40, corner_radius=0)
-    about_btn.pack(side=RIGHT, padx=5)
-
     wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
     wlcmsg.pack(side=TOP, pady=100)
 
@@ -724,17 +697,6 @@ def beginProgram():
     # Adds the tabs
     tabview.add("Types")
     tabview.add("Collections")
-    tabview.add("Others")
-
-    # rarbg_combobox is used for the RARBG API
-    rarbg_combobox_var = customtkinter.StringVar(value="RARBG - Category")  # set initial value
-
-    rarbg_combobox = customtkinter.CTkOptionMenu(tabview.tab("Others"), 
-                                            values=rarbg_categories_list,
-                                            variable=rarbg_combobox_var,
-                                            command=lambda e: apply_to_variable("RARBG- " + rarbg_combobox.get())
-)
-    rarbg_combobox.pack(pady=20)
 
     # Creates an outer frame for displaying all-in-one types search
     types_outer_frame = customtkinter.CTkFrame(tabview.tab("Types"), fg_color="transparent")
@@ -795,7 +757,8 @@ def beginProgram():
     
     segemented_button.pack(pady=10)
 
-    like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
+    like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!")
+    like_text.pack()
     github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb("https://github.com/SerjSX/pSearch/"))
     github_button.pack(pady=5)
 
