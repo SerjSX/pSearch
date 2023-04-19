@@ -50,11 +50,11 @@ But as an alternative and a faster method, I also build the program in a standal
 - **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality).
 
  ## Notice
-- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. Only the APIs may give you direct download links if the API only supports it.
+- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. 
 - You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know, or in the Reddit post: https://www.reddit.com/r/Piracy/comments/zz9tn7/psearch_piracy_multisearching_tool/
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
 
 #### Contribution 
-Can be directly done by using https://sqlitebrowser.org/ and opening the database file, or use db_adder.py from the others folder. And check the Wiki page for contribution.
+Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution.
