@@ -3,6 +3,8 @@
 <p align="center">
   <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/total" alt="Downloads"/>
   <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/latest/total" alt="Latest Downloads"/>
+  <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/latest/pSearch-windows-standalone.zip" alt="Latest Standalone Downloads"/>
+  <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/latest/pSearch-windows-onefile-standalone.zip" alt="Latest Onefile Downloads"/>
   <img src="https://img.shields.io/github/license/SerjSX/pSearch" alt="License"/>
   <img src="https://img.shields.io/github/languages/top/SerjSX/pSearch" alt="Top Language"/>
 </p>
@@ -17,8 +19,8 @@
 |*Title*|**Source Code**|**Windows Standalone**|**Windows Onefile Standalone**|
 |:-|:-|:-|:-|
 |**Descripton**|Running pSearch from the source code requires BeautifulSoup and CustomTkinter. This is the fastest way you can run the program (if familiar with Python), as it isn't built in any way and it's just it.|This is a standalone build of the program meant for distribution in .exe form. The program is built with Nuitka. You may face errors, if you do so please let me know about them.|This is similar to the Windows Standalone method, but you won't see the other modules in the folder as they are embedded in the .exe file (that's why it's Onefile). There are two folders, "others" and "media", and two zip files, "bs4" and "customtkinter", in the package so the program would run in a correct way. The program unzips the zip files for module usage. Launching the program may take a long time with this method.|
-|**Health**|*Efficient*|*May cause errors*|*Efficient*|
-|**Button Name on Site**|View Latest Release GitHub|Download Latest .EXE for Windows|Download Latest .EXE Onefile for Windows|
+|**Health**|*Runs Fast*|*Runs Fast*|*Runs Slow*|
+|**Button Name on Site**|<a href="https://github.com/SerjSX/pSearch/releases/latest" alt="latest release">View Latest Release GitHub</a>|<a href="https://github.com/SerjSX/pSearch/releases/latest/download/pSearch-windows-standalone.zip" alt="download latest standalone exe">Download Latest .EXE for Windows</a>|<a href="https://github.com/SerjSX/pSearch/releases/latest/download/pSearch-windows-onefile-standalone.zip" alt="download latest onefile exe">Download Latest .EXE Onefile for Windows</a>|
 
 ***Source Code and Onefile seem to be efficient enough, because both extract customtkinter and bs4.zip. If you face errors let me know immediately about it. Version 1.6.4 will have console enabled, that way you can see the error from the command line and send it to me here or on Github Issues.***
 &#x200B;
@@ -48,11 +50,11 @@ But as an alternative and a faster method, I also build the program in a standal
 - **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality).
 
  ## Notice
-- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. Only the APIs may give you direct download links if the API only supports it.
+- This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. 
 - You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know, or in the Reddit post: https://www.reddit.com/r/Piracy/comments/zz9tn7/psearch_piracy_multisearching_tool/
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
 
 #### Contribution 
-Can be directly done by using https://sqlitebrowser.org/ and opening the database file, or use db_adder.py from the others folder. And check the Wiki page for contribution.
+Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution.

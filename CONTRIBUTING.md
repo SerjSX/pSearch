@@ -25,3 +25,4 @@ Adding tables to the database file should have a very valid reason, so if any ta
 
 ## Program Contribution
 You are allowed to contribute to the actual program in any way possible, however importing more modules should have a valid reason and the contributor should explain its purpose.
+<strong>All changes must have comments explaining their use and purpose in-detail.</strong>
