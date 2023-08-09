@@ -14,6 +14,7 @@ import random
 from zipfile import ZipFile
 import sys
 import pyperclip
+import requests
 
 # Grabs the directory name
 path = sys.path[0]
@@ -23,12 +24,10 @@ if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkin
     for zipname in [path + "/bs4.zip", path + "/customtkinter.zip"]:
         # opening the zip file in READ mode
         with ZipFile(zipname, 'r') as zip: 
-            # printing all the contents of the zip file
-            zip.printdir() 
             # extracting all the files
-            print('Extracting all the files now...')
+            print('Extracting all the files now from ' + zipname + '...')
             zip.extractall(path)
-            print('Done!')
+            print('Done')
 else:
     print("Folders already exist, starting program...")
 
@@ -40,12 +39,6 @@ from callback import callback as cb
 
 # Base64 Decoding/Encoding function
 import base64_functions as b64f
-
-# About button
-import info
-
-# Imports the API functons module
-import apis as api
 
 # customtkinter.set_appearance_mode("light")
 
@@ -105,23 +98,52 @@ search_text = ["What do you want to search today?",
                 "Make sure you fill this before clicking the search button!",
                 "Searching ALL sites might take some time, so try to avoid it."]
 
-# Options of places to search in RARBG
-rarbg_categories_list = [
-    "Games PC ISO", "Games PS3", "Games PS4","Games XBOX","Software",
-    "Movie XVID","Movie XVID 720p","Movie H264","Movie H264 1080p","Movie H264 720p",
-    "Movie H264 3D","Movie H264 4K","Movie H265 1080P","Movie H265 4K","Movie H265 4K HDR",
-    "Movie Full BD","Movie BD Remux","TV Episodes","TV Episodes HD","TV Episodes UHD",
-    "Music MP3","Music FLAC",
-]
-
 # allLinks for appending all links at the end (used in Online Database)
 allLinks = {}
 
 # best results
 best_results = {}
 
-# Connects to the websites database
-conn = sqlite3.connect(path + '/others/websitesdb')
+# CONTRIBUTORS/DEVELOPERS ONLY: Change to True if you are adding a site,
+# that way it doesn't connect to the online database and it uses the offline one
+# with your modifications.
+testMode = False
+
+# Tries to download the latest database from Github
+try:
+    database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websitesdb"
+
+    if testMode == False:
+        print("Downloading database file...")
+        r = requests.get(database_url) # create HTTP response object
+
+        # send a HTTP request to the server and save
+        # the HTTP response in a response object called r
+        with open(path + "/websitesdb",'wb') as f:
+
+            # Saving received content as a png file in
+            # binary format
+
+            # write the contents of the response (r.content)
+            # to a new file in binary mode.
+            f.write(r.content)
+
+        print("Connecting to the database file...")
+        # Connects to the websites database
+        conn = sqlite3.connect('websitesdb')
+        
+        print("Done")
+    else:
+        print("Using test mode, connecting to the local database file.")
+        conn = sqlite3.connect(path + '/others/websitesdb')    
+
+# If it fails to connect and download...
+except:
+    print("Failed to connect to the server for downloading database, using default database from /others/")
+    # Connects to this database which is the one that came from the release, if
+    # it fails to connect to the internet
+    conn = sqlite3.connect(path + '/others/websitesdb')    
+
 # Asigns cursor to execute database functions
 cur = conn.cursor()
 
@@ -139,7 +161,7 @@ for row in cur.execute('''
     # Appends it to the websites list.
     websites.append(row)
 
-print("The terminal will be used for displaying errors. Any error you face report on Github with full details.")
+print("\nThe terminal will be used for displaying errors. Any error you face report on Github with full details.\n")
 
 # Used for changing the software's theme - dark or light
 def change_theme(current_theme):
@@ -306,6 +328,14 @@ def search_process_signal(button_num, nwindow, chosen_input,
         chosen_input = int(chosen_input)
         int_or_str = "int"
     except:
+        mod_chosen_input = actual_chosen_input.split()
+
+        # Only add the values of the chosen_input with each other if there is more than one value
+        # in the splitted variable, or else keep it as it is. 
+        if len(mod_chosen_input) > 0:
+            chosen_input = ''
+            for i in mod_chosen_input:
+                chosen_input = chosen_input + i
         int_or_str = "str"
 
     # If the search results window isn't None then most probably there's another one already on-screen,
@@ -318,7 +348,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         # if in: is in the search value then a special condition is detected.
         # A special condition is a shortcut to directly search in a website without using the dropdown for selection.
-        if int_or_str == "str" and not chosen_input.startswith("C-") and not chosen_input.startswith("RARBG-") and chosen_input not in types_list:
+        if int_or_str == "str" and not chosen_input.startswith("C-") and chosen_input not in types_list:
             # foundPing is used for detecting if a matching site has been found, to prevent multiple sites.
             foundPing = False
 
@@ -327,6 +357,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
                 # website (lowercased) then...
                 if chosen_input.lower() in web[1].lower():
+                    print(chosen_input.lower(), web[1].lower())
                     # Asign the site's id to chosen_input
                     chosen_input = str(web[0])
                     # Change the ping to True
@@ -399,14 +430,6 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     if chosen_input in site[7] or "all" in site[7]:
                         # Activate the onlineMethod function with forwarding the site's ID.
                         online_method(search_value, site[0], 0, site[8])
-
-            elif actual_chosen_input.startswith("RARBG-"):
-                results = api.rarbg(search_value, actual_chosen_input.split("-")[1].strip())
-                allLinks.update(results)
-                
-                # add 1 step to the progress bar
-                search_progress_bar.step(1)
-                search_progress_canvas.update()
                 
             elif actual_chosen_input.startswith("C-"):
                 split = actual_chosen_input.split("-")
@@ -462,7 +485,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
             # Creates a notice block to always use an adblocker extension
             notice_ublock = customtkinter.CTkButton(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links",
-                                                    command=lambda e: cb("https://github.com/gorhill/uBlock#ublock-origin"))
+                                                    command=lambda: cb("https://github.com/gorhill/uBlock#ublock-origin"))
             notice_ublock.pack(expand=TRUE, fill=BOTH)
 
             # Convert dictionary keys and values to list to select accordingly afterwards
@@ -491,15 +514,15 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     result_link_frame = customtkinter.CTkFrame(result_primary_frame)
                     result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
 
-                    copy_button = customtkinter.CTkButton(result_link_frame, image=copy_img, text="", width=20,
+                    copy_button = customtkinter.CTkButton(result_link_frame,  cursor="hand2", image=copy_img, text="", width=20,
                                                         corner_radius=0, fg_color="#EAE0DA", hover_color="#F7F5EB", 
                                                         command=lambda link=link: pyperclip.copy(link))
                     copy_button.pack(side=LEFT, anchor="w")
 
                     if type == "best":
-                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
+                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ",  cursor="hand2", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
                     else:
-                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
+                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ",  cursor="hand2", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
 
                     if len(link) > 160:
                         result_link = customtkinter.CTkLabel(result_link_frame, text=link[:159].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
@@ -603,21 +626,17 @@ def beginProgram():
     top_functions_frame.pack(side=TOP, fill=BOTH)
 
     # theme changer button
-    toggle_theme_btn = customtkinter.CTkButton(top_functions_frame, text=" Change Theme ", command=lambda: change_theme(customtkinter.get_appearance_mode()), width=40, corner_radius=0)
+    toggle_theme_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2",text=" Change Theme ", command=lambda: change_theme(customtkinter.get_appearance_mode()), width=40, corner_radius=0)
     toggle_theme_btn.pack(side=LEFT, padx=5)
 
     # db_checker button
-    db_checker_btn = customtkinter.CTkButton(top_functions_frame, text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
+    db_checker_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2", text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
     db_checker_btn.pack(side=LEFT)
 
     # base64_functions button
-    base64_functions_btn = customtkinter.CTkButton(top_functions_frame, text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
+    base64_functions_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2", text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
     base64_functions_btn.pack(side=LEFT, padx=5)
     
-    # about/info button
-    about_btn = customtkinter.CTkButton(top_functions_frame, text=" About pSearch ", command=info.info_message, width=40, corner_radius=0)
-    about_btn.pack(side=RIGHT, padx=5)
-
     wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
     wlcmsg.pack(side=TOP, pady=100)
 
@@ -661,7 +680,8 @@ def beginProgram():
                                                 image=search_img, 
                                                 command=lambda: search_process_signal(0, False, site_entry_input.get(), search_entry_input.get(), 0, 0), 
                                                 width=10,
-                                                height=10)
+                                                height=10,  
+                                                cursor="hand2")
 
     site_entry_input.pack(side=LEFT, padx=5)
     search_entry_input.pack(side=LEFT)
@@ -678,20 +698,9 @@ def beginProgram():
     # Adds the tabs
     tabview.add("Types")
     tabview.add("Collections")
-    tabview.add("APIs")
-
-    # rarbg_combobox is used for the RARBG API
-    rarbg_combobox_var = customtkinter.StringVar(value="RARBG - Category")  # set initial value
-
-    rarbg_combobox = customtkinter.CTkOptionMenu(tabview.tab("APIs"), 
-                                            values=rarbg_categories_list,
-                                            variable=rarbg_combobox_var,
-                                            command=lambda e: apply_to_variable("RARBG- " + rarbg_combobox.get())
-)
-    rarbg_combobox.pack(pady=20)
 
     # Creates an outer frame for displaying all-in-one types search
-    types_outer_frame = customtkinter.CTkFrame(tabview.tab("Types"), fg_color="transparent")
+    types_outer_frame = customtkinter.CTkFrame(tabview.tab("Types"), fg_color="transparent", cursor="hand2")
     types_outer_frame.pack(pady=20)
 
     # Gets the types from the database in order to display them afterwards
@@ -719,7 +728,8 @@ def beginProgram():
                                             text=type_name.capitalize() + " sites", 
                                             command=lambda type_name=type_name: apply_to_variable(type_name),
                                             image=type_images["{0}".format(type_name)],
-                                            compound="top")
+                                            compound="top", 
+                                            cursor="hand2",)
         type_btns.pack(side=TOP)
 
         # Appends the type name to types_list list to be used for button click identification afterwards
@@ -744,13 +754,15 @@ def beginProgram():
     segemented_button = customtkinter.CTkOptionMenu(master=tabview.tab("Collections"),
                                                     values=collection_list,
                                                     variable=segemented_button_var,
-                                                    command=lambda e: apply_to_variable(segemented_button.get())
+                                                    command=lambda e: apply_to_variable(segemented_button.get()),
+                                                    cursor="hand2"
                                                 )
     
     segemented_button.pack(pady=10)
 
-    like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!").pack()
-    github_button = customtkinter.CTkButton(master=root, text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb("https://github.com/SerjSX/pSearch/"))
+    like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!")
+    like_text.pack()
+    github_button = customtkinter.CTkButton(master=root, cursor="hand2", text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb("https://github.com/SerjSX/pSearch/"))
     github_button.pack(pady=5)
 
     

@@ -23,7 +23,7 @@ header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
           'Connection': 'keep-alive'}
 
 # Connects to the websites database
-conn = sqlite3.connect(path + '\others\websitesdb')
+conn = sqlite3.connect(path + '/others/websitesdb')
 # Asigns cursor to execute database functions
 cur = conn.cursor()
 
@@ -36,14 +36,14 @@ def db_checker():
 
     if db_checker_confirm == 1:
         # Used for selecting all content from the Websites table
-        db_check = "SELECT * FROM Websites"
+        websites = cur.execute("SELECT * FROM Websites")
 
         # This dictionary will contain the sites that resulted errors
         errored_sites = dict()
 
         messagebox.showinfo("Database Checking Operation", "The process is being run in the background on each site, once it's done there will be another message box stating the result. You can also check the command line for progress.")
 
-        for site in cur.execute(db_check):
+        for site in websites:
             print("Starting operation on " + site[2])
 
             page_code = -1
@@ -67,10 +67,21 @@ def db_checker():
                                 "Check command line/terminal for list")
             for site,code in errored_sites.items():
                 print(site + ", with code: " + str(code))
-
+                
+            val = messagebox.askyesno("Delete or Keep", "Do you want to delete the ones that resulted an error?")
+            
+            if val == 1:
+            	for site,code in errored_sites.items():
+            		print("Deleting", site)
+            		cur.execute("DELETE FROM Websites WHERE url = ?", (site,))
+            		
+            	print("Done Deleting")
+            	conn.commit()
+						
+				
         else:
             messagebox.showinfo("Database Checking Operation", "The operation resulted no errors.")
 
-        print("Database Checking Operation is done")
+        print("Database Checking Operation is done, it is recommended to reload program in case of deleted sites.")
 
     
