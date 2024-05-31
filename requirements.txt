@@ -2,3 +2,5 @@ beautifulsoup4==4.11.1
 customtkinter
 pyperclip
 rarbgapi
+pillow
+setuptools
