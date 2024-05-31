@@ -4,3 +4,4 @@ pyperclip
 rarbgapi
 pillow
 setuptools
+lxml

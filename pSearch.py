@@ -4,6 +4,7 @@ from tkinter import messagebox
 import customtkinter
 import urllib.parse, urllib.request, urllib.error
 from bs4 import BeautifulSoup
+from bs4 import SoupStrainer
 import os
 import sqlite3
 import traceback
@@ -40,7 +41,8 @@ from callback import callback as cb
 # Base64 Decoding/Encoding function
 import base64_functions as b64f
 
-# customtkinter.set_appearance_mode("light")
+# Automatically sets appearance based on system's theme
+customtkinter.set_appearance_mode("system")
 
 root = customtkinter.CTk()
 root.title("pSearch")
@@ -50,7 +52,7 @@ root.title("pSearch")
 if os.name == "nt":
     root.iconbitmap(path + "/media/icon.ico")
 
-root.geometry("1050x620")
+root.geometry("1050x600")
 
 search_progress_window = None
 search_progress_frame = None
@@ -91,12 +93,13 @@ header = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
 
 search_text = ["What do you want to search today?",
                 "What do you want to search?",
+                "Use an adblocker please!",
                 "Enter what you want to search here!",
-                "Try searching in the FMHY starred collections.",
                 "Here is where you put what you want to search.",
                 "Enter search value here...",
                 "Make sure you fill this before clicking the search button!",
-                "Searching ALL sites might take some time, so try to avoid it."]
+                "Searching ALL sites might take some time, so try to avoid it.",
+                "<-- You can search \"all\" sites ;)"]
 
 # allLinks for appending all links at the end (used in Online Database)
 allLinks = {}
@@ -243,23 +246,23 @@ def online_method(search_value, site_id, chosen_type, main_link):
     if page_code == 200:
         html = page_connect.read()
         # Parse the page with BeautifulSoup
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html, 'lxml', parse_only=SoupStrainer(site_key1))
 
         # Souping elements according to the chosen software. Some work the same way, so they have
         # the same souping method.
         # If the site_key2-3 aren't 'null', then use the default method (specific class)
         if site_key2 != "null" and site_key3 != "null":
-            tags = soup(site_key1, {site_key2: site_key3})
+            tags = soup.find_all(site_key1, attrs={site_key2: site_key3})
         # If it is null, then this is done on purpose as the websites have special conditions, for example
         # 1337x and gog-games. Explained further afterwards.
         else:
             # soups without a specific class, the site_key1 is most probably "a".
-            tags = soup(site_key1)
+            tags = soup.find_all(site_key1)
 
         # For each tag in tags...
         for tag in tags:
             # Find the "a" / links
-            links = tag.find('a')
+            links = tag.a
 
             # If it didn't result "None"...
             if links is not None:
@@ -322,7 +325,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
     
     try:
         # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
-        # needs to just select the ID number of the site.
+        # need to just select the ID number of the site.
         chosen_input = chosen_input.split()[0]        
     
         chosen_input = int(chosen_input)
@@ -366,6 +369,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     
                     print("Found it: " + web[1])
                     break
+                elif chosen_input.lower() == "all":
+                    chosen_input = "all"
+                    foundPing = True
 
             # if the ping stays False then no matching sites were found, throws an error.
             if foundPing == False:
@@ -375,6 +381,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
         # Create a result window for the frame
         search_progress_window = customtkinter.CTkToplevel(root)
         search_progress_window.title("pSearch - Loading Results...")
+        search_progress_window.attributes("-topmost", True)
 
         search_progress_frame = customtkinter.CTkFrame(search_progress_window)
         search_progress_frame.pack(side=RIGHT, fill=BOTH, expand=True)
@@ -430,15 +437,6 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     if chosen_input in site[7] or "all" in site[7]:
                         # Activate the onlineMethod function with forwarding the site's ID.
                         online_method(search_value, site[0], 0, site[8])
-                
-            elif actual_chosen_input.startswith("C-"):
-                split = actual_chosen_input.split("-")
-                for site in websites:
-                    # add 1 step to the progress bar
-                    search_progress_bar.step(1)
-                    search_progress_canvas.update()
-                    if int(split[1].strip()) == site[9]:
-                        online_method(search_value, site[0], 0, site[8])
 
             # This runs as the default method, which is when the user selects a specific site
             else:
@@ -493,7 +491,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
             values = list(final_links.values())
 
             for i in range(start_position, end_position):
-                if result_count < 50:
+                if result_count < 30:
                     global result_link
                     global result_name
 
@@ -549,8 +547,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
             search_progress_window.geometry("1250x650")
             search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
 
-                # If it's greater than 50
-            if len(final_links) > 50:
+                # If it's greater than 30
+            if len(final_links) > 30:
                 # _count is used for counting each number from the input
                 several_btn_count = 0
                 # _length has the length of the results
@@ -559,16 +557,16 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 global several_btn_list
                 several_btn_list = list()
 
-                # Divides the input by 50 (to get appx how many buttons it needs)
-                btn_count = math.ceil(several_btn_length/50)
+                # Divides the input by 30 (to get appx how many buttons it needs)
+                btn_count = math.ceil(several_btn_length/30)
 
                 # For b in the range of btn_count...
                 for b in range(btn_count):
                     # for i in the range of the input plus one...
                     for i in range(several_btn_length + 1):      
             
-                        # If the _count reached 50
-                        if several_btn_count == 50:
+                        # If the _count reached 30
+                        if several_btn_count == 30:
                             # append it to the list
                             several_btn_list.append(str(b) + "-" + str(several_btn_count))
                             # deduct from _length the appended amount
@@ -595,9 +593,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     button_id = int(button_split[0])
                     button_value = int(button_split[1])
 
-                    # create the button by passing starting position(button_id*50) and ending position(button_id*50+button_value)
-                    other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*50, button_id*50+button_value), width=30, height=30)
-                    other_page_btns.pack(side=LEFT, padx=10)
+                    # create the button by passing starting position(button_id*30) and ending position(button_id*30+button_value)
+                    other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*30, button_id*30+button_value), width=30, height=30)
+                    other_page_btns.pack(side=LEFT, padx=10, pady=5)
 
         # If it isn't greater than 0, it says No Results
         else:
@@ -636,6 +634,9 @@ def beginProgram():
     # base64_functions button
     base64_functions_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2", text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
     base64_functions_btn.pack(side=LEFT, padx=5)
+
+    github_button = customtkinter.CTkButton(top_functions_frame, text="Star on Github! ", border_spacing=3, cursor="hand2", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb("https://github.com/SerjSX/pSearch/"))
+    github_button.pack(side=RIGHT, padx=5)
     
     wlcmsg = customtkinter.CTkLabel(root, text="pSearch - Piracy Multi-Search Tool", font=customtkinter.CTkFont(size=24, weight="bold"))
     wlcmsg.pack(side=TOP, pady=100)
@@ -654,7 +655,7 @@ def beginProgram():
 
     # For each web in websites, append the id, name and type to websites_list_dropdown to use in dropdown menu
     for web in websites:
-        websites_list_dropdown.append(str(web[0]) + " --- " + web[1] + "- Type: " + web[7])
+        websites_list_dropdown.append(str(web[0]) + " | " + web[1] + " - Type: " + web[7])
 
     # Create a StringVar to insert the chosen value in it (either by clicking one of the buttons or from dropdown menu)
     option_chosen = StringVar()
@@ -680,7 +681,7 @@ def beginProgram():
                                                 image=search_img, 
                                                 command=lambda: search_process_signal(0, False, site_entry_input.get(), search_entry_input.get(), 0, 0), 
                                                 width=10,
-                                                height=10,  
+                                                height=30,  
                                                 cursor="hand2")
 
     site_entry_input.pack(side=LEFT, padx=5)
@@ -692,16 +693,16 @@ def beginProgram():
     search_entry_input.bind("<Return>", lambda e: search_process_signal(0, False, site_entry_input.get(), search_entry_input.get(), 0, 0))
 
     # Tab view allows you to switch between shortcut buttons/choices easily
-    tabview = customtkinter.CTkTabview(root, height=40)
-    tabview.pack(pady=20)
+    typesFrame = customtkinter.CTkFrame(root, height=50, width=100, fg_color="transparent", border_width=1)
+    typesFrame.pack(pady=20)
 
-    # Adds the tabs
-    tabview.add("Types")
-    tabview.add("Collections")
+    titleButton = customtkinter.CTkLabel(typesFrame, text="Shortcuts", fg_color="transparent", pady=30, font=("Ariel", 20), width=70,
+                                            height=32)
+    titleButton.pack(pady=5)
 
     # Creates an outer frame for displaying all-in-one types search
-    types_outer_frame = customtkinter.CTkFrame(tabview.tab("Types"), fg_color="transparent", cursor="hand2")
-    types_outer_frame.pack(pady=20)
+    types_outer_frame = customtkinter.CTkFrame(typesFrame, fg_color="transparent", cursor="hand2")
+    types_outer_frame.pack(padx=5,pady=5)
 
     # Gets the types from the database in order to display them afterwards
     get_types = cur.execute("SELECT * FROM Types")
@@ -711,60 +712,30 @@ def beginProgram():
         # Save the name of the type in a separate variable, [0] is the id, [1] is the name
         type_name = type[1]
 
-        # Create a frame to insert image and name under it
-        type_frame = customtkinter.CTkFrame(master=types_outer_frame)
-        type_frame.pack(side=LEFT, pady=10, padx=5)
+        if type_name != "all":
+            # Create a frame to insert image and name under it
+            type_frame = customtkinter.CTkFrame(master=types_outer_frame)
+            type_frame.pack(side=LEFT, pady=10, padx=5)
 
-        # Generates the image for the type.
-        # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
-        # according to the type's name.
-        type_images["{0}".format(type_name)] = customtkinter.CTkImage(light_image=Image.open(type_images[type_name]),
+            # Generates the image for the type.
+            # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
+            # according to the type's name.
+            type_images["{0}".format(type_name)] = customtkinter.CTkImage(light_image=Image.open(type_images[type_name]),
                                                                     size=(48,48))
 
-        # Creates the buttons for each type to display type name
-        type_btns = customtkinter.CTkButton(master=type_frame, 
-                                            width=70,
-                                            height=32,
-                                            text=type_name.capitalize() + " sites", 
-                                            command=lambda type_name=type_name: apply_to_variable(type_name),
-                                            image=type_images["{0}".format(type_name)],
-                                            compound="top", 
-                                            cursor="hand2",)
-        type_btns.pack(side=TOP)
+            # Creates the buttons for each type to display type name
+            type_btns = customtkinter.CTkButton(master=type_frame, 
+                                                width=70,
+                                                height=32,
+                                                text=type_name.capitalize() + " Sites", 
+                                                command=lambda type_name=type_name: apply_to_variable(type_name),
+                                                image=type_images["{0}".format(type_name)],
+                                                compound="top", 
+                                                cursor="hand2",)
+            type_btns.pack(side=TOP)
 
-        # Appends the type name to types_list list to be used for button click identification afterwards
-        types_list.append(type[1])
-
-    # Used for collection buttons
-    get_collections = cur.execute("SELECT * FROM Collections")
-
-    for collection in get_collections:
-        # Save the name of the type in a separate variable, [0] is the id, [1] is the name
-        collection_name = collection[1]
-        collection_id = collection[0]
-
-        # Appends the type name to types_list list to be used for button click identification afterwards
-        collection_list.append("C-" + str(collection_id) + " - " + collection_name)
-
-    collection_text = customtkinter.CTkLabel(master=tabview.tab("Collections"), text="Sites that are in collections are starred in a popular megathread. For example, the sites in the FMHY collections have a star in their megathread.")
-    collection_text.pack()
-
-    segemented_button_var = customtkinter.StringVar(value="None")  # set initial value
-
-    segemented_button = customtkinter.CTkOptionMenu(master=tabview.tab("Collections"),
-                                                    values=collection_list,
-                                                    variable=segemented_button_var,
-                                                    command=lambda e: apply_to_variable(segemented_button.get()),
-                                                    cursor="hand2"
-                                                )
-    
-    segemented_button.pack(pady=10)
-
-    like_text = customtkinter.CTkLabel(master=root, text="Did you like the program? Star it on Github!")
-    like_text.pack()
-    github_button = customtkinter.CTkButton(master=root, cursor="hand2", text="", height=30, width=0, corner_radius=0, image=github_img, command=lambda: cb("https://github.com/SerjSX/pSearch/"))
-    github_button.pack(pady=5)
-
+            # Appends the type name to types_list list to be used for button click identification afterwards
+            types_list.append(type[1])
     
 
 # The beginning program runs beginProgram() function

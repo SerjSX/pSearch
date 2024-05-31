@@ -60,6 +60,8 @@ def start_base64():
     app.geometry("750x350")
     app.title("Base64 Decoder/Encoder")
 
+    app.attributes("-topmost", True)
+
     label_text = customtkinter.CTkLabel(app, text="This program is used to perform Base64 encoding/decoding")
     label_text.pack(pady=30)
 
@@ -75,3 +77,5 @@ def start_base64():
     button_encode.pack(pady=10, padx=10, side=LEFT)
     button_sencode = customtkinter.CTkButton(app, text="URL and Filename Safe Encode", command=lambda: button_click_event("safe encode", input_textbox.get("0.0", "end")))
     button_sencode.pack(pady=10, padx=10, side=LEFT)
+
+    
