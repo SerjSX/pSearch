@@ -317,6 +317,8 @@ def online_method(search_value, site_id, chosen_type, main_link):
                     results_count = results_count + 1
                 else:
                     allLinks[("default", site_name, site_link, link[0])] = link[1]
+        else:
+            print("\nPlease note that the following site returned no results: " + site_link)
 
 
 def search_process_signal(button_num, nwindow, chosen_input, 
