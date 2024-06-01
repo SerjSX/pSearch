@@ -1,4 +1,4 @@
-![pSearch on version 1.6.2](https://i.ibb.co/2cVk43b/Capture.png)
+![pSearch on version 1.6.2](https://i.ibb.co/7Q8BnnD/image.png)
 
 <p align="center">
   <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/total" alt="Downloads"/>
