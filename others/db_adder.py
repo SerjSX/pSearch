@@ -11,16 +11,16 @@ conn = sqlite3.connect(path + '/websitesdb')
 cur = conn.cursor()
 
 insert_command = '''INSERT INTO Websites (name, url, searchurl, key1_id, key2_id, 
-                key3_id, type_id, hasmainlink)
-	            VALUES (?, ?, ?, ?, ?, ?, ?, ?)'''
+                key3_id, type_id, hasmainlink, plusorspace)
+	            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'''
 
 key_1_retr = "SELECT * FROM Keys1"
 key_2_retr = "SELECT * FROM Keys2"
 key_3_retr = "SELECT * FROM Keys3"
 types_retr = "SELECT * FROM Types"
 
-def apply_db(name, link, slink, key1, key2, key3, type, hasmainlink):
-    cur.execute(insert_command, (name, link, slink, key1, key2, key3, type, hasmainlink,))
+def apply_db(name, link, slink, key1, key2, key3, type, hasmainlink, plusorspace):
+    cur.execute(insert_command, (name, link, slink, key1, key2, key3, type, hasmainlink, plusorspace,))
     print("Done")
     conn.commit()
     askUser()
@@ -116,6 +116,14 @@ def askUser():
         print("You have to either type 0 or 1! Start over...")
         askUser()
 
+    print('''\n Now, is the search text separated by plus (+) or space (%20)?
+    If by plus it would be: grand+theft+auto, so type 0.
+    If by space it would be: grand theft auto, so type 1.''')
+    plusorspace = int(input("\n Type either 0 or 1: "))
+    if plusorspace != 0 and plusorspace != 1:
+        print("You have to either type 0 or 1! Start over...")
+    
+
     print("\n\n Preview:")
     print("Name: " + name)
     print("Link: " + link)
@@ -125,11 +133,12 @@ def askUser():
     print("Key3:", key3)
     print("Type:", type_usr)
     print("Has main link:", hasmainlink)
+    print("Plus or space:", plusorspace)
 
     usr_proceed = input("Do you want to apply to database or start over? Type 0 for proceed, 1 for start over, 2 for quit: ")
 
     if usr_proceed == "0":
-        apply_db(name, link, slink, key1, key2, key3, type_usr, hasmainlink)
+        apply_db(name, link, slink, key1, key2, key3, type_usr, hasmainlink, plusorspace)
     elif usr_proceed == "2":
         exit()
     else:
