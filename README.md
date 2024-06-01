@@ -46,12 +46,13 @@ Keep in mind, running it with native Python will always be faster than with a UI
 But as an alternative and a faster method, I also build the program in a standalone executable file which you can download from every release.
 
 ## There are some not-so-important functionalities at the top...
-- **DB Checker** checks the health (page code) of all of the sites in the database then prints it in the command line. Make sure to run the .exe via command line to see the actual results because I have disabled the console while building the program.
+- **DB Checker** checks the health (page code) of all of the sites in the database then prints it in the command line. Make sure to run the .exe via command line to see the actual results because I have disabled the console while building the program. Please note that overtime I have noticed this method to be not fully efficient, since some sites can change their URL or key names, which returns no results and no errors. But, it's still good for quick analysis, though the "all" search is more useful for detecting errors.
 - **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality).
 
  ## Notice
 - This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. 
-- You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know, or in the Reddit post: https://www.reddit.com/r/Piracy/comments/zz9tn7/psearch_piracy_multisearching_tool/
+- You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know.
+- Please use an adblocker in your browser to stay safe when visiting a website!
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
