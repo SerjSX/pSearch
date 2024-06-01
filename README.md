@@ -30,7 +30,10 @@
 |:-|:-|
 |**Using site input box -** ***choosing where to search, has a smaller input in size in the program with the text "Enter site name here"***|You can either \[1\] type a site's name, the program checks if the site is in the database and proceeds with the search, \[2\] choose a site from the dropdown options shown by clicking the upside down arrow next to the site input box, \[3\] click one of the Shortcuts buttons, which allows you to search immediately in multiple sites within a category|
 |**Using search input box -** ***typing what you want to search in the chosen site(s)***|You can type anything you want in the input box, and then you can either \[1\] click the search button, or \[2\] click the Enter button from your keyboard, in order to start searching|
-|**Browsing the results page**|\[1\] You can click on the title / link of the result to visit the site, \[2\] you can click on the site's name to visit the normal homepage of the site, \[3\] if the results count is greater than 50 you can browse other pages by clicking the number buttons at the bottom of the page|
+|**Browsing the results page**|\[1\] You can click on the title / link of the result to visit the site, \[2\] you can click on the site's name to visit the normal homepage of the site, \[3\] if the results count is greater than 30 you can browse other pages by clicking the number buttons at the bottom of the page|
+
+#### Additional Note
+Searching in ALL sites is time consuming, especially with slow wifi connections. I removed the button All from the Shortcuts, since it would be more efficient to strategically search in a category. However, you can still use "all" in the site input box to search everywhere since it is also a good way to test if all sites are working properly.
 
 ## Requirements and Running
 This software uses <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> and <a href="https://pypi.org/project/customtkinter/" target="_blank">CustomTkinter</a>. Use this command within the extracted folder to install everything from the requirements.txt file, or you can manually from PyPI:
