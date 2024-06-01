@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import customtkinter
-import urllib.parse, urllib.request, urllib.error
+import urllib.parse
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 import os
@@ -157,7 +157,7 @@ websites = list()
 for row in cur.execute('''
     SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
     Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink,
-    Websites.collection_id
+    Websites.plusorspace
         FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
             ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
             AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
@@ -203,6 +203,7 @@ def online_method(search_value, site_id, chosen_type, main_link):
             site_key1 = web[4]
             site_key2 = web[5]
             site_key3 = web[6]
+            plusorspace = web[9]
 
     # result_links used for appending links from the results.
     result_links = {}
@@ -226,17 +227,22 @@ def online_method(search_value, site_id, chosen_type, main_link):
     # If it doesn't start with https://1337x.to/ then quote it with + (it replaces space with +), this is
     # the default method as most sites work this way.
     else:
-        search_value_fixed = urllib.parse.quote_plus(search_value)
+        if plusorspace == 0:
+            search_value_fixed = urllib.parse.quote_plus(search_value)
+        else:
+            search_value_fixed = urllib.parse.quote(search_value)           
+        
         # Connect the url with the software name the user put at the beginning
         search_url = site_slink + search_value_fixed
+        print(search_url)
 
-    # Send a request to connect to the site with the header.
-    req = urllib.request.Request(url=search_url, headers=header)
+
 
     # Try to open the URL to read
     try:
-        page_connect = urllib.request.urlopen(req)
-        page_code = page_connect.getcode()
+        # Send a request to connect to the site with the header and retrieve html
+        html = requests.get(search_url, headers=header).content
+        page_code = 200
     except:
         messagebox.showerror("Error!", "An error occurred during searching the following site: " + search_url + "\nSearch process will continue")
         print(search_url + " resulted the following error (search will continue):\n" + traceback.format_exc())
@@ -244,7 +250,6 @@ def online_method(search_value, site_id, chosen_type, main_link):
         page_code = -1
 
     if page_code == 200:
-        html = page_connect.read()
         # Parse the page with BeautifulSoup
         soup = BeautifulSoup(html, 'lxml', parse_only=SoupStrainer(site_key1))
 
@@ -696,13 +701,15 @@ def beginProgram():
     typesFrame = customtkinter.CTkFrame(root, height=50, width=100, fg_color="transparent", border_width=1)
     typesFrame.pack(pady=20)
 
-    titleButton = customtkinter.CTkLabel(typesFrame, text="Shortcuts", fg_color="transparent", pady=30, font=("Ariel", 20), width=70,
+    titleButton = customtkinter.CTkLabel(typesFrame, text="Shortcuts", fg_color="transparent", font=("Ariel", 20), width=70,
                                             height=32)
-    titleButton.pack(pady=5)
+    titleButton.pack(pady=(30,0))
+    descr = customtkinter.CTkLabel(typesFrame, text="Search by types faster", fg_color="transparent", font=customtkinter.CTkFont(family="Ariel", size=12, slant="italic"), width=70, height=32)
+    descr.pack(pady=5)
 
     # Creates an outer frame for displaying all-in-one types search
     types_outer_frame = customtkinter.CTkFrame(typesFrame, fg_color="transparent", cursor="hand2")
-    types_outer_frame.pack(padx=5,pady=5)
+    types_outer_frame.pack(padx=5,pady=(0,5))
 
     # Gets the types from the database in order to display them afterwards
     get_types = cur.execute("SELECT * FROM Types")
