@@ -28,7 +28,7 @@
 ## Using the program
 ||**Description**|
 |:-|:-|
-|**Using site input box -** ***choosing where to search, has a smaller input in size in the program with the text "Enter site name here"***|You can either \[1\] type a site's name, the program checks if the site is in the database and proceeds with the search, \[2\] choose a site from the dropdown options shown by clicking the upside down arrow next to the site input box, \[3\] click one of the Types buttons or choose one of the Collections|
+|**Using site input box -** ***choosing where to search, has a smaller input in size in the program with the text "Enter site name here"***|You can either \[1\] type a site's name, the program checks if the site is in the database and proceeds with the search, \[2\] choose a site from the dropdown options shown by clicking the upside down arrow next to the site input box, \[3\] click one of the Shortcuts buttons, which allows you to search immediately in multiple sites within a category|
 |**Using search input box -** ***typing what you want to search in the chosen site(s)***|You can type anything you want in the input box, and then you can either \[1\] click the search button, or \[2\] click the Enter button from your keyboard, in order to start searching|
 |**Browsing the results page**|\[1\] You can click on the title / link of the result to visit the site, \[2\] you can click on the site's name to visit the normal homepage of the site, \[3\] if the results count is greater than 50 you can browse other pages by clicking the number buttons at the bottom of the page|
 
