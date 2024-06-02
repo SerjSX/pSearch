@@ -291,6 +291,7 @@ def online_method(search_value, site_id, chosen_type, main_link):
 
             # If Links resulted None, then the following have special conditions.
             elif links is None:
+                    
                 # Get the href from the tag, because at first we grabbed the "a" directly.
                 main_link_b = tag.get("href")
                 # If it isn't None...
