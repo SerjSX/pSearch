@@ -54,6 +54,7 @@ But as an alternative and a faster method, I also build the program in a standal
 
 ## From where do I get the websites?
 Piracy Megathread and a mix of the "Other Treasures": https://www.reddit.com/r/Piracy/wiki/megathread/#wiki_.1FA99_.279C_other_treasures
+
 Note: I don't use ALL megathreads. I add sites based on:
 - the database amount, for example if there aren't enough links for Android then I start to search for Android related websites in the various trusted megathreads.
 - removed content. If I remove a site from a category, I search for another replacement from the trusted megathreads.
