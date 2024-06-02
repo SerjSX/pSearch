@@ -6,7 +6,6 @@ import urllib.parse
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 import os
-import sqlite3
 import traceback
 from random import shuffle
 from PIL import  Image
@@ -16,6 +15,7 @@ from zipfile import ZipFile
 import sys
 import pyperclip
 import requests
+import json
 
 # Grabs the directory name
 path = sys.path[0]
@@ -31,9 +31,6 @@ if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkin
             print('Done')
 else:
     print("Folders already exist, starting program...")
-
-# Database Checker py checks the health of the websites in the database
-import db_checker as dc
 
 # Callback py redirects user to browser with a defined link
 from callback import callback as cb
@@ -114,7 +111,7 @@ testMode = False
 
 # Tries to download the latest database from Github
 try:
-    database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websitesdb"
+    database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websites.json"
 
     if testMode == False:
         print("Downloading database file...")
@@ -122,7 +119,7 @@ try:
 
         # send a HTTP request to the server and save
         # the HTTP response in a response object called r
-        with open(path + "/websitesdb",'wb') as f:
+        with open(path + "/websites.json",'wb') as f:
 
             # Saving received content as a png file in
             # binary format
@@ -130,39 +127,27 @@ try:
             # write the contents of the response (r.content)
             # to a new file in binary mode.
             f.write(r.content)
-
-        print("Connecting to the database file...")
-        # Connects to the websites database
-        conn = sqlite3.connect('websitesdb')
         
         print("Done")
+        database_file_path = path + "/websites.json"
     else:
         print("Using test mode, connecting to the local database file.")
-        conn = sqlite3.connect(path + '/others/websitesdb')    
+        database_file_path = path + '/others/websites.json'    
 
 # If it fails to connect and download...
 except:
     print("Failed to connect to the server for downloading database, using default database from /others/")
     # Connects to this database which is the one that came from the release, if
     # it fails to connect to the internet
-    conn = sqlite3.connect(path + '/others/websitesdb')    
+    database_file_path = path + '/others/websites.json'    
 
-# Asigns cursor to execute database functions
-cur = conn.cursor()
 
 # The websites grabbed from the database are inserted in this list.
 websites = list()
+   
+with open(database_file_path) as f:
+    websites = json.load(f)
 
-# Grabs the information from the Database
-for row in cur.execute('''
-    SELECT Websites.id, Websites.name, Websites.url, Websites.searchurl, 
-    Keys1.name, Keys2.name, Keys3.name, Types.name, Websites.hasmainlink,
-    Websites.plusorspace
-        FROM Websites JOIN Keys1 JOIN Keys2 JOIN Keys3 JOIN Types 
-            ON Websites.key1_id = Keys1.id AND Websites.key2_id = Keys2.id 
-            AND Websites.key3_id = Keys3.id AND Websites.type_id = Types.id'''):
-    # Appends it to the websites list.
-    websites.append(row)
 
 print("\nThe terminal will be used for displaying errors. Any error you face report on Github with full details.\n")
 
@@ -184,7 +169,7 @@ def apply_to_variable(chosen_input):
     site_entry_input.set(chosen_input)
 
 # onlineMethod(search_value,site_id) is the main function where searching is done
-def online_method(search_value, site_id, chosen_type, main_link):    
+def online_method(search_value, userInput, chosen_type, main_link):    
     # These variables below are for the information necessary for the searching process.
     # site_link has the normal link of the website, useful when the grabbed URL doesn't start with the
     # website URL, so we can just add it easily.
@@ -195,15 +180,15 @@ def online_method(search_value, site_id, chosen_type, main_link):
     # for each website from the database file...
     for web in websites:
         # If the website from the file matches the user's inserted option...
-        if web[0] == site_id:
+        if web['name'] == userInput:
             # Sets its information to the appropriate variables.
-            site_name = web[1]
-            site_slink = web[3]
-            site_link = web[2]
-            site_key1 = web[4]
-            site_key2 = web[5]
-            site_key3 = web[6]
-            plusorspace = web[9]
+            site_name = web['name']
+            site_slink = web['searchurl']
+            site_link = web['url']
+            site_key1 = web['key1']
+            site_key2 = web['key2']
+            site_key3 = web['key3']
+            plusorspace = web['plusorspace']
 
     # result_links used for appending links from the results.
     result_links = {}
@@ -222,7 +207,7 @@ def online_method(search_value, site_id, chosen_type, main_link):
             search_url = site_slink + search_value_fixed + "/1/"
     # If the site is FileCR and the chosen type is Android, then specifically search it in
     # the android section for accurate results.
-    elif site_id == "1" and chosen_type == "android":
+    elif site_name == "FileCR" and chosen_type == "android":
         search_url = site_slink + urllib.parse.quote_plus(search_value) + "&subcat_filter=&category-type=23"
     # If it doesn't start with https://1337x.to/ then quote it with + (it replaces space with +), this is
     # the default method as most sites work this way.
@@ -319,35 +304,21 @@ def online_method(search_value, site_id, chosen_type, main_link):
                 else:
                     allLinks[("default", site_name, site_link, link[0])] = link[1]
         else:
-            print("\nPlease note that the following site returned no results: " + site_link)
+            print("\nPlease note that the following site returned no results: " + site_slink)
 
 
 def search_process_signal(button_num, nwindow, chosen_input, 
                         search_value, start_position, end_position):   
     global search_progress_window
 
-    int_or_str = None
-
-    # Used for collection, need whole chosen text
-    actual_chosen_input = chosen_input
     
     try:
-        # Splits the chosen_input because when user chooses a specific site it returns the whole name, we
-        # need to just select the ID number of the site.
-        chosen_input = chosen_input.split()[0]        
-    
-        chosen_input = int(chosen_input)
-        int_or_str = "int"
-    except:
-        mod_chosen_input = actual_chosen_input.split()
+        # Splits the chosen_input to extract the name of the site
+        chosen_input = chosen_input.split('-')[0].strip()     
 
-        # Only add the values of the chosen_input with each other if there is more than one value
-        # in the splitted variable, or else keep it as it is. 
-        if len(mod_chosen_input) > 0:
-            chosen_input = ''
-            for i in mod_chosen_input:
-                chosen_input = chosen_input + i
-        int_or_str = "str"
+    except:
+        chosen_input = chosen_input
+ 
 
     # If the search results window isn't None then most probably there's another one already on-screen,
     # so it destroys it to just have one window.
@@ -359,7 +330,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
         # if in: is in the search value then a special condition is detected.
         # A special condition is a shortcut to directly search in a website without using the dropdown for selection.
-        if int_or_str == "str" and not chosen_input.startswith("C-") and chosen_input not in types_list:
+        if chosen_input not in types_list:
             # foundPing is used for detecting if a matching site has been found, to prevent multiple sites.
             foundPing = False
 
@@ -367,15 +338,17 @@ def search_process_signal(button_num, nwindow, chosen_input,
             for web in websites:
                 # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
                 # website (lowercased) then...
-                if chosen_input.lower() in web[1].lower():
-                    print(chosen_input.lower(), web[1].lower())
-                    # Asign the site's id to chosen_input
-                    chosen_input = str(web[0])
+                if chosen_input.lower() in web['name'].lower():
+                    print(chosen_input.lower(), web['name'].lower())
+
                     # Change the ping to True
                     foundPing = True
-                    # Break the loop
                     
-                    print("Found it: " + web[1])
+                    #set chosen input to proper name
+                    chosen_input = web['name']
+                    
+                    # Break the loop
+                    print("Found it: " + web['name'])
                     break
                 elif chosen_input.lower() == "all":
                     chosen_input = "all"
@@ -433,7 +406,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     search_progress_bar.step(1)
                     search_progress_canvas.update()
                     # Activate the onlineMethod function with forwarding the site's ID.
-                    online_method(search_value, site[0], 0, site[8])
+                    online_method(search_value, site['name'], 0, site['hasmainlink'])
 
             # If chosen_input is in the types_list, indicates that user clicked one of the buttons...
             elif chosen_input in types_list:
@@ -442,9 +415,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     # add 1 step to the progress bar
                     search_progress_bar.step(1)
                     search_progress_canvas.update()
-                    if chosen_input in site[7] or "all" in site[7]:
+                    if chosen_input in site['type'] or "all" in site['type']:
                         # Activate the onlineMethod function with forwarding the site's ID.
-                        online_method(search_value, site[0], 0, site[8])
+                        online_method(search_value, site['name'], 0, site['hasmainlink'])
 
             # This runs as the default method, which is when the user selects a specific site
             else:
@@ -453,8 +426,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     # add 1 step to the progress bar
                     search_progress_bar.step(1)
                     search_progress_canvas.update()
-                    if web[0] == int(chosen_input):
-                        online_method(search_value, web[0], 0, web[8])
+                    if web['name'] == chosen_input:
+                        online_method(search_value, web['name'], 0, web['hasmainlink'])
 
 
         # At the end, it prints the results if the length of allLinks OR best results is greater than 0
@@ -619,7 +592,6 @@ def beginProgram():
     # Variables required to be global in order to function properly
     global option_chosen
     global websites
-    global cur
     global wlcmsg
     global types_list
     global search_progress_frame
@@ -634,10 +606,6 @@ def beginProgram():
     # theme changer button
     toggle_theme_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2",text=" Change Theme ", command=lambda: change_theme(customtkinter.get_appearance_mode()), width=40, corner_radius=0)
     toggle_theme_btn.pack(side=LEFT, padx=5)
-
-    # db_checker button
-    db_checker_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2", text=" DB Checker ", command=dc.db_checker, width=40, corner_radius=0)
-    db_checker_btn.pack(side=LEFT)
 
     # base64_functions button
     base64_functions_btn = customtkinter.CTkButton(top_functions_frame, cursor="hand2", text=" Base64 Encode/Decode ", command=b64f.start_base64, width=40, corner_radius=0)
@@ -663,7 +631,7 @@ def beginProgram():
 
     # For each web in websites, append the id, name and type to websites_list_dropdown to use in dropdown menu
     for web in websites:
-        websites_list_dropdown.append(str(web[0]) + " | " + web[1] + " - Type: " + web[7])
+        websites_list_dropdown.append(web['name'] + " - Type: " + web['type'])
 
     # Create a StringVar to insert the chosen value in it (either by clicking one of the buttons or from dropdown menu)
     option_chosen = StringVar()
@@ -714,15 +682,14 @@ def beginProgram():
     types_outer_frame = customtkinter.CTkFrame(typesFrame, fg_color="transparent", cursor="hand2")
     types_outer_frame.pack(padx=5,pady=(0,5))
 
-    # Gets the types from the database in order to display them afterwards
-    get_types = cur.execute("SELECT * FROM Types")
+    # These are the types of websites allowed in order to make searching multiple sites easier
+    get_types = ["software", "games", "android", "movieseries", "all",
+    "courses", "ebooks", "comics_manga", "music"]
 
     # For each type in the grabbed types (get_types variable)...
     for type in get_types:
-        # Save the name of the type in a separate variable, [0] is the id, [1] is the name
-        type_name = type[1]
 
-        if type_name != "all":
+        if type != "all":
             # Create a frame to insert image and name under it
             type_frame = customtkinter.CTkFrame(master=types_outer_frame)
             type_frame.pack(side=LEFT, pady=10, padx=5)
@@ -730,22 +697,22 @@ def beginProgram():
             # Generates the image for the type.
             # The variable has a specific name to prevent errors, and it grabs the directory from the dictionary 
             # according to the type's name.
-            type_images["{0}".format(type_name)] = customtkinter.CTkImage(light_image=Image.open(type_images[type_name]),
+            type_images["{0}".format(type)] = customtkinter.CTkImage(light_image=Image.open(type_images[type]),
                                                                     size=(48,48))
 
             # Creates the buttons for each type to display type name
             type_btns = customtkinter.CTkButton(master=type_frame, 
                                                 width=70,
                                                 height=32,
-                                                text=type_name.capitalize() + " Sites", 
-                                                command=lambda type_name=type_name: apply_to_variable(type_name),
-                                                image=type_images["{0}".format(type_name)],
+                                                text=type.capitalize() + " Sites", 
+                                                command=lambda type=type: apply_to_variable(type),
+                                                image=type_images["{0}".format(type)],
                                                 compound="top", 
                                                 cursor="hand2",)
             type_btns.pack(side=TOP)
 
             # Appends the type name to types_list list to be used for button click identification afterwards
-            types_list.append(type[1])
+            types_list.append(type)
     
 
 # The beginning program runs beginProgram() function
