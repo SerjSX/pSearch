@@ -68,4 +68,4 @@ Note: I don't use ALL megathreads. I add sites based on:
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
 
 #### Contribution 
-Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution.
+Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution. Though, you have to inform me of the websites added/removed, and if added from which megathread you have taken it.
