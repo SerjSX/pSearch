@@ -1,4 +1,4 @@
-![pSearch on version 1.6.2](https://i.ibb.co/2cVk43b/Capture.png)
+![pSearch on version 1.6.7](https://i.ibb.co/7Q8BnnD/image.png)
 
 <p align="center">
   <img src="https://img.shields.io/github/downloads/SerjSX/pSearch/total" alt="Downloads"/>
@@ -52,6 +52,13 @@ But as an alternative and a faster method, I also build the program in a standal
 - **DB Checker** checks the health (page code) of all of the sites in the database then prints it in the command line. Make sure to run the .exe via command line to see the actual results because I have disabled the console while building the program. Please note that overtime I have noticed this method to be not fully efficient, since some sites can change their URL or key names, which returns no results and no errors. But, it's still good for quick analysis, though the "all" search is more useful for detecting errors.
 - **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality).
 
+## From where do I get the websites?
+Piracy Megathread and a mix of the "Other Treasures": https://www.reddit.com/r/Piracy/wiki/megathread/#wiki_.1FA99_.279C_other_treasures
+
+Note: I don't use ALL megathreads. I add sites based on:
+- the database amount, for example if there aren't enough links for Android then I start to search for Android related websites in the various trusted megathreads.
+- removed content. If I remove a site from a category, I search for another replacement from the trusted megathreads.
+
  ## Notice
 - This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. 
 - You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know.
@@ -61,4 +68,4 @@ But as an alternative and a faster method, I also build the program in a standal
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
 
 #### Contribution 
-Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution.
+Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution. Though, you have to inform me of the websites added/removed, and if added from which megathread you have taken it.
