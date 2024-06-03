@@ -122,17 +122,6 @@
     },
     {
         "hasmainlink": 0,
-        "key1": "h3",
-        "key2": "class",
-        "key3": "entry-title",
-        "name": "Pirate PC",
-        "plusorspace": 0,
-        "searchurl": "https://piratepc.me/?s=",
-        "type": "software",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
         "key1": "h2",
         "key2": "null",
         "key3": "null",
@@ -140,17 +129,6 @@
         "plusorspace": 0,
         "searchurl": "https://www.ovagames.com/?s=",
         "type": "games",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h2",
-        "key2": "class",
-        "key3": "entry-title",
-        "name": "C1NE",
-        "plusorspace": 0,
-        "searchurl": "https://c1ne.co/?s=",
-        "type": "movieseries",
         "url": ""
     },
     {
@@ -196,17 +174,6 @@
         "searchurl": "https://ebook-hunter.org/search/?keyword=",
         "type": "ebooks",
         "url": "https://ebook-hunter.org"
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h2",
-        "key2": "class",
-        "key3": "entry-title",
-        "name": "OceanofPDF",
-        "plusorspace": 0,
-        "searchurl": "https://oceanofpdf.com/?s=",
-        "type": "ebooks",
-        "url": ""
     },
     {
         "hasmainlink": 0,
@@ -455,17 +422,6 @@
         "key1": "h2",
         "key2": "class",
         "key3": "entry-title",
-        "name": "COURSESGHAR",
-        "plusorspace": 0,
-        "searchurl": "https://coursesghar.com/tutorialsv1/?s=",
-        "type": "courses",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h2",
-        "key2": "class",
-        "key3": "entry-title",
         "name": "TutsNode",
         "plusorspace": 0,
         "searchurl": "https://tutsnode.net/?s=",
@@ -627,17 +583,6 @@
         "url": "https://mangareader.to"
     },
     {
-        "hasmainlink": 1,
-        "key1": "div",
-        "key2": "class",
-        "key3": "item-text",
-        "name": "BATO",
-        "plusorspace": 0,
-        "searchurl": "https://bato.to/search?word=",
-        "type": "comics_manga",
-        "url": "https://bato.to"
-    },
-    {
         "hasmainlink": 0,
         "key1": "h3",
         "key2": "class",
@@ -712,6 +657,62 @@
         "plusorspace": 0,
         "searchurl": "https://apkmb.com/?s=",
         "type": "android",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "article",
+        "key2": "class",
+        "key3": "uk-article",
+        "name": "GLOAD",
+        "plusorspace": 0,
+        "searchurl": "https://gload.to/?s=",
+        "type": "games",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "null",
+        "key3": "null",
+        "name": "MANGA ZIP",
+        "plusorspace": 0,
+        "searchurl": "https://manga-zip.is/?s=",
+        "type": "comics_manga",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title",
+        "name": "Tut4IT",
+        "plusorspace": 0,
+        "searchurl": "https://tut4it.com/?s=",
+        "type": "courses",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h3",
+        "key2": "null",
+        "key3": "null",
+        "name": "Light Downloads",
+        "plusorspace": 0,
+        "searchurl": "https://lightdlmovies.blogspot.com/search?q=",
+        "type": "movieseries",
+        "url": ""
+    }
+,
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "title",
+        "name": "CRACKSurl",
+        "plusorspace": 0,
+        "searchurl": "https://cracksurl.com/?s=",
+        "type": "software",
         "url": ""
     }
 ]

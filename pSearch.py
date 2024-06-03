@@ -16,6 +16,7 @@ import sys
 import pyperclip
 import requests
 import json
+import webbrowser
 
 # Grabs the directory name
 path = sys.path[0]
@@ -31,10 +32,7 @@ if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkin
             print('Done')
 else:
     print("Folders already exist, starting program...")
-
-# Callback py redirects user to browser with a defined link
-from callback import callback as cb
-
+    
 # Base64 Decoding/Encoding function
 import base64_functions as b64f
 
@@ -150,6 +148,14 @@ with open(database_file_path) as f:
 
 
 print("\nThe terminal will be used for displaying errors. Any error you face report on Github with full details.\n")
+
+# Used when clicking on the results to visit link
+def cb(link, type=None):
+    webbrowser.open_new(link)
+    
+    # Adjusts the window of the results so it wouldn't be shown on top of the browser.
+    if type == "result":
+        search_progress_window.attributes("-topmost", False)
 
 # Used for changing the software's theme - dark or light
 def change_theme(current_theme):
@@ -338,9 +344,10 @@ def search_process_signal(button_num, nwindow, chosen_input,
             for web in websites:
                 # If the chosen_input (lowercased) is in the web's [1] which is the name of the 
                 # website (lowercased) then...
-                if chosen_input.lower() in web['name'].lower():
-                    print(chosen_input.lower(), web['name'].lower())
 
+                #print(chosen_input.lower(), web['name'].lower())
+
+                if chosen_input.lower() in web['name'].lower():
                     # Change the ping to True
                     foundPing = True
                     
@@ -348,7 +355,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     chosen_input = web['name']
                     
                     # Break the loop
-                    print("Found it: " + web['name'])
+                    #print("Found it: " + web['name'])
                     break
                 elif chosen_input.lower() == "all":
                     chosen_input = "all"
@@ -356,7 +363,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
             # if the ping stays False then no matching sites were found, throws an error.
             if foundPing == False:
-                messagebox.showerror("Error!", "Invalid site name input, either empty it or put a valid name.")  
+                messagebox.showerror("Error!", "Invalid site name input, please either put a valid name, choose one from the dropdown list or click on a shortcut button.")  
                 return
 
         # Create a result window for the frame
@@ -463,8 +470,8 @@ def search_process_signal(button_num, nwindow, chosen_input,
                 end_position = len(final_links)
 
             # Creates a notice block to always use an adblocker extension
-            notice_ublock = customtkinter.CTkButton(search_progress_frame_two, text="Please use an adblocker extension, such as uBlock Origin, while browsing any of the below links",
-                                                    command=lambda: cb("https://github.com/gorhill/uBlock#ublock-origin"))
+            notice_ublock = customtkinter.CTkButton(search_progress_frame_two, text="Please use an adblocker extension, whether in your browser or through a DNS service. Click on this text to go Piracy Megathread's protection recommendation.",
+                                                    command=lambda: cb("https://www.reddit.com/r/Piracy/wiki/megathread/#wiki_.26F5_.279C_not_so_fast_sailor.21_do_this_first", "result"))
             notice_ublock.pack(expand=TRUE, fill=BOTH)
 
             # Convert dictionary keys and values to list to select accordingly afterwards
@@ -484,13 +491,13 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     name = keys[i][3]
                     link = values[i]
 
-                    result_primary_frame = customtkinter.CTkFrame(search_progress_frame_two)
+                    result_primary_frame = customtkinter.CTkFrame(search_progress_frame_two, fg_color="transparent")
                     result_primary_frame.pack(expand=TRUE, fill=BOTH, in_=search_progress_frame_two, pady=20)
 
-                    result_frame = customtkinter.CTkFrame(result_primary_frame)
+                    result_frame = customtkinter.CTkFrame(result_primary_frame, fg_color="transparent")
                     result_frame.pack(expand=TRUE, fill=BOTH, in_=result_primary_frame)                    
 
-                    result_link_frame = customtkinter.CTkFrame(result_primary_frame)
+                    result_link_frame = customtkinter.CTkFrame(result_primary_frame, fg_color="transparent")
                     result_link_frame.pack(expand=TRUE, fill=BOTH, side=TOP)
 
                     copy_button = customtkinter.CTkButton(result_link_frame,  cursor="hand2", image=copy_img, text="", width=20,
@@ -499,9 +506,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     copy_button.pack(side=LEFT, anchor="w")
 
                     if type == "best":
-                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ",  cursor="hand2", fg_color="#A8E4A0", hover_color="#D8E4BC", corner_radius=0 ,width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
+                        result_site_name = customtkinter.CTkLabel(result_frame, text=" " + site_name + " ", fg_color="#A8E4A0", corner_radius=0 ,width=40, text_color="black")
                     else:
-                        result_site_name = customtkinter.CTkButton(result_frame, text=" " + site_name + " ",  cursor="hand2", fg_color="orange", hover_color="yellow", corner_radius=0, width=40, text_color="black", command=lambda site_link=site_link: cb(site_link))
+                        result_site_name = customtkinter.CTkLabel(result_frame, text=" " + site_name + " ", fg_color="orange", corner_radius=0, width=40, text_color="black")
 
                     if len(link) > 160:
                         result_link = customtkinter.CTkLabel(result_link_frame, text=link[:159].strip() + "...", cursor="hand2", font=customtkinter.CTkFont(size=12))
@@ -513,12 +520,12 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     else:
                         result_name = customtkinter.CTkLabel(result_frame, text=name.strip(), cursor="hand2", font=customtkinter.CTkFont(size=18, weight="bold"))
                 
-                    result_site_name.pack(side=LEFT, fill=BOTH, anchor="w")
+                    result_site_name.pack(side=LEFT, anchor="w")
                     result_name.pack(side=LEFT, anchor="w", padx=10)
                     result_link.pack(side=LEFT, anchor="w", padx=5)
                 
-                    result_name.bind("<Button-1>", lambda e,link=link: cb(link))
-                    result_link.bind("<Button-1>", lambda e,link=link: cb(link))
+                    result_name.bind("<Button-1>", lambda e,link=link: cb(link, "result"))
+                    result_link.bind("<Button-1>", lambda e,link=link: cb(link, "result"))
 
                     result_count = result_count + 1
 
