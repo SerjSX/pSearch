@@ -397,28 +397,6 @@
     },
     {
         "hasmainlink": 0,
-        "key1": "div",
-        "key2": "class",
-        "key3": "title",
-        "name": "MovieParadise",
-        "plusorspace": 0,
-        "searchurl": "https://movieparadise.org/?s=",
-        "type": "movieseries",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h1",
-        "key2": "class",
-        "key3": "title",
-        "name": "DownloadR",
-        "plusorspace": 0,
-        "searchurl": "https://downloadr.in/?s=",
-        "type": "courses",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
         "key1": "h2",
         "key2": "class",
         "key3": "entry-title",
