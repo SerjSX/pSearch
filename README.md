@@ -57,7 +57,9 @@ But as an alternative and a faster method, I also build the program in a standal
  ## Notice
 - This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. 
 - You may face errors when using the standalone version for Windows. If you do face any errors please report it in the Issues section so I would know.
-- Please use an adblocker in your browser to stay safe when visiting a website!
+- Please use an adblocker in your browser to stay safe when visiting a website! Check:
+  - https://fmhy.net/adblockvpnguide#adblocking
+  - https://www.reddit.com/r/Piracy/wiki/megathread/#wiki_.26F5_.279C_not_so_fast_sailor.21_do_this_first
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
