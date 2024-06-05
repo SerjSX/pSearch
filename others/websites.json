@@ -713,5 +713,16 @@
         "searchurl": "https://downloadfreecourse.com/search?q=",
         "type": "courses",
         "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "div",
+        "key2": "class",
+        "key3": "box-inner-p",
+        "name": "UHD Movies",
+        "plusorspace": 0,
+        "searchurl": "https://uhdmovies.foo/search/",
+        "type": "movieseries",
+        "url": ""
     }
 ]
