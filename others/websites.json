@@ -702,5 +702,16 @@
         "searchurl": "https://coursesbag.com/?s=",
         "type": "courses",
         "url": "https://coursesbag.com/"
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h3",
+        "key2": "class",
+        "key3": "title",
+        "name": "DFC",
+        "plusorspace": 0,
+        "searchurl": "https://downloadfreecourse.com/search?q=",
+        "type": "courses",
+        "url": ""
     }
 ]
