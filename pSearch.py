@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import customtkinter
-import urllib.parse
+import urllib.parse, urllib.request
 from bs4 import BeautifulSoup
 from bs4 import SoupStrainer
 import os
@@ -106,14 +106,61 @@ best_results = {}
 # that way it doesn't connect to the online database and it uses the offline one
 # with your modifications.
 testMode = False
+    
+
+print("\n---Started Database Checking---\n")
+    
+# Used to check if the database file exists in the default folder of the program
+# means that it has been downloaded already from before
+same_dir = False;
+    
+# Checks if the database file in the default path exists
+# means that it has been already downloaded from online
+# if not sets the program to differenciate the file size online vs local by using the database
+# file from the /others/ folder.
+if os.path.isfile(path + "/websites.json") == True:
+    localCheckPath = path + '/websites.json'
+    localCheckSize = os.path.getsize(localCheckPath)
+    same_dir = True
+    print("Found database file in the default directory!")
+
+else:
+    localCheckPath = path + '/others/websites.json'
+    localCheckSize = os.path.getsize(localCheckPath)
+    print("Using the database file from the /others/ folder.")
+ 
 
 # Tries to download the latest database from Github
 try:
     database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websites.json"
+    
+    # Used for checking if the size of the local is the same as the online
+    # if yes no need to download
+    same_size = False;
+   
+    
+    onlineCheckReq = urllib.request.Request(database_url, method='HEAD')
+    onlineCheckURL = urllib.request.urlopen(onlineCheckReq)
+    onlineCheckSize = onlineCheckURL.headers['Content-Length']
+    print("Online database size is:", onlineCheckSize)
+    print("Local database size is:", localCheckSize)
+    
+    
+    if int(localCheckSize) == int(onlineCheckSize):
+        same_size = True;
+        print("The online and local database have the same size, hence no need to download")
+    else:
+        same_size = False;
+        if testMode == False:
+            print("The online and local database don't have the same size, the program will automatically download the latest version")
+        else:
+            print("The program will connect to the local database in /others/ since test mode is enabled.")
+  
 
-    if testMode == False:
+    if testMode == False and same_size == False:
         print("Downloading database file...")
         r = requests.get(database_url) # create HTTP response object
+
 
         # send a HTTP request to the server and save
         # the HTTP response in a response object called r
@@ -128,17 +175,25 @@ try:
         
         print("Done")
         database_file_path = path + "/websites.json"
-    else:
-        print("Using test mode, connecting to the local database file.")
-        database_file_path = path + '/others/websites.json'    
+    else:        
+        if same_dir == False:
+            print("Connecting to the local database in /others/")
+            database_file_path = path + '/others/websites.json'   
+        else:
+            print("Connecting to the local database in the default folder")
+            database_file_path = path + '/websites.json'   
+           
+        
 
-# If it fails to connect and download...
+# If it fails to connect and download, then uses the database file from the /others/ folder.
+# Which is the default that comes with the program.
 except:
     print("Failed to connect to the server for downloading database, using default database from /others/")
     # Connects to this database which is the one that came from the release, if
     # it fails to connect to the internet
     database_file_path = path + '/others/websites.json'    
 
+print("\n---Database Checking Done---", "Path to connect: " + database_file_path)
 
 # The websites grabbed from the database are inserted in this list.
 websites = list()
