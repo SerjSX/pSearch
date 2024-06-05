@@ -680,8 +680,7 @@
         "searchurl": "https://lightdlmovies.blogspot.com/search?q=",
         "type": "movieseries",
         "url": ""
-    }
-,
+    },
     {
         "hasmainlink": 0,
         "key1": "h2",
@@ -692,5 +691,16 @@
         "searchurl": "https://cracksurl.com/?s=",
         "type": "software",
         "url": ""
+    },
+    {
+        "hasmainlink": 1,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "post-title",
+        "name": "CoursesBag",
+        "plusorspace": 0,
+        "searchurl": "https://coursesbag.com/?s=",
+        "type": "courses",
+        "url": "https://coursesbag.com/"
     }
 ]
