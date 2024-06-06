@@ -60,9 +60,14 @@ But as an alternative and a faster method, I also build the program in a standal
 - Please use an adblocker in your browser to stay safe when visiting a website! Check:
   - https://fmhy.net/adblockvpnguide#adblocking
   - https://www.reddit.com/r/Piracy/wiki/megathread/#wiki_.26F5_.279C_not_so_fast_sailor.21_do_this_first
+
+ ## Nuitka
+To create executable files, I use Nuitka with the following commands:
+- python -m nuitka --standalone --windows-icon-from-ico=icon.ico --include-package-data=bs4 --include-package-data=customtkinter --enable-plugin=tk-inter --product-name="pSearch" --product-version="" pSearch.py 
+- python -m nuitka --onefile --windows-icon-from-ico=icon.ico --include-package-data=bs4 --include-package-data=customtkinter --enable-plugin=tk-inter --product-name="pSearch" --product-version="" pSearch.py
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
 
 #### Contribution 
-Can be directly done by using https://sqlitebrowser.org/ and opening the database file, you can also check the Wiki page for contribution.
+Can be directly done by opening the database file from the /others/ folder named websites.json using any software, you can also check the Wiki page for extra information.
