@@ -724,5 +724,27 @@
         "searchurl": "https://uhdmovies.foo/search/",
         "type": "movieseries",
         "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "div",
+        "key2": "class",
+        "key3": "programs-list",
+        "name": "MUTAZ.NET",
+        "plusorspace": 0,
+        "searchurl": "https://www.mutaz.pro/search/?query=",
+        "type": "software",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title",
+        "name": "Motka",
+        "plusorspace": 0,
+        "searchurl": "https://motka.net/?s=",
+        "type": "software",
+        "url": ""
     }
 ]

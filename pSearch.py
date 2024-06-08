@@ -22,8 +22,8 @@ import webbrowser
 path = sys.path[0]
 
 # Extracts the module zip files needed for the program if they are not already there.
-if os.path.exists(path + "/bs4") == False and os.path.exists(path + "/customtkinter") == False:
-    for zipname in [path + "/bs4.zip", path + "/customtkinter.zip"]:
+if os.path.exists(path + "\\bs4") == False and os.path.exists(path + "\\customtkinter") == False:
+    for zipname in [path + "\\bs4.zip", path + "\\customtkinter.zip"]:
         # opening the zip file in READ mode
         with ZipFile(zipname, 'r') as zip: 
             # extracting all the files
@@ -772,9 +772,11 @@ def beginProgram():
                                                 compound="top", 
                                                 cursor="hand2",)
             type_btns.pack(side=TOP)
-
+            
             # Appends the type name to types_list list to be used for button click identification afterwards
             types_list.append(type)
+
+
     
 
 # The beginning program runs beginProgram() function
