@@ -368,6 +368,8 @@ def online_method(search_value, userInput, chosen_type, main_link):
             print("\nPlease note that the following site returned no results: " + site_slink)
 
 
+# This function is used to check and process the chosen input, launch the function for  the actual online search,
+# and display the results in a shuffled format.
 def search_process_signal(button_num, nwindow, chosen_input, 
                         search_value, start_position, end_position):   
     global search_progress_window
@@ -584,18 +586,22 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
                     result_count = result_count + 1
 
+            
+
             # remove the progress bar when search is finished
             search_progress_bar.place_forget()
             search_progress_scrollbar.pack(side=RIGHT, fill=Y)
             search_progress_window.geometry("1250x650")
             search_progress_window.title("pSearch - " + str(result_count) + " results - Window " + str(button_num))
 
-                # If it's greater than 30
+            # If it's greater than 30, create a button
             if len(final_links) > 30:
                 # _count is used for counting each number from the input
                 several_btn_count = 0
+                
                 # _length has the length of the results
                 several_btn_length = len(final_links)
+                
                 # _list to append the amount for each button
                 global several_btn_list
                 several_btn_list = list()
@@ -628,17 +634,29 @@ def search_process_signal(button_num, nwindow, chosen_input,
                         # Increment several_btn_count by 1
                         several_btn_count += 1
 
+            
                 # For each button in the buttons list
-                for button in several_btn_list:
-                    # Split the value
-                    button_split = button.split("-")
-                    # Put the id and value in separate variables
-                    button_id = int(button_split[0])
-                    button_value = int(button_split[1])
 
-                    # create the button by passing starting position(button_id*30) and ending position(button_id*30+button_value)
-                    other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*30, button_id*30+button_value), width=30, height=30)
-                    other_page_btns.pack(side=LEFT, padx=10, pady=5)
+                # to limit only showing 10 buttons.
+                button_limit = 0
+                for button in several_btn_list:
+                    if button_limit <= 10:
+                        # Split the value
+                        button_split = button.split("-")
+                        # Put the id and value in separate variables
+                        button_id = int(button_split[0])
+                        button_value = int(button_split[1])
+
+                        # create the button by passing starting position(button_id*30) and ending position(button_id*30+button_value)
+                        other_page_btns = customtkinter.CTkButton(search_progress_frame_two, text=button_id, command=lambda button_id=button_id, button_value=button_value: search_process_signal(str(button_id), True, chosen_input, search_value, button_id*30, button_id*30+button_value), width=30, height=30)
+                        other_page_btns.pack(side=LEFT, padx=10, pady=5)
+
+                        # Only allowing 10 buttons to be displayed, increase till condition meets.
+                        button_limit += 1
+
+                    else:
+                        # break for loop once condition meets
+                        break
 
         # If it isn't greater than 0, it says No Results
         else:
