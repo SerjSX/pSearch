@@ -189,17 +189,6 @@
     {
         "hasmainlink": 0,
         "key1": "h2",
-        "key2": "null",
-        "key3": "null",
-        "name": "ReadAllComics",
-        "plusorspace": 0,
-        "searchurl": "https://readallcomics.com/?story=",
-        "type": "comics_manga",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h2",
         "key2": "class",
         "key3": "admania_entrytitle",
         "name": "online-courses",
