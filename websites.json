@@ -12,6 +12,17 @@
     },
     {
         "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title",
+        "name": "monkrus",
+        "plusorspace": 0,
+        "searchurl": "https://w14.monkrus.ws/search?q=",
+        "type": "software",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
         "key1": "h1",
         "key2": "class",
         "key3": "entry-title",
@@ -19,6 +30,17 @@
         "plusorspace": 0,
         "searchurl": "https://fitgirl-repacks.site/?s=",
         "type": "games",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title",
+        "name": "FTUApps",
+        "plusorspace": 0,
+        "searchurl": "https://ftuapps.dev/?s=",
+        "type": "software",
         "url": ""
     },
     {
@@ -79,6 +101,28 @@
     {
         "hasmainlink": 0,
         "key1": "h2",
+        "key2": "class",
+        "key3": "w-post-elm",
+        "name": "downloadly",
+        "plusorspace": 0,
+        "searchurl": "https://downloadly.ir/?s=",
+        "type": "software",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "title",
+        "name": "CracksHash",
+        "plusorspace": 0,
+        "searchurl": "https://crackshash.com/?s=",
+        "type": "software",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
         "key2": "null",
         "key3": "null",
         "name": "OVA games",
@@ -113,10 +157,10 @@
         "hasmainlink": 0,
         "key1": "h2",
         "key2": "class",
-        "key3": "entry-title",
-        "name": "AfraTafreeh",
+        "key3": "title",
+        "name": "Giga Course",
         "plusorspace": 0,
-        "searchurl": "https://afratafreeh.com/?s=",
+        "searchurl": "https://gigacourse.com/?s=",
         "type": "courses",
         "url": ""
     },
@@ -155,12 +199,23 @@
     },
     {
         "hasmainlink": 0,
+        "key1": "h6",
+        "key2": "class",
+        "key3": "card-title",
+        "name": "ElAmigos Games",
+        "plusorspace": 0,
+        "searchurl": "https://www.elamigos-games.com/?q=",
+        "type": "games",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
         "key1": "h1",
         "key2": "class",
         "key3": "post-title",
         "name": "GetComics",
         "plusorspace": 0,
-        "searchurl": "https://getcomics.org/?s=",
+        "searchurl": "https://getcomics.info/?s=",
         "type": "comics_manga",
         "url": ""
     },
@@ -187,15 +242,15 @@
         "url": ""
     },
     {
-        "hasmainlink": 0,
-        "key1": "h2",
+        "hasmainlink": 1,
+        "key1": "h3",
         "key2": "null",
         "key3": "null",
-        "name": "ReadAllComics",
+        "name": "ZipComic",
         "plusorspace": 0,
-        "searchurl": "https://readallcomics.com/?story=",
+        "searchurl": "https://www.zipcomic.com/search?kwd=",
         "type": "comics_manga",
-        "url": ""
+        "url": "https://www.zipcomic.com"
     },
     {
         "hasmainlink": 0,
@@ -355,6 +410,17 @@
         "hasmainlink": 0,
         "key1": "h2",
         "key2": "class",
+        "key3": "col post-title",
+        "name": "yasdl",
+        "plusorspace": 0,
+        "searchurl": "https://www.yasdl.com/?s=",
+        "type": "software",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
         "key3": "entry-title",
         "name": "PDF Stop",
         "plusorspace": 0,
@@ -501,8 +567,19 @@
         "key3": "entry-title h5 h6-mobile post-title",
         "name": "Vega Movies",
         "plusorspace": 0,
-        "searchurl": "https://vegamovies.st/?s=",
+        "searchurl": "https://vegamovies.ist/?s=",
         "type": "movieseries",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title searchResultTitle",
+        "name": "GameBounty",
+        "plusorspace": 0,
+        "searchurl": "https://gamebounty.world/?s=",
+        "type": "games",
         "url": ""
     },
     {
@@ -540,12 +617,12 @@
     },
     {
         "hasmainlink": 0,
-        "key1": "dl",
-        "key2": "null",
-        "key3": "null",
-        "name": "APK HOME",
+        "key1": "div",
+        "key2": "class",
+        "key3": "col-12 col-md-6 col-xl-4 mb-3",
+        "name": "LITEAPKS",
         "plusorspace": 0,
-        "searchurl": "https://apkhome.net/?s=",
+        "searchurl": "https://liteapks.com/?s=",
         "type": "android",
         "url": ""
     },
@@ -594,15 +671,15 @@
         "url": ""
     },
     {
-        "hasmainlink": 1,
-        "key1": "figcaption",
-        "key2": "class",
-        "key3": "meta-footer",
-        "name": "SomosMovies",
+        "hasmainlink": 0,
+        "key1": "h3",
+        "key2": "null",
+        "key3": "null",
+        "name": "Light Downloads",
         "plusorspace": 0,
-        "searchurl": "https://somosmovies.com/?search=",
+        "searchurl": "https://lightdlmovies.blogspot.com/search?q=",
         "type": "movieseries",
-        "url": "https://somosmovies.com"
+        "url": ""
     },
     {
         "hasmainlink": 0,

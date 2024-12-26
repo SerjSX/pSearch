@@ -113,85 +113,88 @@ print("\n---Started Database Checking---\n")
 # Used to check if the database file exists in the default folder of the program
 # means that it has been downloaded already from before
 same_dir = False;
-    
-# Checks if the database file in the default path exists
-# means that it has been already downloaded from online
-# if not sets the program to differenciate the file size online vs local by using the database
-# file from the /others/ folder.
-if os.path.isfile(path + "/websites.json") == True:
-    localCheckPath = path + '/websites.json'
-    localCheckSize = os.path.getsize(localCheckPath)
-    same_dir = True
-    print("Found database file in the default directory!")
 
-else:
-    localCheckPath = path + '/others/websites.json'
-    localCheckSize = os.path.getsize(localCheckPath)
-    print("Using the database file from the /others/ folder.")
+
+if testMode == False:
+    # Checks if the database file in the default path exists
+    # means that it has been already downloaded from online
+    # if not sets the program to differenciate the file size online vs local by using the database
+    # file from the /others/ folder.
+    if os.path.isfile(path + "/websites.json") == True:
+        localCheckPath = path + '/websites.json'
+        localCheckSize = os.path.getsize(localCheckPath)
+        same_dir = True
+        print("Found database file in the default directory!")
+
+    else:
+        localCheckPath = path + '/others/websites.json'
+        localCheckSize = os.path.getsize(localCheckPath)
+        print("Using the database file from the /others/ folder.")
  
 
-# Tries to download the latest database from Github
-try:
-    database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websites.json"
+    # Tries to download the latest database from Github
+    try:
+        database_url = "https://raw.githubusercontent.com/SerjSX/pSearch/master/others/websites.json"
     
-    # Used for checking if the size of the local is the same as the online
-    # if yes no need to download
-    same_size = False;
+        # Used for checking if the size of the local is the same as the online
+        # if yes no need to download
+        same_size = False;
    
     
-    onlineCheckReq = urllib.request.Request(database_url, method='HEAD')
-    onlineCheckURL = urllib.request.urlopen(onlineCheckReq)
-    onlineCheckSize = onlineCheckURL.headers['Content-Length']
-    print("Online database size is:", onlineCheckSize)
-    print("Local database size is:", localCheckSize)
+        onlineCheckReq = urllib.request.Request(database_url, method='HEAD')
+        onlineCheckURL = urllib.request.urlopen(onlineCheckReq)
+        onlineCheckSize = onlineCheckURL.headers['Content-Length']
+        print("Online database size is:", onlineCheckSize)
+        print("Local database size is:", localCheckSize)
     
     
-    if int(localCheckSize) == int(onlineCheckSize):
-        same_size = True;
-        print("The online and local database have the same size, hence no need to download")
-    else:
-        same_size = False;
-        if testMode == False:
+        if int(localCheckSize) == int(onlineCheckSize):
+            same_size = True;
+            print("The online and local database have the same size, hence no need to download")
+        else:
+            same_size = False;
             print("The online and local database don't have the same size, the program will automatically download the latest version")
-        else:
-            print("The program will connect to the local database in /others/ since test mode is enabled.")
-  
-
-    if testMode == False and same_size == False:
-        print("Downloading database file...")
-        r = requests.get(database_url) # create HTTP response object
 
 
-        # send a HTTP request to the server and save
-        # the HTTP response in a response object called r
-        with open(path + "/websites.json",'wb') as f:
+        if same_size == False:
+            print("Downloading database file...")
+            r = requests.get(database_url) # create HTTP response object
 
-            # Saving received content as a png file in
-            # binary format
 
-            # write the contents of the response (r.content)
-            # to a new file in binary mode.
-            f.write(r.content)
+            # send a HTTP request to the server and save
+            # the HTTP response in a response object called r
+            with open(path + "/websites.json",'wb') as f:
+
+                # Saving received content as a png file in
+                # binary format
+
+                # write the contents of the response (r.content)
+                # to a new file in binary mode.
+                f.write(r.content)
         
-        print("Done")
-        database_file_path = path + "/websites.json"
-    else:        
-        if same_dir == False:
-            print("Connecting to the local database in /others/")
-            database_file_path = path + '/others/websites.json'   
-        else:
-            print("Connecting to the local database in the default folder")
-            database_file_path = path + '/websites.json'   
+            print("Done")
+            database_file_path = path + "/websites.json"
+        else:        
+            if same_dir == False:
+                print("Connecting to the local database in /others/")
+                database_file_path = path + '/others/websites.json'   
+            else:
+                print("Connecting to the local database in the default folder")
+                database_file_path = path + '/websites.json'   
            
         
+    # If it fails to connect and download, then uses the database file from the /others/ folder.
+    # Which is the default that comes with the program.
+    except:
+        print("Failed to connect to the server for downloading database, using default database from /others/")
+        # Connects to this database which is the one that came from the release, if
+        # it fails to connect to the internet
+        database_file_path = path + '/others/websites.json'
 
-# If it fails to connect and download, then uses the database file from the /others/ folder.
-# Which is the default that comes with the program.
-except:
-    print("Failed to connect to the server for downloading database, using default database from /others/")
-    # Connects to this database which is the one that came from the release, if
-    # it fails to connect to the internet
-    database_file_path = path + '/others/websites.json'    
+else:
+    print("Connecting to the local database in /others/ since testMode is enabled")
+    database_file_path = path + '/others/websites.json'       
+
 
 print("\n---Database Checking Done---", "Path to connect: " + database_file_path)
 
@@ -404,7 +407,10 @@ def search_process_signal(button_num, nwindow, chosen_input,
 
                 #print(chosen_input.lower(), web['name'].lower())
 
-                if chosen_input.lower() in web['name'].lower():
+                if chosen_input.lower() == "all":
+                    chosen_input = "all"
+                    foundPing = True
+                elif chosen_input.lower() in web['name'].lower():
                     # Change the ping to True
                     foundPing = True
                     
@@ -414,9 +420,9 @@ def search_process_signal(button_num, nwindow, chosen_input,
                     # Break the loop
                     #print("Found it: " + web['name'])
                     break
-                elif chosen_input.lower() == "all":
-                    chosen_input = "all"
-                    foundPing = True
+                #elif chosen_input.lower() == "all":
+                #    chosen_input = "all"
+                #    foundPing = True
 
             # if the ping stays False then no matching sites were found, throws an error.
             if foundPing == False:
@@ -462,6 +468,7 @@ def search_process_signal(button_num, nwindow, chosen_input,
             # Clears allLinks and best_results to start over with a new search.
             allLinks.clear()
             best_results.clear()
+            print("chosen input is",chosen_input)
 
             # in case user chose all sites...
             if chosen_input == "all":
