@@ -299,17 +299,6 @@
     {
         "hasmainlink": 0,
         "key1": "h2",
-        "key2": "null",
-        "key3": "null",
-        "name": "24Naijamusic",
-        "plusorspace": 0,
-        "searchurl": "https://www14.24naijamuzic.com/?s=",
-        "type": "music",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h2",
         "key2": "class",
         "key3": "entry-title",
         "name": "RARELUST",
@@ -359,17 +348,6 @@
         "name": "iPlusfree",
         "plusorspace": 0,
         "searchurl": "http://www7.iplusfree.org/?s=",
-        "type": "music",
-        "url": ""
-    },
-    {
-        "hasmainlink": 0,
-        "key1": "h2",
-        "key2": "class",
-        "key3": "entry-title",
-        "name": "The Last Disaster",
-        "plusorspace": 0,
-        "searchurl": "https://thelastdisaster.vip/?s=",
         "type": "music",
         "url": ""
     },
@@ -657,6 +635,72 @@
         "plusorspace": 0,
         "searchurl": "https://motka.net/?s=",
         "type": "software",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "div",
+        "key2": "class",
+        "key3": "jobinfo",
+        "name": "GFxtra",
+        "plusorspace": 0,
+        "searchurl": "https://www.searchgfx.com/?do=search&subaction=search&story=",
+        "type": "assets",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h1",
+        "key2": "class",
+        "key3": "entry-title",
+        "name": "OnlyGFX",
+        "plusorspace": 0,
+        "searchurl": "https://www.onlygfx.com/?s=",
+        "type": "assets",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "post-title",
+        "name": "CGArchives",
+        "plusorspace": 0,
+        "searchurl": "https://cgarchives.com/?s=",
+        "type": "assets",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title",
+        "name": "CG Persia",
+        "plusorspace": 0,
+        "searchurl": "https://cgpersia.com/?s=",
+        "type": "assets",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "title front-view-title",
+        "name": "Dev Asset Collection",
+        "plusorspace": 0,
+        "searchurl": "https://unityassetcollection.com/?s=",
+        "type": "assets",
+        "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "search-entry-title entry-title",
+        "name": "Unity Asset Free",
+        "plusorspace": 0,
+        "searchurl": "https://unityassets4free.com/?s=",
+        "type": "assets",
         "url": ""
     }
 ]
