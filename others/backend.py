@@ -2,8 +2,8 @@ from collections import defaultdict
 import os
 import sys
 import json
-from others.py.html_conn import page_conn
-from others.py.progress_bar import progressBar
+from others.html_conn import page_conn
+from others.progress_bar import progressBar
 from random import shuffle
 from tkinter import messagebox
 import urllib.request
@@ -15,7 +15,14 @@ import requests
 testMode = False
 
 # Grabs the directory name
-path = sys.path[0]
+if getattr(sys, 'frozen', False):
+    # If the application is run as a bundle, the PyInstaller bootloader
+    # extends the sys module by a flag frozen=True and sets the app 
+    # path into variable _MEIPASS'.
+    path = sys._MEIPASS
+else:
+    path = os.path.dirname(os.path.abspath(__file__))
+    print(path)
 
 
 class websites:
@@ -71,13 +78,13 @@ class websites:
             # means that it has been already downloaded from online
             # if not sets the program to differenciate the file size online vs local by using the database
             # file from the /others/ folder.
-            if os.path.isfile(path + "/websites.json") == True:
-                localCheckPath = path + '/websites.json'
-                print("Found database file in the default directory!")
+            if os.path.isfile(path + "/online_json/websites.json") == True:
+                localCheckPath = path + '/online_json/websites.json'
+                print("Found database file from the online_json folder!")
 
             else:
-                localCheckPath = path + '/others/websites.json'
-                print("Using the database file from the /others/ folder.")
+                localCheckPath = path + '/websites.json'
+                print("Using the local database file")
 
             # This variable stores the size of the local json file.
             localCheckSize = os.path.getsize(localCheckPath)
@@ -110,7 +117,7 @@ class websites:
                     r = requests.get(database_url) # create HTTP response object
 
                     # creating a new file and writing the content to it from the online json file.
-                    with open(path + "/websites.json",'wb') as f:
+                    with open(path + "/online_json/websites.json",'wb') as f:
 
                         # Saving received content as a png file in
                         # binary format
@@ -120,21 +127,21 @@ class websites:
                         f.write(r.content)
         
                     print("Done")
-                    self.database_file_path += "/websites.json"
+                    self.database_file_path += "/online_json/websites.json"
 
            
         
             # If it fails to connect and download, then uses the database file from the /others/ folder.
             # Which is the default that comes with the program.
             except:
-                print("Failed to connect to the server for downloading database, using default database from /others/")
+                print("Failed to connect to the server for downloading database, using the local database file")
                 # Connects to this database which is the one that came from the release, if
                 # it fails to connect to the internet
-                self.database_file_path += '/others/websites.json'
+                self.database_file_path += '/websites.json'
 
         else:
-            print("Connecting to the local database in /others/ since testMode is enabled")
-            self.database_file_path += '/others/websites.json'       
+            print("Connecting to the local database since testMode is enabled")
+            self.database_file_path += '/websites.json'       
 
 
         print("\n---Database Checking Done---", "Connecting and loading: " + self.database_file_path)

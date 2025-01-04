@@ -2,49 +2,27 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 import os
-from PIL import  Image
+from PIL import Image
 import sys
 import webbrowser
 import random
 import pyperclip
 import math
-from zipfile import ZipFile
-
-# Grabs the directory name
-path = sys.path[0]
-
-print("Welcome to pSearch. This command line is used to see errors, you can minimize it!")
-# Extracts the module zip files needed for the program if they are not already there.
-if os.path.exists(path + "\\bs4") == False and os.path.exists(path + "\\customtkinter") == False:
-    for zipname in [path + "\\others\\library_data\\bs4.zip", path + "\\others\\library_data\\customtkinter.zip"]:
-        # opening the zip file in READ mode
-        with ZipFile(zipname, 'r') as zip: 
-            # extracting all the files
-            print('Extracting all the files now from ' + zipname + '...')
-            zip.extractall(path)
-            print('Done')
-else:
-    print("Folders already exist, starting program...")
-    
 # Imports backend operations that are required to do import, load and search websites
-from others.py.backend import websites
-
+from others.backend import websites
 # Customtkinter used for GUI
 import customtkinter
 
-# Used to show images for each type afterwards
-type_images = {
-    'android': path + '/media/android_image.png',
-    'comics_manga': path + '/media/comics_manga_image.png',
-    'courses': path + '/media/course_image.png',
-    'ebooks': path + '/media/ebook_image.png',
-    'games': path + '/media/game_image.png',
-    'movieseries': path + "/media/movieseries_image.png",
-    'software': path + '/media/software_image.png',
-    'music': path + '/media/music_image.png',
-    'all': path + '/media/all_image.png',
-    'assets': path + '/media/asset_image.png',
-}
+# Grabs the directory name
+if getattr(sys, 'frozen', False):
+    # If the application is run as a bundle, the PyInstaller bootloader
+    # extends the sys module by a flag frozen=True and sets the app 
+    # path into variable _MEIPASS'.
+    path = sys._MEIPASS
+else:
+    path = os.path.dirname(os.path.abspath(__file__))
+
+print("Welcome to pSearch. This command line is used to see errors, you can minimize it!")
 
 # Preparing the image widgets for search, github and copy logos.
 search_img = customtkinter.CTkImage(light_image=Image.open(path + "/media/search_button.png"),
@@ -69,7 +47,21 @@ search_text = ["What do you want to search today?",
                 "Make sure you fill this before clicking the search button!",
                 "Searching ALL sites might take some time, so try to avoid it.",
                 "<-- You can search \"all\" sites ;)"]
-        
+
+# Used to show images for each type afterwards
+type_images = {
+    'android': path + '/media/android_image.png',
+    'comics_manga': path + '/media/comics_manga_image.png',
+    'courses': path + '/media/course_image.png',
+    'ebooks': path + '/media/ebook_image.png',
+    'games': path + '/media/game_image.png',
+    'movieseries': path + "/media/movieseries_image.png",
+    'software': path + '/media/software_image.png',
+    'music': path + '/media/music_image.png',
+    'all': path + '/media/all_image.png',
+    'assets': path + '/media/asset_image.png',
+}
+
 class App(customtkinter.CTk):
     def __init__(self):
         """
@@ -132,7 +124,7 @@ class App(customtkinter.CTk):
         wlcmsg.pack(side=TOP, pady=100)
 
         # Creates a list for storing the available sites from the database to show on the dropdown list
-        websites_list_dropdown = [web['name'] + " - Type: " + web['type'] for web in self.websites]
+        self.websites_list_dropdown = ['all'] + [web['name'] + " - Type: " + web['type'] for web in self.websites]
 
         # Create a StringVar to insert the chosen value in it (either by clicking one of the buttons or from dropdown menu)
         option_chosen = StringVar()
@@ -145,11 +137,14 @@ class App(customtkinter.CTk):
         process_chosen_frame.pack(padx=10, pady=10) 
 
         # Creates entry for user input space with width 300      
-        search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=350, placeholder_text=random.choice(search_text))
+        search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=350,placeholder_text=random.choice(search_text))
 
         # Creates entry for user input space with width 300      
-        self.site_entry_input = customtkinter.CTkComboBox(process_chosen_frame, variable=option_chosen, values=websites_list_dropdown, height=30, width=200, command=lambda e: self.apply_to_variable(self.site_entry_input.get()))
+        self.site_entry_input = customtkinter.CTkComboBox(process_chosen_frame, variable=option_chosen, values=self.websites_list_dropdown, height=30, width=200, command=lambda e: self.apply_to_variable(self.site_entry_input.get()))
         self.site_entry_input.set("Enter site name here")
+        # allows the user to search the sites list.
+        self.bind('<Return>',self.update_site_entry_input)
+
 
         # Creates the search button widget, with the on-click command heading towards search_signal method
         # with passing the option chosen and the search entry.
@@ -225,6 +220,28 @@ class App(customtkinter.CTk):
         else:
             self.toggle_theme_btn.configure(image=dark_mode_img)
             customtkinter.set_appearance_mode("light")
+
+
+    # This allows the user to enter a site name, click Enter, and then check the 
+    # dropdown menu to see possible choices.
+    def update_site_entry_input(self,event):
+        # gets the current input and makes it lowercase
+        a=self.site_entry_input.get().lower()
+        
+        # proceeds only if the length of the input is not 0 and it isn't empty, if they are
+        # then keep the same websites list.
+        if (len(a) != 0) and (a != " "):
+            # loops over the websites and checks if the user input is in the websites.
+            newvalues=[i for i in self.websites_list_dropdown if a in i.lower()]
+        else:
+            newvalues=self.websites_list_dropdown
+
+        # If the results of newvalues ins't 0, set it as the new values of the dropdown menu
+        if len(newvalues) != 0:
+            self.site_entry_input.configure(values=newvalues)
+        else:
+            # else throws an error.
+            messagebox.showerror("Couldn't find that site!", "That site is not found. Try to rephrase it, or check the list to know the available websites.")
 
 
 
