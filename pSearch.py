@@ -12,6 +12,8 @@ import math
 from others.backend import websites
 # Customtkinter used for GUI
 import customtkinter
+from others.CTkScrollableDropdown.ctk_scrollable_dropdown import CTkScrollableDropdown
+
 
 # Grabs the directory name
 if getattr(sys, 'frozen', False):
@@ -95,7 +97,7 @@ class App(customtkinter.CTk):
         self.websites = websites_var.get_all()
         
         self.title("pSearch")
-        self.geometry("850x600")
+        self.geometry("1000x600")
         
         # these variables are initialized now to check later in search_signal method if they are open or no
         self.search_results_window = None
@@ -137,13 +139,12 @@ class App(customtkinter.CTk):
         process_chosen_frame.pack(padx=10, pady=10) 
 
         # Creates entry for user input space with width 300      
-        search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=350,placeholder_text=random.choice(search_text))
+        search_entry_input = customtkinter.CTkEntry(process_chosen_frame, height=30, width=400,placeholder_text=random.choice(search_text))
 
         # Creates entry for user input space with width 300      
-        self.site_entry_input = customtkinter.CTkComboBox(process_chosen_frame, variable=option_chosen, values=self.websites_list_dropdown, height=30, width=200, command=lambda e: self.apply_to_variable(self.site_entry_input.get()))
-        self.site_entry_input.set("Enter site name here")
+        self.site_entry_input = customtkinter.CTkComboBox(process_chosen_frame, variable=option_chosen, height=30, width=300, command=lambda e: self.apply_to_variable(self.site_entry_input.get()))
         # allows the user to search the sites list.
-        self.bind('<Return>',self.update_site_entry_input)
+        CTkScrollableDropdown(attach=self.site_entry_input, values=self.websites_list_dropdown, autocomplete=True)
 
 
         # Creates the search button widget, with the on-click command heading towards search_signal method
@@ -220,29 +221,6 @@ class App(customtkinter.CTk):
         else:
             self.toggle_theme_btn.configure(image=dark_mode_img)
             customtkinter.set_appearance_mode("light")
-
-
-    # This allows the user to enter a site name, click Enter, and then check the 
-    # dropdown menu to see possible choices.
-    def update_site_entry_input(self,event):
-        # gets the current input and makes it lowercase
-        a=self.site_entry_input.get().lower()
-        
-        # proceeds only if the length of the input is not 0 and it isn't empty, if they are
-        # then keep the same websites list.
-        if (len(a) != 0) and (a != " "):
-            # loops over the websites and checks if the user input is in the websites.
-            newvalues=[i for i in self.websites_list_dropdown if a in i.lower()]
-        else:
-            newvalues=self.websites_list_dropdown
-
-        # If the results of newvalues ins't 0, set it as the new values of the dropdown menu
-        if len(newvalues) != 0:
-            self.site_entry_input.configure(values=newvalues)
-        else:
-            # else throws an error.
-            messagebox.showerror("Couldn't find that site!", "That site is not found. Try to rephrase it, or check the list to know the available websites.")
-
 
 
     # This is used when the user clicks from the dropdown menu to search a site or if a shortcut is 
