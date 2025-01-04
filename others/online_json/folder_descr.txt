@@ -1,0 +1,3 @@
+Used for downloading and storing the json file from Github in this folder.
+
+This file is needed for auto-py-to-exe to include the folder when compiling.
