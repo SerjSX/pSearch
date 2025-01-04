@@ -1,5 +1,6 @@
-![pSearch](https://i.ibb.co/5KwR8rM/image.png)
-
+<p align="center">
+  <img src="https://i.ibb.co/6YRyvYT/image.png" />
+</p>
 
 
 <p align="center">
