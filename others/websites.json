@@ -713,5 +713,16 @@
         "searchurl": "https://www.rockmods.net/search?q=",
         "type": "android",
         "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "div",
+        "key2": "class",
+        "key3": "relative group overflow-hidden",
+        "name": "AnkerGames",
+        "plusorspace": 1,
+        "searchurl": "https://ankergames.net/search/",
+        "type": "games",
+        "url": ""
     }
 ]
