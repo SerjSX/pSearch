@@ -39,7 +39,9 @@
 Searching in ALL sites is time consuming, especially with slow wifi connections. I removed the button All from the Shortcuts, since it would be more efficient to strategically search in a category. However, you can still use "all" in the site input box to search everywhere since it is also a good way to test if all sites are working properly.
 
 ## Requirements and Running
-This software uses <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> and <a href="https://pypi.org/project/customtkinter/" target="_blank">CustomTkinter</a>. Use this command within the extracted folder to install everything from the requirements.txt file, or you can manually from PyPI:
+This software uses <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> and <a href="https://pypi.org/project/customtkinter/" target="_blank">CustomTkinter</a>. The program also uses https://github.com/Akascape/CTkScrollableDropdown to have the combobox auto show and search to find a website easily.
+
+Use this command within the extracted folder to install everything from the requirements.txt file, or you can manually from PyPI:
  
     pip install -r requirements.txt
 
