@@ -64,10 +64,15 @@ But as an alternative and a faster method, I also build the program in a standal
   - https://fmhy.net/adblockvpnguide#adblocking
   - https://www.reddit.com/r/Piracy/wiki/megathread/#wiki_.26F5_.279C_not_so_fast_sailor.21_do_this_first
 
- ## Nuitka
-To create executable files, I use Nuitka with the following commands:
-- python -m nuitka --standalone --windows-icon-from-ico=icon.ico --include-package-data=bs4 --include-package-data=customtkinter --enable-plugin=tk-inter --product-name="pSearch" --product-version="" pSearch.py 
-- python -m nuitka --onefile --windows-icon-from-ico=icon.ico --include-package-data=bs4 --include-package-data=customtkinter --enable-plugin=tk-inter --product-name="pSearch" --product-version="" pSearch.py
+ ## auto py to exe
+To create executable files, I now use auto-py-to-exe (https://pypi.org/project/auto-py-to-exe/) with the following configs:
+- One for One file, one for One Directory
+- Console based
+- Apply the icon file: icon.ico that's in the source code
+- Additional files: add the folders media, others, online_json from others
+- Additional files: websites.json (not the one from online_json. online_json folder from the others folder must be empty and only include the .txt file.)
+- Advanced -> name -> pSearch
+- Advanced -> --hide-console -> minimize-late
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
