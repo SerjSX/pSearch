@@ -702,5 +702,16 @@
         "searchurl": "https://unityassets4free.com/?s=",
         "type": "assets",
         "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h2",
+        "key2": "class",
+        "key3": "entry-title vcard",
+        "name": "RockMods",
+        "plusorspace": 0,
+        "searchurl": "https://www.rockmods.net/search?q=",
+        "type": "android",
+        "url": ""
     }
 ]
