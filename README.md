@@ -25,7 +25,7 @@
 |**Health**|*Runs Fast*|*Runs Fast*|*Runs Slow*|
 |**Button Name on Site**|<a href="https://github.com/SerjSX/pSearch/releases/latest" alt="latest release">View Latest Release GitHub</a>|<a href="https://github.com/SerjSX/pSearch/releases/latest/download/pSearch-windows-standalone.zip" alt="download latest standalone exe">Download Latest .EXE for Windows</a>|<a href="https://github.com/SerjSX/pSearch/releases/latest/download/pSearch-windows-onefile-standalone.zip" alt="download latest onefile exe">Download Latest .EXE Onefile for Windows</a>|
 
-***Source Code and Onefile seem to be efficient enough, because both extract customtkinter and bs4.zip. If you face errors let me know immediately about it. Version 1.6.4 will have console enabled, that way you can see the error from the command line and send it to me here or on Github Issues.***
+***If you face errors let me know immediately about it. Version 1.6.4 will have console enabled, that way you can see the error from the command line and send it to me here or on Github Issues.***
 &#x200B;
 
 ## Using the program
