@@ -724,5 +724,27 @@
         "searchurl": "https://ankergames.net/search/",
         "type": "games",
         "url": ""
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "h3",
+        "key2": "null",
+        "key3": "null",
+        "name": "qoob.name",
+        "plusorspace": 0,
+        "searchurl": "https://qoob.name/search/",
+        "type": "games",
+        "url": ""
+    },
+    {
+        "hasmainlink": 1,
+        "key1": "article",
+        "key2": "class",
+        "key3": "card has-shadow clickable",
+        "name": "apkmody",
+        "plusorspace": 0,
+        "searchurl": "https://apkmody.mobi/?s=",
+        "type": "android",
+        "url": "https://apkmody.mobi"
     }
 ]
