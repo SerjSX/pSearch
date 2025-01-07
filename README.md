@@ -81,4 +81,4 @@ OR with pyinstaller:
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
 
 #### Contribution 
-Can be directly done by opening the database file from the /others/ folder named websites.json using any software, you can also check the Wiki page for extra information.
+Can be directly done by opening the database file from the /others/ folder named websites.json using any software, you can also check the Wiki page for extra information. Thanks for adding/removing sites that are needed to be added/removed, and make sure to mention from where (which megathread) you got the site's name so I'd know.
