@@ -21,7 +21,7 @@
 ## Three launching methods
 |*Title*|**Source Code**|**Windows Standalone**|**Windows Onefile Standalone**|
 |:-|:-|:-|:-|
-|**Description**|Running pSearch from the source code requires BeautifulSoup and CustomTkinter. Need to be familiar with Python and the libraries used. This is the fastest way you can run the program (if familiar with Python), as it isn't built in any way and it's just it.|This is a standalone build of the program meant for distribution in .exe form. The program is built with auto-py-to-exe, more information can be found below. You may face errors, if you do so please let me know about them.|This is similar to the Windows Standalone method, but you won't see the other modules in the folder as they are embedded in the .exe file (that's why it's Onefile). There are two folders, "others" and "media", and two zip files, "bs4" and "customtkinter", in the package so the program would run in a correct way. The program unzips the zip files for module usage. Launching the program may take a long time with this method.|
+|**Description**|Running pSearch from the source code requires BeautifulSoup and CustomTkinter. Need to be familiar with Python and the libraries used. This is the fastest way you can run the program (if familiar with Python), as it isn't built in any way and it's just it.|This is a standalone build of the program meant for distribution in .exe form. The program is built with auto-py-to-exe, more information can be found below. You may face errors, if you do so please let me know about them.|This is similar to the Windows Standalone method, but you won't see the other modules in the folder as they are embedded in the .exe file (that's why it's Onefile). There are two folders, "others" and "media", in the package so the program would run in a correct way. Launching the program may take some time with this method.|
 |**Health**|*Runs Fastest*|*Runs Fast*|*Runs Slow*|
 |**Button Name on Site**|<a href="https://github.com/SerjSX/pSearch/releases/latest" alt="latest release">View Latest Release GitHub</a>|<a href="https://github.com/SerjSX/pSearch/releases/latest/download/pSearch-windows-standalone.zip" alt="download latest standalone exe">Download Latest .EXE for Windows</a>|<a href="https://github.com/SerjSX/pSearch/releases/latest/download/pSearch-windows-onefile-standalone.zip" alt="download latest onefile exe">Download Latest .EXE Onefile for Windows</a>|
 
@@ -36,7 +36,7 @@
 |**Browsing the results page**|\[1\] You can click on the title / link of the result to visit the site, \[2\] you can click on the site's name to visit the normal homepage of the site, \[3\] if the results count is greater than 30 you can browse other pages by clicking the number buttons at the bottom of the page|
 
 #### Additional Note
-Searching in ALL sites is time consuming, especially with slow wifi connections. I removed the button All from the Shortcuts, since it would be more efficient to strategically search in a category. However, you can still use "all" in the site input box to search everywhere since it is also a good way to test if all sites are working properly.
+Searching in ALL sites is time consuming, especially with slow wifi connections. I removed the button All from the Shortcuts, since it would be more efficient to strategically search in a category. However, you can still use "all" in the site input box to search everywhere since it is also a good way to test if all sites are working properly. It's in the dropdown menu too as the first entry.
 
 ## Requirements and Running
 This software uses <a href="https://pypi.org/project/beautifulsoup4/" target="_blank">BeautifulSoup</a> and <a href="https://pypi.org/project/customtkinter/" target="_blank">CustomTkinter</a>. The program also uses https://github.com/Akascape/CTkScrollableDropdown to have the combobox auto show and search to find a website easily.
@@ -48,14 +48,13 @@ Use this command within the extracted folder to install everything from the requ
 Make sure you have pip and Python installed. 
 Keep in mind, running it with native Python will always be faster than with a UI/web version, once you install Python and the requirements it's easy and fast to run it.
 
-    Open terminal in the program's folder (from Linux point) and run
+    Open terminal/command prompt in the program's folder and run
         python3 pSearch.py
         
 But as an alternative and a faster method, I also build the program in a standalone executable file which you can download from every release.
 
 ## There are some not-so-important functionalities at the top...
-- **DB Checker** checks the health (page code) of all of the sites in the database then prints it in the command line. Make sure to run the .exe via command line to see the actual results because I have disabled the console while building the program. Please note that overtime I have noticed this method to be not fully efficient, since some sites can change their URL or key names, which returns no results and no errors. But, it's still good for quick analysis, though the "all" search is more useful for detecting errors.
-- **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality).
+- **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality). It is found in the others folder.
 
  ## Notice
 - This tool doesn't let you download files. Simply just a search tool. It doesn't grab direct download links, it just searches and gives you the original pages of the website. 
@@ -73,6 +72,10 @@ To create executable files, I now use auto-py-to-exe (https://pypi.org/project/a
 - Additional files: websites.json (not the one from online_json. online_json folder from the others folder must be empty and only include the .txt file.)
 - Advanced -> name -> pSearch
 - Advanced -> --hide-console -> minimize-late
+
+OR with pyinstaller:
+- Standalone: pyinstaller --noconfirm --onedir --console --icon "D:\path\to\icon.ico" --name "pSearch" --hide-console "minimize-late" --add-data "D:\path\to\media;media/" --add-data "D:\path\to\others;others/" --add-data "D:\path\to\others\websites.json;." --add-data "D:\path\to\others\online_json;online_json/"  "D:\path\to\pSearch.py"
+- Onefile: pyinstaller --noconfirm --onefile --console --icon "D:\path\to\icon.ico" --name "pSearch" --hide-console "minimize-late" --add-data "D:\path\to\media;media/" --add-data "D:\path\to\others;others/" --add-data "D:\path\to\others\websites.json;." --add-data "D:\path\to\others\online_json;online_json/"  "D:\path\to\pSearch.py"
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
