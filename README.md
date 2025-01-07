@@ -53,7 +53,7 @@ Keep in mind, running it with native Python will always be faster than with a UI
         
 But as an alternative and a faster method, I also build the program in a standalone executable file which you can download from every release.
 
-## There are some not-so-important functionalities at the top...
+## Additional Programs
 - **Base64 Encode/Decode** is for decoding/encoding base64. I added this because FMHY has a base64 database so you can directly use this to decode them (that's the main reason I added it for but of course it can be used for its primary functionality). It is found in the others folder.
 
  ## Notice
