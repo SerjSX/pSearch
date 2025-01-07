@@ -74,8 +74,8 @@ To create executable files, I now use auto-py-to-exe (https://pypi.org/project/a
 - Advanced -> --hide-console -> minimize-late
 
 OR with pyinstaller:
-- Standalone: pyinstaller --noconfirm --onedir --console --icon "D:\path\to\icon.ico" --name "pSearch" --hide-console "minimize-late" --add-data "D:\path\to\media;media/" --add-data "D:\path\to\others;others/" --add-data "D:\path\to\others\websites.json;." --add-data "D:\path\to\others\online_json;online_json/"  "D:\path\to\pSearch.py"
-- Onefile: pyinstaller --noconfirm --onefile --console --icon "D:\path\to\icon.ico" --name "pSearch" --hide-console "minimize-late" --add-data "D:\path\to\media;media/" --add-data "D:\path\to\others;others/" --add-data "D:\path\to\others\websites.json;." --add-data "D:\path\to\others\online_json;online_json/"  "D:\path\to\pSearch.py"
+- Standalone: `pyinstaller --noconfirm --onedir --console --icon "D:\path\to\icon.ico" --name "pSearch" --hide-console "minimize-late" --add-data "D:\path\to\media;media/" --add-data "D:\path\to\others;others/" --add-data "D:\path\to\others\websites.json;." --add-data "D:\path\to\others\online_json;online_json/"  "D:\path\to\pSearch.py"`
+- Onefile: `pyinstaller --noconfirm --onefile --console --icon "D:\path\to\icon.ico" --name "pSearch" --hide-console "minimize-late" --add-data "D:\path\to\media;media/" --add-data "D:\path\to\others;others/" --add-data "D:\path\to\others\websites.json;." --add-data "D:\path\to\others\online_json;online_json/"  "D:\path\to\pSearch.py"`
  
  ### Violation Notes
  This program shouldn't violate any ToS's of the websites included as it doesn't grab the download links. It still forwards to the original website, just the software's page of it.
