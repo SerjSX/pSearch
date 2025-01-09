@@ -9,3 +9,6 @@ __pycache__/rarbg_search.cpython-310.pyc
 websitesdb
 pSearch-windows-onefile-standalone.zip
 pSearch-windows-standalone.zip
+/others/__pycache__
+/others/CTkScrollableDropdown/__pycache__
+/others/online_json

@@ -746,5 +746,60 @@
         "searchurl": "https://apkmody.mobi/?s=",
         "type": "android",
         "url": "https://apkmody.mobi"
+    },
+    {
+        "hasmainlink": 1,
+        "key1": "div",
+        "key2": "class",
+        "key3": "tgxtablecell clickable-row click textshadow rounded txlight",
+        "name": "TorrentGalaxy",
+        "plusorspace": 0,
+        "searchurl": "https://torrentgalaxy.to/torrents.php?search=",
+        "type": "all",
+        "url": "https://torrentgalaxy.to"
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "td",
+        "key2": "class",
+        "key3": "text-wrap w-100",
+        "name": "Knaben Database",
+        "plusorspace": 1,
+        "searchurl": "https://knaben.org/search/",
+        "type": "all",
+        "url": ""
+    },
+    {
+        "hasmainlink": 1,
+        "key1": "div",
+        "key2": "class",
+        "key3": "torrent-title",
+        "name": "cloudtorrents",
+        "plusorspace": 0,
+        "searchurl": "https://cloudtorrents.com/search?query=",
+        "type": "all",
+        "url": "https://cloudtorrents.com"
+    },
+    {
+        "hasmainlink": 1,
+        "key1": "h5",
+        "key2": "class",
+        "key3": "mb-1",
+        "name": "BT4G",
+        "plusorspace": 1,
+        "searchurl": "https://bt4gprx.com/search?q=",
+        "type": "all",
+        "url": "https://bt4gprx.com"
+    },
+    {
+        "hasmainlink": 0,
+        "key1": "div",
+        "key2": "class",
+        "key3": "title",
+        "name": "scnlog.me",
+        "plusorspace": 1,
+        "searchurl": "https://scnlog.me/?s=",
+        "type": "all",
+        "url": ""
     }
 ]
